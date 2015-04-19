@@ -2,6 +2,7 @@
 
 use App\Category;
 use App\Setting;
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
 
@@ -16,6 +17,7 @@ use Cmgmyr\Messenger\Models\Thread as Conversation;
 use Cmgmyr\Messenger\Models\Message as ConversationMessage;
 
 use App\Services\Purifier;
+use Illuminate\Support\Facades\View;
 
 class InstallController extends Controller
 {
@@ -35,6 +37,8 @@ class InstallController extends Controller
 
     private $role;
 
+    private $auth;
+
     /**
      * Initializer.
      *
@@ -46,13 +50,14 @@ class InstallController extends Controller
      * @param Conversation $conversation
      * @param ConversationMessage $conversationMessage
      * @param Role $role
+     * @param Guard $auth
      */
     public function __construct(
         User $user, Channel $channel, Category $category,
         Topic $topic, Post $post,
         Conversation $conversation,
         ConversationMessage $conversationMessage,
-        Role $role
+        Role $role, Guard $auth
     )
     {
         $this->user = $user;
@@ -63,11 +68,22 @@ class InstallController extends Controller
         $this->conversationMessage = $conversationMessage;
         $this->role = $role;
         $this->category = $category;
+        $this->auth = $auth;
     }
 
     public function show()
     {
         return view('core.installer.index');
+    }
+
+    public function showDBError()
+    {
+        return view('core.installer.errors.configuredb');
+    }
+
+    public function showPDOException()
+    {
+        return view('core.installer.errors.pdoexception');
     }
 
     public function install(InstallRequest $request)
@@ -79,12 +95,16 @@ class InstallController extends Controller
             Artisan::call('migrate', ['--quiet']);
             Artisan::call('vendor:publish', ['--quiet']);
             Artisan::call('clear-compiled', ['--quiet']);
+            Artisan::call('cache:clear', ['--quiet']);
+
+            $username = $request->input('username');
+            $password = $request->input('password');
 
             // STEP 2: Create the admin user (confirmed by default)
             $adminUser = $this->user->create(array(
-                'name' => $request->input('username'),
+                'name' => $username,
                 'email' => $request->input('email'),
-                'password' => Hash::make($request->input('password')),
+                'password' => Hash::make($password),
                 'slug' => str_slug($request->input('username')),
                 'confirmed' => 1
             ));
@@ -169,30 +189,26 @@ class InstallController extends Controller
                     'value' => 'null'
                 ),
                 6 => array(
-                    'name' => 'outgoing_email',
-                    'value' => htmlspecialchars($request->input('site_email'))
-                ),
-                7 => array(
                     'name' => 'recaptcha',
                     'value' => 'false'
                 ),
-                8 => array(
+                7 => array(
                     'name' => 'recaptcha_key',
                     'value' => 'null'
                 ),
-                9 => array(
+                8 => array(
                     'name' => 'twitter_feed_id',
                     'value' => 'null'
                 ),
-                10 => array(
+                9 => array(
                     'name' => 'bootswatch_theme',
                     'value' => $request->has('bootswatch_theme') ? $request->get('bootswatch_theme') : 6
                 ),
-                11 => array(
+                10 => array(
                     'name' => 'navbar_style',
                     'value' => ($request->has('inverse_navbar') ? 1 : 0)
                 ),
-                12 => array(
+                11 => array(
                     'name' => 'infractions',
                     'value' => ($request->has('enable_infractions') ? 'true' : 'false')
                 )
@@ -210,7 +226,7 @@ class InstallController extends Controller
                     ));
                 }
             }
-            catch(Exception $e) {
+            catch(Exception $ex) {
                 if ($ex instanceof \PDOException) // Is it PDOException? If yes, show the "pdoexception" view.
                 {
                     return view('core.installer.errors.pdoexception', array(
@@ -225,7 +241,7 @@ class InstallController extends Controller
                 }
             }
 
-            // Step 5: Send the administrator a private message
+            // Step 5: Send the administrator a "welcome" message
             // This is the final step
 
             $conversation = $adminUser->threads()->create(array(
@@ -249,6 +265,10 @@ class InstallController extends Controller
             ));
 
             $conversation->addParticipants(array($adminUser->id));
+
+            if ($this->auth->attempt(['name' => $username, 'password' => $password]))
+            {
+            }
 
             return view('core.installer.success');
         }

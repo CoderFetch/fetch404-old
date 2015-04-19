@@ -7,7 +7,7 @@
 		<meta charset="UTF-8"></meta>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		
-		<link href="/assets/css/cosmo.css" rel="stylesheet" type="text/css" media="all" />
+		<link href="/assets/css/themes/{{{ $theme_id }}}.css" rel="stylesheet" type="text/css" media="all" />
 		<link href="/assets/css/summernote.css" rel="stylesheet" type="text/css" media="all" />
 		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" media="all">
 		<link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700|PT+Sans:400,700|Roboto:400,100,300,500,700" rel="stylesheet" type="text/css" media="all">
@@ -16,7 +16,7 @@
 		<link href="/assets/css/admin/main.css" rel="stylesheet" type="text/css" media="all" />
 		@endif
 		<link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-rc.2/css/select2.min.css" rel="stylesheet" />
-		<link href="/assets/css/jquery.mentionsInput.css" rel="stylesheet" />
+		<link href="/assets/css/main.css" rel="stylesheet" type="text/css" />
 		
 		<script src="/assets/js/jquery-1.11.2.min.js"></script>
 		<script src="/assets/js/bootstrap.min.js"></script>
@@ -27,144 +27,12 @@
 		<script src="/assets/js/admin/main.js"></script>
 		@endif
 		<script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-rc.2/js/select2.min.js"></script>
-		<script src="/assets/js/underscore-min.js"></script>
-		<script src="/assets/js/jquery.elastic.js"></script>
-		<script src="/assets/js/jquery.events.input.js"></script>
-		<script src="/assets/js/jquery.mentionsInput.js"></script>
-
-		<style>
-		.navbar-top-links {
-			margin-right: 0;
-		}
-
-		.navbar-top-links li {
-			display: inline-block;
-		}
-
-		.navbar-top-links li:last-child {
-			margin-right: 15px;
-		}
-
-		.navbar-top-links li a {
-			padding: 15px;
-			min-height: 50px;
-		}
-
-		.navbar-top-links .dropdown-menu li {
-			display: block;
-		}
-
-		.navbar-top-links .dropdown-menu li:last-child {
-			margin-right: 0;
-		}
-
-		.navbar-top-links .dropdown-menu li a {
-			padding: 3px 20px;
-			min-height: 0;
-		}
-		.navbar-top-links .dropdown-menu li a div {
-			white-space: normal;
-		}
-
-		.navbar-top-links .dropdown-messages,
-		.navbar-top-links .dropdown-tasks,
-		.navbar-top-links .dropdown-alerts {
-			width: 325px;
-			min-width: 0;
-		}
-
-		.navbar-top-links .dropdown-messages {
-			margin-left: 5px;
-		}
-
-		.navbar-top-links .dropdown-tasks {
-			margin-left: -59px;
-		}
-
-		.navbar-top-links .dropdown-alerts {
-			margin-left: -123px;
-		}
-
-		.navbar-top-links .dropdown-user {
-			right: 0;
-			left: auto;
-		}
-		@keyframes blink {  
-			0% { color: green; }
-			100% { color: white; }
-		}
-		@-webkit-keyframes blink {
-			0% { color: green; }
-			100% { color: white; }
-		}
-		.blink {
-			-webkit-animation-name: blink;
-			-webkit-animation-duration: 0.5s;
-		    -webkit-animation-iteration-count: 5;
-			
-			-moz-animation-name: blink;
-			-moz-animation-duration: 0.5s;
-		    -moz-animation-iteration-count: 5;
-			
-			-ms-animation-name: blink;
-			-ms-animation-duration: 0.5s;
-		    -ms-animation-iteration-count: 5;
-			
-			-o-animation-name: blink;
-			-o-animation-duration: 0.5s;
-		    -o-animation-iteration-count: 5;
-			
-			animation-name: blink;
-			animation-duration: 0.5s;
-			animation-iteration-count: 5;
-		}
-
-		/* enable absolute positioning */
-		.inner-addon {
-			position: relative;
-		}
-
-		/* style glyph */
-		.inner-addon .fa {
-			position: absolute;
-			padding: 10px;
-			pointer-events: none;
-		}
-
-		/* align glyph */
-		.left-addon .fa  { left:  0px; top: 4.5px;}
-		.right-addon .fa { right: 0px; top: 4.5px;}
-
-		/* add padding  */
-		.left-addon input  { padding-left:  30px; }
-		.right-addon input { padding-right: 30px; }
-		</style>
-		<script>
-			var tooltipSettings = {html: true, animation: false};
-			var summernoteSettings = {
-				height: 300, 
-				minHeight: null, 
-				maxHeight: null,
-				toolbar: [
-					['style', ['bold', 'italic', 'underline', 'clear']],
-					['font', ['strikethrough']],
-					['fontsize', ['fontsize']],
-					['color', ['color']],
-					['para', ['ul', 'ol', 'paragraph']],
-					['height', ['height']]
-				]
-			};
-			$(document).ready(function()
-			{
-				$('[data-type=tooltip]').tooltip(tooltipSettings);
-				$('[data-type=summernote]').summernote(summernoteSettings || {});
-			});
-		</script>
+		<script src="/assets/js/main.js"></script>
 	</head>
 	
 	<body style="position: relative; padding-top: 60px; font-family: 'Source Sans Pro'; font-weight: 300;"@yield('extra_attributes')>
 		<!-- Navigation -->
-		<nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
+		<nav class="navbar navbar-{{{ $navbar_style == 1 ? 'inverse' : 'default' }}} navbar-fixed-top" role="navigation">
 			<div class="container">
 				<!-- Brand and toggle get grouped for better mobile display -->
 				<div class="navbar-header">
@@ -175,7 +43,7 @@
 						<span class="icon-bar"></span>
 					</button>
 					<a class="navbar-brand" href="/">
-						minerzone
+						{{{ $site_title }}}
 					</a>
 				</div>
 				<!-- Collect the nav links, forms, and other content for toggling -->
@@ -197,9 +65,6 @@
 								@endif
 								<li><a href="{{{ route('forum.get.show.top.posters') }}}">Top posters</a></li>
 							</ul>
-						</li>
-						<li>
-							<a href="{{{ route('play.get.show') }}}"><i class="fa fa-gamepad fa-fw"></i> Play</a>
 						</li>
 					</ul>
 					{!! Form::open(['route' => 'search.send', 'class' => 'navbar-form navbar-right']) !!}
@@ -261,20 +126,16 @@
 			@endif
 		@yield('content')
 			<hr>
-	        <footer style="position: fixed; bottom: 0; width: 100%;">
-				<span class="text-muted">
-					{{{ Post::count() }}} posts
-				</span>
-				&nbsp;
-				<span class="text-muted">
-					{{{ Topic::count() }}} topics
-				</span>
-				&nbsp;
-				<span class="text-muted">
-					{{{ User::count() }}} users
-				</span>
-      		</footer>
-      		@yield('footer')
+			<div style="position: absolute; bottom: 0 !important;">
+				<footer>
+					<div class="pull-left">
+					<span class="text-muted">
+						{{{ User::count() }}} users
+					</span>
+					</div>
+				</footer>
+				@yield('footer')
+			</div>
 		</div>
 	</body>
 </html>

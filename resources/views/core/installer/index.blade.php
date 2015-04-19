@@ -13,7 +13,7 @@
             color: #666;
             line-height: 1.5em;
         }
-        body, input, textarea, select {
+        body, input, textarea, select, button {
             font-size: 16px;
             font-family: open sans, helvetica, arial, sans-serif;
         }
@@ -115,7 +115,7 @@
             cursor: pointer;
             border-radius: 3px;
             background: #f6f6f6;
-            font-weight: 600;
+            font-weight: 300;
             border: 1px solid transparent;
             white-space: nowrap;
             font-size: 120%;
@@ -211,29 +211,29 @@
         <div class='details'>
             <ul class='form'>
                 <li class='half'>
-                    {!! Form::text('forumTitle', '', ['placeholder' => 'Forum title', 'value' => '']) !!}
+                    {!! Form::text('forumTitle', '', ['placeholder' => 'Forum title', 'value' => Input::old('forumTitle')]) !!}
                     <br>
                 </li>
                 <li class='half advanced'>
-                    {!! Form::text('forumDesc', '', ['placeholder' => 'Forum description', 'value' => '']) !!}
+                    {!! Form::text('forumDesc', '', ['placeholder' => 'Forum description', 'value' => Input::old('forumDesc')]) !!}
                     <br>
                 </li>
                 <li class='clear'></li>
                 <li class='half advanced'>
                     {!! Form::label('enable_infractions_label', 'Enable infractions?') !!}
-                    {!! Form::checkbox('enable_infractions', '', false) !!}
+                    {!! Form::checkbox('enable_infractions', '', Input::old('enable_infractions')) !!}
                     <br>
                 </li>
                 <li class='half advanced'>
                     {!! Form::label('inverse_navbar_label', 'Enable inverse navigation colors?') !!}
-                    {!! Form::checkbox('inverse_navbar', '', false) !!}
+                    {!! Form::checkbox('inverse_navbar', '', Input::old('inverse_navbar')) !!}
                     <br>
                 </li>
                 <li class='clear'></li>
                 <li class='half advanced'>
                     {!! Form::label('bootswatch_theme_label', 'Select Bootswatch theme') !!}
                     <select name="bootswatch_theme">
-                        <option value="1">Default Bootstrap</option>
+                        <option value="1" selected>Default Bootstrap</option>
                         <option value="2">Cerulean</option>
                         <option value="3">Cosmo</option>
                         <option value="4">Cyborg</option>
@@ -259,7 +259,7 @@
 
             <ul class='form'>
                 <li class='half'>
-                    <input type='text' placeholder='MySQL Host' name='mysqlHost' value='localhost'/>
+                    <input type='text' placeholder='MySQL Host' name='mysqlHost' value='{{{ Input::old("mysqlHost") }}}'/>
                     <br>
                     @if ($errors->has('mysqlHost'))
                         <span style="color: #a94442;">
@@ -268,7 +268,7 @@
                     @endif
                 </li>
                 <li class='half'>
-                    <input type='text' placeholder='MySQL Username' name='mysqlUser'/>
+                    <input type='text' placeholder='MySQL Username' name='mysqlUser' value='{{{ Input::old("mysqlUser") }}}'/>
                     <br>
                     @if ($errors->has('mysqlUser'))
                         <span style="color: #a94442;">
@@ -277,7 +277,7 @@
                     @endif
                 </li>
                 <li class='half clear'>
-                    <input type='password' placeholder='MySQL Password' name='mysqlPass'/>
+                    <input type='password' placeholder='MySQL Password' name='mysqlPass' value='{{{ Input::old("mysqlPass") }}}'/>
                     <br>
                     @if ($errors->has('mysqlPass'))
                         <span style="color: #a94442;">
@@ -286,7 +286,7 @@
                     @endif
                 </li>
                 <li class='half'>
-                    <input type='text' placeholder='MySQL Database' name='mysqlDB'/>
+                    <input type='text' placeholder='MySQL Database' name='mysqlDB' value='{{{ Input::old("mysqlDB") }}}'/>
                     <br>
                     @if ($errors->has('mysqlDB'))
                         <span style="color: #a94442;">
@@ -301,7 +301,7 @@
 
             <ul class='form'>
                 <li class='half'>
-                    <input type='text' placeholder='Admin Username' name='username' value=''/>
+                    <input type='text' placeholder='Admin Username' name='username' value='{{{ Input::old("username") }}}'/>
                     <br>
                     @if ($errors->has('username'))
                         <span style="color: #a94442;">
@@ -310,7 +310,7 @@
                     @endif
                 </li>
                 <li class='half'>
-                    <input type='text' placeholder='Admin Email' name='email' value=''/>
+                    <input type='text' placeholder='Admin Email' name='email' value='{{{ Input::old("email") }}}'/>
                     <br>
                     @if ($errors->has('email'))
                         <span style="color: #a94442;">
@@ -319,7 +319,7 @@
                     @endif
                 </li>
                 <li class='half clear'>
-                    <input type='password' placeholder='Admin Password' name='password' value=''/>
+                    <input type='password' placeholder='Admin Password' name='password' value='{{{ Input::old("password") }}}'/>
                     @if ($errors->has('password'))
                         <span style="color: #a94442;">
                             {{{ $errors->first('password') }}}
@@ -334,7 +334,7 @@
             <br>
 
             <ul class='form' style='text-align:center'>
-                <li><input type='submit' name='submit' value='Install Fetch404 &#155;' class='submit button'/></li>
+                <li><button type='submit' class='submit button'>Install Fetch404 &#155;</button></li>
                 <li><a href='#advanced' id='advancedLink'>Advanced Options</a></li>
             </ul>
         </div>

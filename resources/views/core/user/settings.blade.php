@@ -9,7 +9,7 @@
 		Roles:
 		<ul>
 			@foreach($user->roles()->get() as $role)
-			<li>{{{ $role->display_name }}}</li>
+			<li>{{{ $role->name }}}</li>
 			@endforeach
 		</ul>
 		

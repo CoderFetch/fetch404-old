@@ -203,19 +203,42 @@
 </head>
 <body>
 
-<div id='container'>
+<div class='details'>
     <span class="fa-stack fa-lg">
         <i class="fa fa-times fa-stack-2x"></i>
         <i class="fa fa-times fa-stack-1x fa-inverse"></i>
     </span>
     <br>
-    <h1>Internal Error</h1>
+    <h1>Fatal Error</h1>
     <h2>
-        An internal error occurred while processing your request.
+        There was a fatal error while processing your request. <a href="http://fetch404.com">Get help</a>
     </h2>
-    <p>
-        Error: {{{ $error->getMessage() }}}
-    </p>
+
+    <div class="code">
+        {{{ $error->getMessage() }}}
+    </div>
+
+    <h3>Backtrace</h3>
+    <div class="code">
+        @foreach($error->getTrace() as $k => $v)
+        <pre>
+            <strong>
+                {{{ $v["class"] or '' }}}
+                {{{ $v["type"] or '' }}}
+                {{{ $v["function"] }}}()
+            </strong>
+            @if (isset($v["file"]))
+            <em>
+                [{{{ $v["file"] }}}:{{{ $v["line"] }}}]
+            </em>
+            @endif
+        </pre>
+        @endforeach
+    </div>
+    <h3>Additional Information</h3>
+    <ul class="list">
+        <li><label>PHP Version</label> {{{ PHP_VERSION }}}</li>
+    </ul>
 </div>
 </body>
 </html>

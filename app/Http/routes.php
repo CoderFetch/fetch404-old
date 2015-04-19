@@ -184,3 +184,6 @@ $router->group(['middleware' => 'installed'], function() use ($router)
 
 $router->get('/install', ['as' => 'install.get', 'uses' => 'InstallController@show']);
 $router->post('/install', ['as' => 'install.post', 'uses' => 'InstallController@install']);
+
+$router->get('/install/errors/db', ['as' => 'install.dberror', 'uses' => 'InstallController@showDBError']);
+$router->get('/install/errors/pdo', ['as' => 'install.pdoexception', 'uses' => 'InstallController@showPDOException']);

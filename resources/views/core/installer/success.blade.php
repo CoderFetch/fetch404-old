@@ -95,11 +95,6 @@
                 color: #fff;
             }
         </style>
-        <script>
-            $(function() {
-                $('#domain').text(document.domain);
-            });
-        </script>
     </head>
     <body>
         <div id='container'>

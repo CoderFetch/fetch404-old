@@ -206,7 +206,6 @@
 <div id='container'>
     <span class="fa-stack fa-lg">
         <i class="fa fa-database fa-stack-2x"></i>
-        <i class="fa fa-times fa-stack-1x fa-inverse"></i>
     </span>
     <br>
     <h1>Database Error</h1>
@@ -214,7 +213,7 @@
         An error occurred while trying to interact with the database.
     </h2>
     <p>
-        Error: {{{ $error->getMessage() }}}
+        Error code: {{{ $error->getMessage() }}}
     </p>
 </div>
 </body>

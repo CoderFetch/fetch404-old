@@ -37,10 +37,10 @@ class Installed {
                     return $next($request);
                 } else {
                     // Go to the install page, we haven't installed yet.
-                    return view('core.installer.index');
+                    return redirect(route('install.get'));
                 }
             } else {
-                return view('core.installer.configuredb');
+                return redirect(route('install.dberror'));
             }
         }
 

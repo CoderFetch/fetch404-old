@@ -22,8 +22,12 @@ class AppServiceProvider extends ServiceProvider {
 		// Set up the view composers
 		view()->composer('core.partials.layouts.master', function($view) {
 			$site_title = Setting::where('name', '=', 'sitename')->first();
+			$site_theme = Setting::where('name', '=', 'bootswatch_theme')->first();
+			$navbar_style = Setting::where('name', '=', 'navbar_style')->first();
 
 			$view->with('site_title', ($site_title != null ? e($site_title->value) : 'Fetch404'));
+			$view->with('theme_id', ($site_theme != null ? e($site_theme->value) : '1'));
+			$view->with('navbar_style', ($navbar_style != null ? e($navbar_style->value) : '0'));
 		});
 
 		view()->composer('core.admin.index', function($view) {

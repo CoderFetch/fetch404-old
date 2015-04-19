@@ -9,8 +9,6 @@ class PermissionsTableSeeder extends Seeder {
 
     public function run()
     {
-        Permission::truncate();
-
         $startDiscussion = new Permission();
         $startDiscussion->name = 'startDiscussion';
         $startDiscussion->save();

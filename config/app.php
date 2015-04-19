@@ -26,7 +26,7 @@ return [
 	|
 	*/
 
-	'url' => '/',
+	'url' => 'http://steveville.org',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -221,7 +221,9 @@ return [
 		'Smilies' => 'App\Services\Smilies',
 		'Mentions' => 'App\Services\Mentions',
 		'Pluralizer' => 'Illuminate\Support\Pluralizer',
-		'Settings' => 'App\Setting'
+		'Settings' => 'App\Setting',
+		'Topic' => 'App\Topic',
+		'User' => 'App\User'
 	],
 
 ];
