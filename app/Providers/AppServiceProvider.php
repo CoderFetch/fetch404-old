@@ -6,6 +6,8 @@ use App\User;
 use Illuminate\Support\ServiceProvider;
 use Carbon\Carbon;
 
+use App\Setting;
+
 class AppServiceProvider extends ServiceProvider {
 
 	/**
@@ -18,6 +20,12 @@ class AppServiceProvider extends ServiceProvider {
 		//
 
 		// Set up the view composers
+		view()->composer('core.partials.layouts.master', function($view) {
+			$site_title = Setting::where('name', '=', 'sitename')->first();
+
+			$view->with('site_title', ($site_title != null ? e($site_title->value) : 'Fetch404'));
+		});
+
 		view()->composer('core.admin.index', function($view) {
 			$date = new Carbon;
 			$date->subWeek();

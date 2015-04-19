@@ -60,7 +60,7 @@
 			<div class="col-md-8">
 			  By <a href="{{{ $message->user->profileURL }}}">{{{ $message->user->name }}}</a> &raquo; <span data-type="tooltip" data-trigger="hover" data-original-title="{{{ date('j M y, h:i A', strtotime($message->created_at)) }}}">{{{ $message->created_at->diffForHumans() }}}</span>
 			  <hr>
-			  {!! Purifier::clean($message->body) !!}
+			  {!! nl2br(Purifier::clean($message->body)) !!}
 			  <hr>
 			</div>
 

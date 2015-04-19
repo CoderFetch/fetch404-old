@@ -46,6 +46,10 @@ class Handler extends ExceptionHandler {
 		{
 			return response()->make(view('core.errors.modelnotfound'), 404);
 		}
+		elseif ($e instanceof \PDOException)
+		{
+			return response()->make(view('core.installer.errors.configuredb'), 500);
+		}
 		else
 		{
 			return parent::render($request, $e);

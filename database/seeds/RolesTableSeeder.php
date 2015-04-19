@@ -10,46 +10,23 @@ class RolesTableSeeder extends Seeder {
 
     public function run()
     {
+		//Role::truncate();
         // TestDummy::times(20)->create('App\Post');
-		$owner = new Role();
-		
-		$owner->name         = 'owner';
-		$owner->display_name = 'Owner'; // optional
-		$owner->description  = 'User is the owner of the website'; // optional
-		
-		$owner->save();
-		//
-		$member = new Role();
-		
-		$member->name         = 'member';
-		$member->display_name = 'Member'; // optional
-		$member->description  = 'User is a regular member of the website and has basic privileges'; // optional
-		
-		$member->save();
-		
-		// Assign the role(s)
-		$user = User::where(
-			'name',
-			'=',
-			'ItsLeo'
-		)->first();
-		
-		if ($user)
+		$groups = ['Administrator', 'Guest', 'Member', 'Moderator'];
+
+		foreach($groups as $group)
 		{
-			$user->attachRole($owner);
+			$role = new Role();
+
+			$role->name = $group;
+
+			if ($group == 'Administrator')
+			{
+				$role->is_superuser = 1;
+			}
+
+			$role->save();
 		}
-		
-		// Permissions
-		$adminPanel = new Permission();
-		
-		$adminPanel->name = 'admin-panel';
-		$adminPanel->display_name = 'Admin CP Access'; // optional
-		// Allow a user to...
-		$adminPanel->description = 'Access the admin panel'; // optional
-		
-		$adminPanel->save();
-		
-		$owner->attachPermission($adminPanel);
     }
 
 }

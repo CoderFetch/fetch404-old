@@ -34,5 +34,5 @@ if (file_exists($compiledPath))
 	require $compiledPath;
 }
 
-require __DIR__.'/../core/functions/minerzone/helpers.php';
-require __DIR__.'/../core/functions/minerzone/MCHelpers.php';
+//require __DIR__.'/../core/functions/minerzone/helpers.php';
+//require __DIR__.'/../core/functions/minerzone/MCHelpers.php';

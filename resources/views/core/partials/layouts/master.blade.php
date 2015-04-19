@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>MinerZone | @yield('title', 'Home')</title>
+		<title>
+			{{{ $site_title }}} | @yield('title', 'Home')
+		</title>
 		<meta charset="UTF-8"></meta>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		
@@ -259,23 +261,17 @@
 			@endif
 		@yield('content')
 			<hr>
-	        <footer>
-				<a href="#">
-					<i id="social" class="fa fa-youtube-square fa-3x social-gp"></i>
-				</a>		
-				<a href="https://twitter.com/MinerZoneMC" target="blank">
-					<i id="social" class="fa fa-twitter-square fa-3x social-tw"></i>
-				</a>		
-				<span class="pull-right">
-					<ul class="nav nav-pills">
-						<li>
-							<a class="dropdown-toggle" data-toggle="dropdown" href="#">&copy; MinerZone 2015</a>
-							<ul class="dropdown-menu">
-								<li><a href="/credits">Website by LeoRBLX</a></li>
-							</ul>
-						</li>
-						<li><a href="/help">Help</a></li>
-					</ul>
+	        <footer style="position: fixed; bottom: 0; width: 100%;">
+				<span class="text-muted">
+					{{{ Post::count() }}} posts
+				</span>
+				&nbsp;
+				<span class="text-muted">
+					{{{ Topic::count() }}} topics
+				</span>
+				&nbsp;
+				<span class="text-muted">
+					{{{ User::count() }}} users
 				</span>
       		</footer>
       		@yield('footer')

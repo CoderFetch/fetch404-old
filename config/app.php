@@ -26,7 +26,7 @@ return [
 	|
 	*/
 
-	'url' => 'http://minerzone.net',
+	'url' => '/',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -214,14 +214,14 @@ return [
 		'Post' => 'App\Post',
 		'Channel' => 'App\Channel',
 		'Category' => 'App\Category',
-		'MCServer' => 'App\MCServer',
 		'Role' => 'App\Role',
 		'Permission' => 'App\Permission',
 		'NameChange' => 'App\NameChange',
 		'Purifier' => 'App\Services\Purifier',
 		'Smilies' => 'App\Services\Smilies',
 		'Mentions' => 'App\Services\Mentions',
-		'Pluralizer' => 'Illuminate\Support\Pluralizer'
+		'Pluralizer' => 'Illuminate\Support\Pluralizer',
+		'Settings' => 'App\Setting'
 	],
 
 ];

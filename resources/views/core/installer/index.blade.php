@@ -63,31 +63,6 @@
             margin: 0 auto;
         }
 
-        .code {
-            background: #eee;
-            margin: 0 0 1em;
-            padding: 20px;
-            overflow: auto;
-            border-radius: 3px;
-        }
-        .code pre {
-            margin: 0 -18px;
-            padding: 0 18px;
-            font-size: 80%;
-        }
-        .code pre.highlight {
-            font-weight: bold;
-            background: #fff;
-        }
-        .code em {
-            color: #aaa;
-            font-style: normal;
-        }
-        span.highlight {
-            background: #fdef34;
-            padding: 1px 4px;
-            border-radius: 3px;
-        }
 
         .list {
             padding: 0;
@@ -159,6 +134,7 @@
         }
 
         .button.submit {
+            border-color: #000;
             color: #fff;
             background-color: #354059;
         }
@@ -208,19 +184,25 @@
                 $(".advanced").fadeToggle("fast");
             });
             $('.advanced').hide();
+            $('#domain').text(document.domain);
         });
     </script>
 </head>
 <body>
 
 <div id='container'>
-    <span class="fa-stack fa-2x">
+    <span class="fa-stack fa-3x">
         <i class="fa fa-square fa-stack-2x"></i>
         <i class="fa fa-comment-o fa-stack-1x fa-inverse"></i>
     </span>
     <br>
     <h1>Welcome to Fetch404</h1>
     <h2>
+        <small style="color: #ccc">
+            You will be installing Fetch404 on the following domain:
+            <strong id="domain" style="color: black;"></strong>
+        </small>
+        <br />
         Set up your forum by filling out the form below.
         <br />
         <small style="color: lightgray;">* Need help? Visit the <a href="http://fetch404.com">Fetch404 support forum</a>.</small>
@@ -234,6 +216,41 @@
                 </li>
                 <li class='half advanced'>
                     {!! Form::text('forumDesc', '', ['placeholder' => 'Forum description', 'value' => '']) !!}
+                    <br>
+                </li>
+                <li class='clear'></li>
+                <li class='half advanced'>
+                    {!! Form::label('enable_infractions_label', 'Enable infractions?') !!}
+                    {!! Form::checkbox('enable_infractions', '', false) !!}
+                    <br>
+                </li>
+                <li class='half advanced'>
+                    {!! Form::label('inverse_navbar_label', 'Enable inverse navigation colors?') !!}
+                    {!! Form::checkbox('inverse_navbar', '', false) !!}
+                    <br>
+                </li>
+                <li class='clear'></li>
+                <li class='half advanced'>
+                    {!! Form::label('bootswatch_theme_label', 'Select Bootswatch theme') !!}
+                    <select name="bootswatch_theme">
+                        <option value="1">Default Bootstrap</option>
+                        <option value="2">Cerulean</option>
+                        <option value="3">Cosmo</option>
+                        <option value="4">Cyborg</option>
+                        <option value="5">Darkly</option>
+                        <option value="6">Flatly</option>
+                        <option value="7">Journal</option>
+                        <option value="8">Lumen</option>
+                        <option value="9">Paper</option>
+                        <option value="10">Readable</option>
+                        <option value="11">Sandstone</option>
+                        <option value="12">Simplex</option>
+                        <option value="13">Slate</option>
+                        <option value="14">Spacelab</option>
+                        <option value="15">Superhero</option>
+                        <option value="16">United</option>
+                        <option value="17">Yeti</option>
+                    </select>
                     <br>
                 </li>
             </ul>
@@ -283,10 +300,35 @@
             <br>
 
             <ul class='form'>
-                <li class='half'><input type='text' placeholder='Admin Username' name='username' value=''/></li>
-                <li class='half'><input type='text' placeholder='Admin Email' name='email' value=''/></li>
-                <li class='half clear'><input type='password' placeholder='Admin Password' name='password' value=''/></li>
-                <li class='half'><input type='password' placeholder='Confirm Password' name='password_confirmation' value=''/></li>
+                <li class='half'>
+                    <input type='text' placeholder='Admin Username' name='username' value=''/>
+                    <br>
+                    @if ($errors->has('username'))
+                        <span style="color: #a94442;">
+                            {{{ $errors->first('username') }}}
+                        </span>
+                    @endif
+                </li>
+                <li class='half'>
+                    <input type='text' placeholder='Admin Email' name='email' value=''/>
+                    <br>
+                    @if ($errors->has('email'))
+                        <span style="color: #a94442;">
+                            {{{ $errors->first('email') }}}
+                        </span>
+                    @endif
+                </li>
+                <li class='half clear'>
+                    <input type='password' placeholder='Admin Password' name='password' value=''/>
+                    @if ($errors->has('password'))
+                        <span style="color: #a94442;">
+                            {{{ $errors->first('password') }}}
+                        </span>
+                    @endif
+                </li>
+                <li class='half'>
+                    <input type='password' placeholder='Confirm Password' name='password_confirmation' value=''/>
+                </li>
             </ul>
 
             <br>

@@ -7,6 +7,9 @@ use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Debug\ExceptionHandler as SymfonyDisplayer;
 use Illuminate\Contracts\Debug\ExceptionHandler as ExceptionHandlerContract;
 
+use Illuminate\Support\Facades\DB;
+
+use Illuminate\Support\Facades\Schema;
 class Handler implements ExceptionHandlerContract {
 
 	/**
@@ -115,13 +118,24 @@ class Handler implements ExceptionHandlerContract {
 	{
 		$status = $e->getStatusCode();
 
-		if (view()->exists("core.errors.{$status}"))
+		if (DB::connection()->getDatabaseName())
 		{
-			return response()->view("core.errors.{$status}", [], $status);
-		}
-		else
-		{
-			return (new SymfonyDisplayer(config('app.debug')))->createResponse($e);
+			if (Schema::hasTable('migrations')) //Migrations table exists
+			{
+				if (view()->exists("core.errors.{$status}"))
+				{
+					return response()->view("core.errors.{$status}", [], $status);
+				}
+				else
+				{
+					return (new SymfonyDisplayer(config('app.debug')))->createResponse($e);
+				}
+			} else {
+				// Go to the install page, we haven't installed yet.
+				return redirect('/');
+			}
+		} else {
+			return redirect('/');
 		}
 	}
 
