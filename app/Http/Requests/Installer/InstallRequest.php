@@ -14,7 +14,9 @@ class InstallRequest extends FormRequest
 
             'username' => 'required|min:5|max:13|regex:/[A-Za-z0-9\-_!\.\s]/',
             'email' => 'required|email',
-            'password' => 'required|min:8|max:30|confirmed|regex:/[A-Za-z0-9\-_!\$\^\@\#]/'
+            'password' => 'required|min:8|max:30|confirmed|regex:/[A-Za-z0-9\-_!\$\^\@\#]/',
+
+            'outgoing_email' => 'required|email'
         ];
     }
 
@@ -37,6 +39,9 @@ class InstallRequest extends FormRequest
             'password.max' => 'Passwords can be up to 30 characters long.',
             'password.confirmed' => 'Your passwords do not match. Please verify that the confirmation matches the original.',
             'password.regex' => 'You are using characters that are not allowed. Allowed characters: A through Z, a through z, 0 through 9, !, -, _, $, ^, @, #',
+
+            'outgoing_email.required' => 'An outgoing email address is required.',
+            'outgoing_email.email' => 'Please enter a valid email.',
         ];
     }
 

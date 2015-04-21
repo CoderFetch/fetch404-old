@@ -6,7 +6,7 @@
 		<li><a href="/">Home</a></li>
 		<li><a href="/forum">Forum</a></li>
 		<li><a href="{{{ $channel->category->Route }}}">{{{ $channel->category->name }}}</a></li>
-		<li class="active"><a href="{{{ $channel->Route }}}">{{{ $channel->title }}}</a></li>
+		<li class="active"><a href="{{{ $channel->Route }}}">{{{ $channel->name }}}</a></li>
 	</ol>
 	<br />
 	<div class="row">
@@ -17,7 +17,7 @@
 					<a class="btn btn-success btn-xs pull-right" href="{{{ route('forum.get.channel.create.thread', ['slug' => $channel->slug]) }}}">Create thread</a>
 					@endif
 					<h3 class="panel-title">
-						{{{ $channel->title }}}
+						{{{ $channel->name }}}
 					</h3>
 				</div>
 				<div class="panel-body">
@@ -25,7 +25,7 @@
 					@foreach($channel->topics as $i => $thread)
 					<span>
 						<i class="fa fa-comment fa-fw fa-2x pull-left"></i>
-						<a href="{{{ $thread->Route }}}">{{{ $thread->title }}}</a>
+						<a href="{{{ $thread->Route }}}" data-type="tooltip" data-original-title="{{{ str_limit(strip_tags($thread->posts()->first()->content), 65) }}}">{{{ $thread->title }}}</a>
 						<span class="text-muted"> - by {{{ $thread->user->name }}}</span>
 						<span class="pull-right">
 							{{{ $thread->replyCount }}} replies

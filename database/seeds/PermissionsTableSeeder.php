@@ -57,6 +57,23 @@ class PermissionsTableSeeder extends Seeder {
         $register->name = 'register';
         $register->save();
 
+        //
+        $accessAdminPanel = new Permission();
+        $accessAdminPanel->name = 'accessAdminPanel';
+        $accessAdminPanel->save();
+
+        $banUser = new Permission();
+        $banUser->name = 'banUser';
+        $banUser->save();
+
+        $deleteUser = new Permission();
+        $deleteUser->name = 'deleteUser';
+        $deleteUser->save();
+
+        $editUser = new Permission();
+        $editUser->name = 'editUser';
+        $editUser->save();
+
         $adminPerms = array(
             $startDiscussion,
             $editOwnDiscussion,
@@ -69,7 +86,11 @@ class PermissionsTableSeeder extends Seeder {
             $deleteOwnPost,
             $reply,
             $login,
-            $register
+            $register,
+            $accessAdminPanel,
+            $banUser,
+            $deleteUser,
+            $editUser
         );
         $moderatorPerms = array(
               $startDiscussion,
@@ -81,7 +102,8 @@ class PermissionsTableSeeder extends Seeder {
               $editAllPosts,
               $deleteOwnPost,
               $login,
-              $register
+              $register,
+              $banUser
         );
         $memberPerms = array(
           $startDiscussion,

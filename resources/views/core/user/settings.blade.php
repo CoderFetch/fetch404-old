@@ -3,27 +3,6 @@
 @section('title', 'Account settings')
 
 @section('content')
-	<!-- <h3>Coming soon</h3> -->
-	<div class="alert alert-info">
-		@eval($user = Auth::user())
-		Roles:
-		<ul>
-			@foreach($user->roles()->get() as $role)
-			<li>{{{ $role->name }}}</li>
-			@endforeach
-		</ul>
-		
-		Permissions:
-		@eval($permissions = ['admin-panel', 'edit-user', 'create-post', 'edit-post', 'create-thread', 'lock-thread'])
-		<ul>
-			@foreach($permissions as $perm)
-			<li>
-				<i class="fa fa-{{{ Entrust::can($perm) ? 'check' : 'times' }}} text-{{{ Entrust::can($perm) ? 'success' : 'danger' }}}"></i>
-				{{{ $perm }}}
-			</li>
-			@endforeach
-		</ul>
-	</div>
 	@if (count($errors) > 0)
 		<div class="alert alert-danger">
 			<strong>Whoops!</strong> There were some problems with your input.<br><br>
@@ -37,7 +16,7 @@
 	{!! Form::open(['method' => 'POST', 'class' => 'form-horizontal']) !!}
 		<div class="form-group">
 			<label for="name">Username: <i class="fa fa-question-circle fa-fw" data-type='tooltip' data-original-title="<h5>Don't like your username? Now you can change it!</h5>" data-placement='right'></i></label>
-      		<input class="form-control" type="text" name="username" value="{{{ Auth::user()->name }}}" />
+      		<input class="form-control" type="text" name="name" value="{{{ Auth::user()->name }}}" />
       		<small class="help-block">* Changing your username will not affect any of your data.</small>
 		</div>
 		

@@ -253,6 +253,16 @@
                     </select>
                     <br>
                 </li>
+                <li class='clear'></li>
+                <li class='half'>
+                    <input type='text' placeholder='Outgoing email address' name='outgoing_email' value='{{{ Input::old("outgoing_email") }}}'/>
+                    <br>
+                    @if ($errors->has('outgoing_email'))
+                        <span style="color: #a94442;">
+                            {{{ $errors->first('outgoing_email') }}}
+                        </span>
+                    @endif
+                </li>
             </ul>
 
             <br>

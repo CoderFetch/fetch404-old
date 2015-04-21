@@ -11,7 +11,7 @@
 |
 */
 
-$router->group(['middleware' => 'installed'], function() use ($router)
+$router->group(['middleware' => ['installed', 'csrf']], function() use ($router)
 {
 	# Route Models
 	$router->model('role', 'App\Role');
@@ -97,38 +97,6 @@ $router->group(['middleware' => 'installed'], function() use ($router)
 
 	# Pages
 	$router->get('/play', ['uses' => 'MCPlayController@index', 'as' => 'play.get.show']);
-
-	# Administration routes
-	$router->group(['prefix' => 'admin'], function() use ($router)
-	{
-		$router->get('/', ['uses' => 'Admin\AdminPageController@showIndex', 'as' => 'admin.get.index']);
-
-		# User Management
-		$router->group(['prefix' => 'users'], function() use ($router)
-		{
-			$router->get('/{user}/edit', 'Admin\AdminUsersController@getEdit');
-			$router->post('/{user}/edit', 'Admin\AdminUsersController@postEdit');
-			$router->controller('/', 'Admin\AdminUsersController');
-		});
-
-		# Role Management
-		$router->group(['prefix' => 'roles'], function() use ($router)
-		{
-			$router->get('/{role}/edit', 'Admin\AdminRolesController@getEdit');
-			$router->post('/{role}/edit', 'Admin\AdminRolesController@postEdit');
-			$router->get('/{role}/delete', 'Admin\AdminRolesController@getDelete');
-			$router->post('/{role}/delete', 'Admin\AdminRolesController@postDelete');
-			$router->controller('/', 'Admin\AdminRolesController');
-		});
-
-		# Forum Management
-		$router->group(['prefix' => 'forum'], function() use ($router)
-		{
-			$router->controller('/', 'Admin\AdminForumsController');
-		});
-
-		Entrust::routeNeedsPermission('admin*', 'admin_panel');
-	});
 
 	# Private messaging
 	$router->group(['prefix' => 'conversations', 'middleware' => 'auth'], function () use ($router)

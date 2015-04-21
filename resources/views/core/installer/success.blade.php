@@ -108,6 +108,7 @@
                 <small style="color: #ccc">
                     Fetch404 has been installed! You can now use your site.
                 </small>
+                <br />
                 <div style="text-align: center;">
                     <a class="submit button" href="{{{ route('home.show') }}}">
                         Proceed to Site &#155;

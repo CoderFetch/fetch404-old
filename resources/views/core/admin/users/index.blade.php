@@ -1,32 +1,40 @@
 @extends('core.admin.layouts.default')
 
-@section('title', 'Admin Panel')
+@section('title', 'Users')
 
 @section('content')
-	<div class="page-header">
-		<h3>
-			{{{ $title }}}
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="page-header">
+				<h3>
+					{{{ $title }}}
 
-			<div class="pull-right">
-				<a href="{{{ URL::to('admin/users/create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create</a>
+					<div class="pull-right">
+						<a href="{{{ URL::to('admin/users/create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create</a>
+					</div>
+				</h3>
 			</div>
-		</h3>
+		</div>
 	</div>
-
-	<table id="users" class="table table-striped table-hover">
-		<thead>
-			<tr>
-				<th class="col-md-2">Name</th>
-				<th class="col-md-2">Email</th>
-				<th class="col-md-2">Confirmed</th>
-				<th class="col-md-2">Created at</th>
-				<th class="col-md-2">Roles</th>
-				<th class="col-md-2">Actions</th>
-			</tr>
-		</thead>
-		<tbody>
-		</tbody>
-	</table>
+	<div class="row">
+		@include('core.admin.partials.sidebar')
+		<div class="col-md-9">
+			<table id="users" class="table table-striped table-hover">
+				<thead>
+				<tr>
+					<th class="col-md-2">Name</th>
+					<th class="col-md-2">Email</th>
+					<th class="col-md-2">Confirmed</th>
+					<th class="col-md-2">Created at</th>
+					<th class="col-md-2">Role</th>
+					<th class="col-md-2">Actions</th>
+				</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>
 	
 @stop
 

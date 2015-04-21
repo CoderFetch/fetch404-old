@@ -2,7 +2,7 @@
 
 @section('title', 'Create thread')
 @section('content')
-	<h1>Creating thread in "{{{ $channel->title }}}"</h1>
+	<h1>Creating thread in "{{{ $channel->name }}}"</h1>
 	<hr>
 	{!! Form::open(['route' => array('forum.post.channel.create.thread', $channel->slug)]) !!}
 	<div class="row">

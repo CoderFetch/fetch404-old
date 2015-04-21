@@ -27,7 +27,8 @@ class Kernel extends HttpKernel {
 		'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
 		'guest' => 'App\Http\Middleware\RedirectIfAuthenticated',
 		'confirmed' => 'App\Http\Middleware\Confirmed',
-		'installed' => 'App\Http\Middleware\Installed'
+		'installed' => 'App\Http\Middleware\Installed',
+		'csrf' => 'App\Http\Middleware\VerifyCsrfToken'
 	];
 
 }

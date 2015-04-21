@@ -24,6 +24,8 @@ use Redirect;
 use Session;
 use Validator;
 
+use App\Setting;
+
 class AuthController extends Controller {
 	
 	/*
@@ -127,16 +129,19 @@ class AuthController extends Controller {
 				'code' => str_random(30)
 			]);
 			
-			$memberRole = Role::where('name', '=', 'member')->first();
+			$defaultRole = Role::where('is_default', '=', 1)->first();
 			
-			if ($memberRole)
+			if ($defaultRole)
 			{
-				$user->attachRole($memberRole);
+				$user->attachRole($defaultRole);
 			}
-			
-			Mail::send('core.emails.auth.confirm', ['user' => $user, 'confirmation' => $confirmation], function($message) use ($email)
+
+			$outgoingEmail = Setting::where('name', '=', 'outgoing_email')->first();
+			$siteName = Setting::where('name', '=', 'sitename')->first();
+
+			Mail::send('core.emails.auth.confirm', ['user' => $user, 'confirmation' => $confirmation, 'siteName' => $siteName], function($message) use ($email, $outgoingEmail, $siteName)
 			{
-				$message->from('noreply@minerzone.net')->to($email)->subject('Confirm your MinerZone account');
+				$message->from($outgoingEmail->value)->to($email)->subject('Confirm your' . $siteName . ' account');
 			});
 			
 			Flash::success('You have registered on our website! Please check your inbox for a confirmation email.');

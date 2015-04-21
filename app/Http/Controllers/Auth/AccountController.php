@@ -4,6 +4,7 @@
 use App\Http\Controllers\Controller;
 
 // Models
+use App\Http\Requests\Account\AccountSettingsUpdateRequest;
 use App\User;
 use App\AccountConfirmation;
 use App\NameChange;
@@ -96,172 +97,81 @@ class AccountController extends Controller {
 			return redirect()->to('/');
 		}
 	}
-	
+
 	/**
 	 * Update an account's settings
 	 *
-	 * @param Illuminate\Http\Request $request
-	 * @return void
+	 * @param AccountSettingsUpdateRequest $request
 	 */
-	public function updateSettings(Request $request)
+	public function updateSettings(AccountSettingsUpdateRequest $request)
 	{
-		$username = $request->input('username');
+		$username = $request->input('name');
 		$email = $request->input('email');
 		
 		$password = $request->input('password');
-		$password_confirmation = $request->input('password_confirmation');
 		
 		$user = $request->user(); // Set $user to the request's current user.
-		
-		$success = false;
-		
+
+		$oldName = $user->name;
+		$oldEmail = $user->email;
+
 		if (!$user)
 		{
 			return redirect()->to('/');
 		}
-		
-		if ($username != null && $username != '')
+
+		if ($username != $user->name)
 		{
-			if ($user->name != $username) // Name change :)
+			$user->update(array(
+				'name' => $username
+			));
+
+			try {
+				$user->nameChanges()->create(array(
+					'user_id' => $user->id,
+					'old_name' => $oldName,
+					'new_name' => $username
+				));
+			}
+			catch(\PDOException $ex)
 			{
-				if (User::where('name', '=', $username)->count() == 0)
-				{
-					$nameValidator = Validator::make(
-						[
-							'username' => $username
-						],
-						[
-							'username' => 'required|min:5|max:13|regex:/[A-Za-z0-9\-_!\.\s]/|unique:users'
-						],
-						[
-							'username.required' => 'A username is required.',
-							'username.min' => 'Usernames must be at least 5 characters long.',
-							'username.max' => 'Usernames can be up to 13 characters long.',
-							'username.regex' => 'You are using characters that are not allowed. Allowed characters: A through Z, a through z, 0 through 9, -, _, !, and . (period)',
-							'username.unique' => 'That username is taken. Try another!'
-						]
-					);
-					if ($nameValidator->passes())
-					{
-						$nameChange = NameChange::create([
-							'user_id' => $user->id,
-							'old_name' => $user->name,
-							'new_name' => $username
-						]);
-			
-						$user->name = $username;
-						$user->slug = str_slug($username, "-");
-			
-						if ($user->save()) 
-						{
-							$success = true;
-						}
-					}
-					else
-					{
-						return redirect()->to('/account/settings')->withErrors($validator->messages());
-					}
-				}
+
 			}
 		}
-		
-		if ($email != null && $email != '')
+
+		if ($email != $user->email)
 		{
-			if ($user->email != $email) // Email change
+			$user->update(array(
+				'email' => $email
+			));
+
+			$confirmation = AccountConfirmation::create(array(
+				'user_id' => $user->id,
+				'expires_at' => (time() + 3600),
+				'code' => str_random(30)
+			));
+
+			$outgoingEmail = Setting::where('name', '=', 'outgoing_email')->first();
+			$siteName = Setting::where('name', '=', 'sitename')->first();
+
+			Mail::send('core.emails.auth.reconfirm', ['user' => $user, 'confirmation' => $confirmation, 'siteName' => $siteName], function($message) use ($email, $outgoingEmail, $siteName)
 			{
-				$emailValidator = Validator::make(
-					[
-						'email' => $email
-					],
-					[
-						'email' => 'required|email|unique:users'
-					],
-					[
-						'email.required' => 'A username is required.',
-						'email.email' => 'Please enter a valid email.',
-						'email.unique' => 'That email is already in use.'
-					]
-				);
-				if ($emailValidator->passes())
-				{
-					$user->email = $email;
-					$user->confirmed = 0;
-		
-					if ($user->save()) 
-					{
-						$confirmation = AccountConfirmation::create([
-							'user_id' => $user->id,
-							'expires_at' => (time() + 3600),
-							'code' => str_random(30)
-						]);
-	
-						Mail::send('core.emails.auth.confirm', ['user' => $user, 'confirmation' => $confirmation], function($message) use ($email)
-						{
-							$message->from('noreply@minerzone.net')->to($email)->subject('Confirm your MinerZone account');
-						});
-					
-						$success = true;
-					}
-				}
-			}
-			else
-			{
-				return redirect()->to('/account/settings')->withErrors($emailValidator->messages())->withInput();
-			}
-		}		
-		
-		if ($password != null && $password != '') 
-		{
-			if (!Hash::check($password, $user->password))
-			{
-				$password_validator = Validator::make(
-					[
-						'password' => $password,
-						'password_confirmation' => $password_confirmation
-					],
-					[
-						'password' => 'required|min:8|max:30|confirmed|regex:/[A-Za-z0-9\-_!\$\^\@\#]/',
-					],
-					[
-						'password.required' => 'A password is required.',
-						'password.min' => 'Passwords must be at least 8 characters long.',
-						'password.max' => 'Passwords can be up to 30 characters long.',
-						'password.confirmed' => 'Your passwords do not match. Please verify that the confirmation matches the original.',
-						'password.regex' => 'You are using characters that are not allowed. Allowed characters: A through Z, a through z, 0 through 9, !, -, _, $, ^, @, #'
-					]
-				);
-				
-				if ($password_validator->passes())
-				{
-					$user->password = Hash::make($password);
-					
-					if ($user->save()) 
-					{
-						$success = true;
-					}
-				}
-				else
-				{
-					return redirect()->to('/account/settings')->withErrors($password_validator->messages())->withInput();
-				}
-			}
+				$message->from($outgoingEmail->value)->to($email)->subject('Please re-confirm your email');
+			});
 		}
-		
-		if ($success)
-		{
-			Flash::info('Updated account');
-		}
-		
+
 		return redirect()->to('/account/settings');
 	}
+
 	/**
 	 * Create a new account controller instance.
 	 *
-	 * @return void
+	 * @return mixed
 	 */
 	public function __construct()
 	{
-		
+		$this->middleware('auth', ['except' => 'activateAccount']);
+		$this->middleware('confirmed', ['except' => 'activateAccount']);
 	}
 
 }

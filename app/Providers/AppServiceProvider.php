@@ -24,10 +24,36 @@ class AppServiceProvider extends ServiceProvider {
 			$site_title = Setting::where('name', '=', 'sitename')->first();
 			$site_theme = Setting::where('name', '=', 'bootswatch_theme')->first();
 			$navbar_style = Setting::where('name', '=', 'navbar_style')->first();
+			$recaptcha_enabled = Setting::where('name', '=', 'recaptcha')->first();
+
+			$view->with('recaptcha_enabled', ($recaptcha_enabled != null ? $recaptcha_enabled->value : '0'));
+			$view->with('site_title', ($site_title != null ? e($site_title->value) : 'Fetch404'));
+			$view->with('theme_id', ($site_theme != null ? e($site_theme->value) : '1'));
+			$view->with('navbar_style', ($navbar_style != null ? e($navbar_style->value) : '0'));
+		});
+
+		view()->composer('core.admin.layouts.default', function($view) {
+			$site_title = Setting::where('name', '=', 'sitename')->first();
+			$site_theme = Setting::where('name', '=', 'bootswatch_theme')->first();
+			$navbar_style = Setting::where('name', '=', 'navbar_style')->first();
 
 			$view->with('site_title', ($site_title != null ? e($site_title->value) : 'Fetch404'));
 			$view->with('theme_id', ($site_theme != null ? e($site_theme->value) : '1'));
 			$view->with('navbar_style', ($navbar_style != null ? e($navbar_style->value) : '0'));
+		});
+
+		view()->composer('core.admin.general', function($view) {
+			$site_title = Setting::where('name', '=', 'sitename')->first();
+			$site_theme = Setting::where('name', '=', 'bootswatch_theme')->first();
+			$navbar_style = Setting::where('name', '=', 'navbar_style')->first();
+			$recaptcha_enabled = Setting::where('name', '=', 'recaptcha')->first();
+			$recaptcha_key = Setting::where('name', '=', 'recaptcha_key')->first();
+
+			$view->with('site_title', ($site_title != null ? e($site_title->value) : 'Fetch404'));
+			$view->with('theme_id', ($site_theme != null ? e($site_theme->value) : '1'));
+			$view->with('navbar_style', ($navbar_style != null ? e($navbar_style->value) : '0'));
+			$view->with('recaptcha_enabled', ($recaptcha_enabled != null ? ($recaptcha_enabled->value == 'true' ? 'true' : 'false') : 'false'));
+			$view->with('recaptcha_key', ($recaptcha_key != null ? e($recaptcha_key->value) : ''));
 		});
 
 		view()->composer('core.admin.index', function($view) {
@@ -43,6 +69,14 @@ class AppServiceProvider extends ServiceProvider {
 			$view->with('latest_tickets', $tickets);
 
 			$view->with('roles', Role::all());
+		});
+
+		view()->composer('core.auth.register', function($view) {
+			$recaptcha_enabled = Setting::where('name', '=', 'recaptcha')->first();
+			$recaptcha_key = Setting::where('name', '=', 'recaptcha_key')->first();
+
+			$view->with('recaptcha_enabled', ($recaptcha_enabled != null ? $recaptcha_enabled->value : '0'));
+			$view->with('recaptcha_key', ($recaptcha_key != null ? e($recaptcha_key->value) : ''));
 		});
 	}
 

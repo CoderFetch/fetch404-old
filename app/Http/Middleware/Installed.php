@@ -43,6 +43,5 @@ class Installed {
                 return redirect(route('install.dberror'));
             }
         }
-
     }
 }

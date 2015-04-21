@@ -18,7 +18,7 @@
 			@foreach($category->channels->all() as $i => $channel)
 			<span>
 				<i class="fa fa-comment fa-fw fa-2x pull-left"></i>
-				<h3 style="margin-top: 5px;"><a href="{{{ $channel->Route }}}">{{{ $channel->title }}}</a></h3>
+				<h3 style="margin-top: 5px;"><a href="{{{ $channel->Route }}}">{{{ $channel->name }}}</a></h3>
 				<small>
 					<label>Discussions:</label> 
 					{{{ $channel->topics()->count() }}} 

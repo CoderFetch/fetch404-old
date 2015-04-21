@@ -1,6 +1,6 @@
 @extends('core.admin.layouts.default')
 
-@section('title', 'Admin Panel')
+@section('title', 'Home')
 
 @section('content')
 	<div class="row">
@@ -11,94 +11,29 @@
 	</div>
 	<!-- /.row -->
 	<div class="row">
-		<div class="col-lg-3 col-md-6">
-			<div class="panel panel-primary">
-				<div class="panel-heading">
-					<div class="row">
-						<div class="col-xs-3">
-							<i class="fa fa-comments fa-5x"></i>
-						</div>
-						<div class="col-xs-9 text-right">
-							<div class="huge">26</div>
-							<div>New Comments!</div>
-						</div>
-					</div>
-				</div>
-				<a href="#">
-					<div class="panel-footer">
-						<span class="pull-left">View Details</span>
-						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-						<div class="clearfix"></div>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="col-lg-3 col-md-6">
-			<div class="panel panel-success">
-				<div class="panel-heading">
-					<div class="row">
-						<div class="col-xs-3">
-							<i class="fa fa-tasks fa-5x"></i>
-						</div>
-						<div class="col-xs-9 text-right">
-							<div class="huge">12</div>
-							<div>New Tasks!</div>
-						</div>
-					</div>
-				</div>
-				<a href="#">
-					<div class="panel-footer">
-						<span class="pull-left">View Details</span>
-						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-						<div class="clearfix"></div>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="col-lg-3 col-md-6">
-			<div class="panel panel-warning">
-				<div class="panel-heading">
-					<div class="row">
-						<div class="col-xs-3">
-							<i class="fa fa-shopping-cart fa-5x"></i>
-						</div>
-						<div class="col-xs-9 text-right">
-							<div class="huge">124</div>
-							<div>New Orders!</div>
-						</div>
-					</div>
-				</div>
-				<a href="#">
-					<div class="panel-footer">
-						<span class="pull-left">View Details</span>
-						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-						<div class="clearfix"></div>
-					</div>
-				</a>
-			</div>
-		</div>
-		<div class="col-lg-3 col-md-6">
-			<div class="panel panel-danger">
-				<div class="panel-heading">
-					<div class="row">
-						<div class="col-xs-3">
-							<i class="fa fa-support fa-5x"></i>
-						</div>
-						<div class="col-xs-9 text-right">
-							<div class="huge">13</div>
-							<div>Support Tickets!</div>
-						</div>
-					</div>
-				</div>
-				<a href="#">
-					<div class="panel-footer">
-						<span class="pull-left">View Details</span>
-						<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-						<div class="clearfix"></div>
-					</div>
-				</a>
-			</div>
+		@include('core.admin.partials.sidebar')
+		<div class="col-md-9">
+			<p>
+				Welcome to your admin panel. Here you can manage various parts of your Fetch404 website.
+			</p>
 		</div>
 	</div>
 	<!-- /.row -->
+	<div class="modal fade" id="welcomeModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">Welcome!</h4>
+				</div>
+				<div class="modal-body">
+					<p>Hi there!</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary">Save changes</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 @stop

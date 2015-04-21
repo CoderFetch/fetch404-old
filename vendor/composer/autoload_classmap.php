@@ -18,6 +18,7 @@ return array(
     'CreateCategoriesTable' => $baseDir . '/database/migrations/2015_04_06_140311_create_categories_table.php',
     'CreateChannelsTable' => $baseDir . '/database/migrations/2015_04_06_153306_create_channels_table.php',
     'CreateMessagesTable' => $baseDir . '/database/migrations/2014_10_28_175710_create_messages_table.php',
+    'CreateNameChangesTable' => $baseDir . '/database/migrations/2015_04_21_204313_create_name_changes_table.php',
     'CreateNewsTable' => $baseDir . '/database/migrations/2015_04_14_232118_create_news_table.php',
     'CreateParticipantsTable' => $baseDir . '/database/migrations/2014_10_28_180224_create_participants_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',

@@ -3,25 +3,8 @@
 // External libraries (well, sort of)
 use App\Http\Controllers\AdminController;
 
-// Models
-use App\User;
-use App\AccountConfirmation;
-use App\NameChange;
-
-// Illuminate stuff
-use Illuminate\Http\Request;
-
 // The Laracasts libraries
 use Laracasts\Flash\Flash;
-
-// The facades need to be included for some reason O_o
-use Auth;
-use Hash;
-use Mail;
-use Response;
-use Redirect;
-use Session;
-use Validator;
 
 class AdminPageController extends AdminController {
 
@@ -38,18 +21,27 @@ class AdminPageController extends AdminController {
 	/**
 	 * Attempt to show the admin index page
 	 *
-	 * @param Illuminate\Http\Request $request
 	 * @return void
 	 */
-	public function showIndex(Request $request)
+	public function showIndex()
 	{
 		return view('core.admin.index');
+	}
+
+	/**
+	 * Attempt to show the general settings page
+	 *
+	 * @return void
+	 */
+	public function showGeneral()
+	{
+		return view('core.admin.general');
 	}
 		 
 	/**
 	 * Create a new admin page controller instance.
 	 *
-	 * @return void
+	 * @return mixed
 	 */
 	public function __construct()
 	{

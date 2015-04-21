@@ -452,16 +452,15 @@ class AdminUsersController extends AdminController {
 			->edit_column('email', function($row) {
 				return $row->email;
 			})
-			->edit_column('roles', function($row) {
+			->edit_column('role', function($row) {
 				$str = ($row->roles->count() > 0 ? '' : 'None');
-				foreach($row->roles as $i => $role)
+
+				if ($row->roles()->count() > 0)
 				{
-					$str .= $role->display_name;
-					if ($i != sizeof($row->roles) - 1)
-					{
-						$str .= ', ';
-					}
+					$role = $row->roles()->first();
+					$str .=	$role->name;
 				}
+
 				return $str;			
 			})
 			->edit_column('confirmed', function($row) {
@@ -471,7 +470,7 @@ class AdminUsersController extends AdminController {
 				return $row->created_at->diffForHumans();
 			})
 			->edit_column('actions', '<a href="{{{ URL::to(\'admin/users/\' . $id . \'/edit\' ) }}}" class="btn btn-xs btn-default">Edit</a>
-                                 @if($name == \'admin\')
+                                 @if($id == 1)
                                  @else
                                      <a href="{{{ URL::to(\'admin/users/\' . $id . \'/delete\' ) }}}" class="btn btn-xs btn-danger">Delete</a>
                                  @endif

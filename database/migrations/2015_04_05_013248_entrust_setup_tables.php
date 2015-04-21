@@ -18,6 +18,8 @@ class EntrustSetupTables extends Migration
             $table->string('display_name')->nullable();
             $table->string('description')->nullable();
             $table->boolean('is_superuser')->default(false);
+            $table->boolean('is_default')->default(false);
+
             $table->timestamps();
         });
 

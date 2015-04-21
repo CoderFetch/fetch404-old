@@ -50,6 +50,14 @@
 							</div>
 						</div>
 
+						@if ($recaptcha_enabled)
+						<div class="form-group">
+							<label class="col-md-4 control-label">Are you human?</label>
+							<div class="col-md-6 col-md-offset-4">
+								<div class="g-recaptcha" data-sitekey="{{{ $recaptcha_key }}}"></div>
+							</div>
+						</div>
+						@endif
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
 								<button type="submit" class="btn btn-primary">

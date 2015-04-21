@@ -9,7 +9,7 @@ class Channel extends Model {
 
 	//
 	protected $table = 'channels';
-	protected $fillable = ['title', 'description', 'weight', 'category_id', 'slug'];
+	protected $fillable = ['name', 'description', 'weight', 'category_id', 'slug'];
 	
 	public function category()
 	{

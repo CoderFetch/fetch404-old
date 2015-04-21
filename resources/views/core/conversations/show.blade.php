@@ -50,7 +50,7 @@
 		  <div class="row">
 			<div class="col-md-3">
 				<center>
-					<img class="img-rounded" src="https://cravatar.eu/avatar/{{{ str_slug($message->user->name, '') }}}/100.png" />		
+					<img class="img-rounded" src="https://cravatar.eu/avatar/{{{ str_slug($message->user->name, '') }}}/100.png" />
 					<br /><br />
 
 					<strong><a href="{{{ $message->user->profileURL }}}">{{{ $message->user->name }}}</a></strong>

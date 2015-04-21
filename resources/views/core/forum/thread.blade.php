@@ -23,7 +23,7 @@
 	<li><a href="/">Home</a></li>
 	<li><a href="/forum">Forum</a></li>
 	<li><a href="{{{ $thread->channel->category->Route }}}">{{{ $thread->channel->category->name }}}</a></li>
-	<li><a href="{{{ $thread->channel->Route }}}">{{{ $thread->channel->title }}}</a></li>
+	<li><a href="{{{ $thread->channel->Route }}}">{{{ $thread->channel->name }}}</a></li>
 	<li class="active"><a href="{{{ $thread->Route }}}">{{{ $thread->title }}}</a></li>
 </ol>
 <div class="page-header">
@@ -61,15 +61,19 @@
 			</div>
 
 			<div class="col-md-9">
-			  By <a href="{{{ $post->user->profileURL }}}">{{{ $post->user->name }}}</a> 
-			  &raquo; 
+			  By <a href="{{{ $post->user->profileURL }}}">{{{ $post->user->name }}}</a>
+			  &raquo;
 			  <span data-type="tooltip" data-trigger="hover" data-original-title="{{{ date('l \a\t g:h A', strtotime($thread->created_at)) }}}">{{{ $post->created_at->diffForHumans() }}}</span>
 			  <hr>
 			  {!! Mentions::parse(Purifier::clean($post->content)) !!}
+
 			  <br />
 			  <hr>
 			</div>
 		  </div>
+		</div>
+		<div class="panel-footer" style="border-top: 1px solid #eee;font-size: 11px;padding: 14px 14px;margin: 1px 0 0;">
+			<i class="fa fa-thumbs-o-up" style="font-size: 15px;"></i>
 		</div>
 	</div>
 @endforeach

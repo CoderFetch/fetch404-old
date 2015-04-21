@@ -13,31 +13,12 @@ class Purifier
 		$config->set('HTML.Doctype', 'XHTML 1.0 Transitional');
 		$config->set('URI.DisableExternalResources', false);
 		$config->set('URI.DisableResources', false);
-		$config->set('HTML.Allowed', 'u,p,b,i,small,blockquote,span[style],span[class],p,strong,em,li,ul,ol,div[align],br,img');
+		$config->set('HTML.Allowed', 'a,u,p,b,i,small,blockquote,span[style],span[class],p,strong,em,li,ul,ol,div[align],br,img');
 		$config->set('CSS.AllowedProperties', array('float', 'color','background-color', 'background', 'font-size', 'font-family', 'text-decoration', 'font-weight', 'font-style', 'font-size'));
-		$config->set('HTML.AllowedAttributes', 'src, height, width, alt, class, *.style');
+		$config->set('HTML.AllowedAttributes', 'a.href, src, height, width, alt, class, *.style');
 		$purifier = new HTMLPurifier($config);
-        
+
         return $purifier->purify($html);
     }
 
-    public static function cleanWithExtraDots($html)
-    {
-		$config = HTMLPurifier_Config::createDefault();
-		$config->set('HTML.Doctype', 'XHTML 1.0 Transitional');
-		$config->set('URI.DisableExternalResources', false);
-		$config->set('URI.DisableResources', false);
-		$config->set('HTML.Allowed', 'u,p,b,i,small,blockquote,span[style],span[class],p,strong,em,li,ul,ol,div[align],br,img');
-		$config->set('CSS.AllowedProperties', array('float', 'color','background-color', 'background', 'font-size', 'font-family', 'text-decoration', 'font-weight', 'font-style', 'font-size'));
-		$config->set('HTML.AllowedAttributes', 'src, height, width, alt, class, *.style');
-		$purifier = new HTMLPurifier($config);
-        
-        $dots = '';
-        if (strlen(strip_tags($html)) > env('MAX_STR_SIZE', 50))
-        {
-        	$dots = '...';
-        }
-        
-        return Purifier::clean($html);
-    }
 }

@@ -48,7 +48,7 @@ class Handler extends ExceptionHandler {
 		}
 		elseif ($e instanceof \PDOException)
 		{
-			return response()->make(view('core.installer.errors.configuredb'), 500);
+			return response()->make(view('core.installer.errors.pdoexception', array('error' => $e)), 500);
 		}
 		else
 		{

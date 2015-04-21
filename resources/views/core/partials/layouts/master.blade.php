@@ -15,7 +15,7 @@
 		@if (Request::is('admin*'))
 		<link href="/assets/css/admin/main.css" rel="stylesheet" type="text/css" media="all" />
 		@endif
-		<link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-rc.2/css/select2.min.css" rel="stylesheet" />
+		<link href="/assets/css/select2.min.css" rel="stylesheet" />
 		<link href="/assets/css/main.css" rel="stylesheet" type="text/css" />
 		
 		<script src="/assets/js/jquery-1.11.2.min.js"></script>
@@ -28,6 +28,10 @@
 		@endif
 		<script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-rc.2/js/select2.min.js"></script>
 		<script src="/assets/js/main.js"></script>
+
+		@if ($recaptcha_enabled)
+		<script src='https://www.google.com/recaptcha/api.js'></script>
+		@endif
 	</head>
 	
 	<body style="position: relative; padding-top: 60px; font-family: 'Source Sans Pro'; font-weight: 300;"@yield('extra_attributes')>
@@ -48,7 +52,7 @@
 				</div>
 				<!-- Collect the nav links, forms, and other content for toggling -->
 				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-					<ul class="nav navbar-nav navbar-top-links">
+					<ul class="nav navbar-nav">
 						<li{{{ Request::is('/') ? ' class=active' : '' }}}>
 							<a href="/"><i class="fa fa-home fa-fw"></i> Home</a>
 						</li>
@@ -68,12 +72,11 @@
 						</li>
 					</ul>
 					{!! Form::open(['route' => 'search.send', 'class' => 'navbar-form navbar-right']) !!}
-						<div class="inner-addon right-addon form-group">
-							<i class="fa fa-search fa-1x"></i>
+						<div class="form-group">
 							<input type="text" class="form-control" placeholder="Search" name="query" value="{{{ isset($searchQuery) ? $searchQuery : '' }}}"/>
 						</div>
 					{!! Form::close() !!}
-					<ul class="nav navbar-nav navbar-top-links navbar-right">
+					<ul class="nav navbar-nav navbar-right">
 						@if (!Auth::check())
 						<li>
 							<a href="{{{ route('auth.get.login') }}}"><i class="fa fa-sign-in fa-fw"></i> Log in</a>
@@ -92,14 +95,17 @@
 								<li><a href="{{{ route('conversations') }}}"><i class="fa fa-envelope fa-fw"></i> Conversations <span class="badge" style="background-color: gray; color: white;">{{{ Auth::user()->newMessagesCount() }}}</span></a></li>
 								<li><a href="{{{ route('tickets') }}}"><i class="fa fa-list-alt fa-fw"></i>Tickets <span class="badge" style="background-color: gray; color: white;">{{{ Auth::user()->unreadTicketsCount() }}}</span> </a></li>
 								<li><a href="{{{ route('account.get.show.settings') }}}"><i class="fa fa-cog fa-fw"></i> Settings</a></li>
-								@if (Entrust::can('admin-panel'))
-									<li>
-										<a href="{{{ route('admin.get.index') }}}"><i class="fa fa-laptop fa-fw"></i> Admin Panel</a>
-									</li>
-								@endif
 								<li><a href="{{{ route('auth.get.logout') }}}"><i class="fa fa-sign-out fa-fw"></i> Log out</a></li>
 							</ul>
 						</li>
+						@if (Auth::user()->can('accessAdminPanel'))
+						<li>
+							<a href="{{{ route('admin.get.index') }}}">
+								<i class="fa fa-cog"></i>
+								Admin
+							</a>
+						</li>
+						@endif
 						@endif
 					</ul>
 				</div>
@@ -107,7 +113,7 @@
 			</div>
 			<!-- /.container -->
 		</nav>
-		<div class="@yield('container_class', 'container')">
+		<div class="container">
 			@if (Auth::check() && !Auth::user()->isConfirmed())
 			<br>
 			<div class="alert alert-info">
@@ -120,22 +126,12 @@
 			<br>
 			<div class="alert alert-{{ Session::get('flash_notification.level') == 'error' ? 'danger' : Session::get('flash_notification.level') }}">
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-
 				{!! Session::get('flash_notification.message') !!}
 			</div>
 			@endif
-		@yield('content')
+			<br />
+			@yield('content')
 			<hr>
-			<div style="position: absolute; bottom: 0 !important;">
-				<footer>
-					<div class="pull-left">
-					<span class="text-muted">
-						{{{ User::count() }}} users
-					</span>
-					</div>
-				</footer>
-				@yield('footer')
-			</div>
 		</div>
 	</body>
 </html>

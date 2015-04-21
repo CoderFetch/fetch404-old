@@ -3,40 +3,51 @@
 @section('title', 'Admin Panel')
 
 @section('content')
-	<div class="page-header">
-		<h3>
-			{{{ $title }}}
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="page-header">
+				<h3>
+					{{{ $title }}}
 
-			<div class="pull-right">
-				<a href="{{{ URL::to('admin/users/create') }}}" class="btn btn-small btn-info iframe"><span class="glyphicon glyphicon-plus-sign"></span> Create</a>
+					<div class="pull-right">
+						<a href="{{{ URL::to('admin/users/create') }}}" class="btn btn-small btn-info"><span class="glyphicon glyphicon-plus-sign"></span> Create</a>
+					</div>
+				</h3>
 			</div>
-		</h3>
-	</div>
-	@if ($categories->count() < 1)
-	<p>No categories have been defined.</p>
-	@else
-	@foreach($categories as $category)
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h3 class="panel-title">{{{ $category->name }}}</h3>
 		</div>
-		<div class="panel-body">
-			@if (!$category->channels->isEmpty())
-			<ul class="list-group">
-			@foreach($category->channels as $i => $channel)
-			<span>
-				<div class="pull-right">
-					<button class="btn btn-info btn-sm">Edit</button>
-					<button class="btn btn-danger btn-sm">Delete</button>
+	</div>
+	<div class="row">
+		@include('core.admin.partials.sidebar')
+		<div class="col-md-9">
+			@if ($categories->count() < 1)
+			<p>No categories have been defined.</p>
+			@else
+			@foreach($categories as $category)
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">{{{ $category->name }}}</h3>
 				</div>
-				<h4 style="margin-top: 5px;">{{{ $channel->title }}}</h4>
-			</span>
-			<hr>
-			@endforeach
-			</ul>
-			@endif
+				<div class="panel-body">
+					@if (!$category->channels->isEmpty())
+					<ul class="list-group">
+					@foreach($category->channels as $i => $channel)
+					<span>
+						<div class="pull-right">
+							<button class="btn btn-info btn-sm">Edit</button>
+							<button class="btn btn-danger btn-sm">Delete</button>
+						</div>
+						<h4 style="margin-top: 5px;">{{{ $channel->name }}}</h4>
+					</span>
+					@if ($i != $category->channels->count() - 1)
+					<hr>
+					@endif
+					@endforeach
+					</ul>
+					@endif
+				</div>
+			</div>
+		@endforeach
 		</div>
 	</div>
-	@endforeach
 	@endif
 @stop

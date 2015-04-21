@@ -125,21 +125,21 @@ class InstallController extends Controller
 
             // Step 3: Create categories and channels
             $exampleCategory1 = $this->category->create(array(
-               'title' =>  'Example Category #1',
+               'name' =>  'Example Category #1',
                'description' => 'An example category.',
                'weight' => 1,
                'slug' => 'example-category-1'
             ));
 
             $exampleCategory2 = $this->category->create(array(
-                'title' =>  'Example Category #2',
+                'name' =>  'Example Category #2',
                 'description' => 'Another example category.',
                 'weight' => 2,
                 'slug' => 'example-category-2'
             ));
 
             $exampleChannel1 = $this->channel->create(array(
-               'title' => 'Example Channel #1',
+               'name' => 'Example Channel #1',
                'description' => 'An example channel.',
                'weight' => 1,
                'category_id' => 1,
@@ -147,7 +147,7 @@ class InstallController extends Controller
             ));
 
             $exampleChannel2 = $this->channel->create(array(
-                'title' => 'Example Channel #2',
+                'name' => 'Example Channel #2',
                 'description' => 'Another example channel.',
                 'weight' => 2,
                 'category_id' => 1,
@@ -155,7 +155,7 @@ class InstallController extends Controller
             ));
 
             $exampleChannel3 = $this->channel->create(array(
-                'title' => 'Example Channel #3',
+                'name' => 'Example Channel #3',
                 'description' => 'Yet another example channel.',
                 'weight' => 1,
                 'category_id' => 2,
@@ -174,19 +174,19 @@ class InstallController extends Controller
                 ),
                 2 => array(
                     'name' => 'youtube_url',
-                    'value' => 'null'
+                    'value' => null
                 ),
                 3 => array(
                     'name' => 'twitter_url',
-                    'value' => 'null'
+                    'value' => null
                 ),
                 4 => array(
                     'name' => 'gplus_url',
-                    'value' => 'null'
+                    'value' => null
                 ),
                 5 => array(
                     'name' => 'fb_url',
-                    'value' => 'null'
+                    'value' => null
                 ),
                 6 => array(
                     'name' => 'recaptcha',
@@ -194,11 +194,11 @@ class InstallController extends Controller
                 ),
                 7 => array(
                     'name' => 'recaptcha_key',
-                    'value' => 'null'
+                    'value' => null
                 ),
                 8 => array(
                     'name' => 'twitter_feed_id',
-                    'value' => 'null'
+                    'value' => null
                 ),
                 9 => array(
                     'name' => 'bootswatch_theme',
@@ -211,15 +211,16 @@ class InstallController extends Controller
                 11 => array(
                     'name' => 'infractions',
                     'value' => ($request->has('enable_infractions') ? 'true' : 'false')
+                ),
+                12 => array(
+                    'name' => 'outgoing_email',
+                    'value' => $request->input('outgoing_email')
                 )
             );
-            try {
-
-                foreach($data as $setting){
-//                    $queries->create("settings", array(
-//                        'name' => $setting["name"],
-//                        'value' => $setting["value"]
-//                    ));
+            try
+            {
+                foreach($data as $setting)
+                {
                     Setting::create(array(
                        'name' => $setting["name"],
                        'value' => $setting["value"]
@@ -248,14 +249,14 @@ class InstallController extends Controller
                 'subject' => 'Welcome to your new Fetch404 installation'
             ));
 
-            $messageBody = 'Hey there, <strong>' . $adminUser->name . '</strong>! Thanks for using Fetch404. Here are a few tips to get you started.\n';
+            $messageBody = 'Hey there, <strong>' . $adminUser->name . '</strong>! Thanks for using Fetch404. Here are a few tips to help you get started.';
             $messageBody .= '<h1>Managing your Forum</h1><hr>';
             $messageBody .= '<p>Managing a large forum can be hard. Luckily, Fetch404\'s admin panel allows you to easily customize almost every part of your forum, including categories, channels, and much more. Just go to the "Forum" section of your admin panel and start setting up your forum!</p><hr>';
             $messageBody .= '<h1>Customizing your Site</h1><hr>';
             $messageBody .= '<p>Bored of the same old bland look? Want some color? You can do that! Just go to the "Design" section of your admin panel and you can instantly change the site theme, and if you want to, invert the colors of the navigation bar. You can also edit the custom styles (custom.css).</p><hr>';
-            $messageBody .= '<h1>Changing the General Stuff</h1><hr>';
+            $messageBody .= '<h1>Configuring your Site</h1><hr>';
             $messageBody .= '<p>Want to prevent spambots? Want to change your site\'s name? Need to disable the login or register feature? You can do all of that from the "General" section of your admin panel.</p><br><small>* Note: You will need to have a <a href="https://www.google.com/recaptcha/intro/index.html">reCAPTCHA</a> key in order to enable the captcha.</small><hr>';
-            $messageBody .= '<h1>I need help!/h1><hr>';
+            $messageBody .= '<h1>I need help!</h1><hr>';
             $messageBody .= '<p>Don\'t worry! You can go to our <a href="http://fetch404.com">support forum</a> and receive help with various things.</p><hr><p>We hope you enjoy using Fetch404. Please note that there is a lot more than what is listed here. You may want to turn off registering for a bit until you are sure that your website is ready. Once again, enjoy!</p>';
 
             $message = $adminUser->messages()->create(array(

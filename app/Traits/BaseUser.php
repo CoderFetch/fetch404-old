@@ -18,6 +18,7 @@ trait BaseUser {
      * Relationship functions
      * DO NOT MODIFY
      */
+
     /*
      * Get all the topics created by a user.
      *
@@ -27,6 +28,7 @@ trait BaseUser {
     {
         return $this->hasMany('App\Topic');
     }
+
     /*
     * Get all the posts created by a user.
     *
@@ -36,6 +38,7 @@ trait BaseUser {
     {
         return $this->hasMany('App\Post');
     }
+
     /*
      * Get all of the user's tickets.
      *
@@ -54,6 +57,16 @@ trait BaseUser {
     public function news()
     {
         return $this->hasMany('App\News');
+    }
+
+    /*
+     * Get any name changes the user has had.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function nameChanges()
+    {
+        return $this->hasMany('App\NameChange');
     }
 
     /*
