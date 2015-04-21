@@ -50,7 +50,7 @@
 							</div>
 						</div>
 
-						@if ($recaptcha_enabled)
+						@if ($recaptcha_enabled == 'true')
 						<div class="form-group">
 							<label class="col-md-4 control-label">Are you human?</label>
 							<div class="col-md-6 col-md-offset-4">

@@ -75,7 +75,7 @@ class AppServiceProvider extends ServiceProvider {
 			$recaptcha_enabled = Setting::where('name', '=', 'recaptcha')->first();
 			$recaptcha_key = Setting::where('name', '=', 'recaptcha_key')->first();
 
-			$view->with('recaptcha_enabled', ($recaptcha_enabled != null ? $recaptcha_enabled->value : '0'));
+			$view->with('recaptcha_enabled', ($recaptcha_enabled != null ? ($recaptcha_enabled->value == 'true' ? 'true' : 'false') : 'false'));
 			$view->with('recaptcha_key', ($recaptcha_key != null ? e($recaptcha_key->value) : ''));
 		});
 	}
