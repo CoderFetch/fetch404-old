@@ -16,7 +16,9 @@
 		"laracasts/flash": "~1.3",
 		"zizaco/entrust": "dev-laravel-5",
 		"cmgmyr/messenger": "~2.0",
-		"bllim/datatables": "*"
+		"bllim/datatables": "*",
+	  	"tobscure/permissible": "dev-master",
+	  	"fzaninotto/faker": "1.4.0"
 	},
 	"autoload": {
 		"classmap": [

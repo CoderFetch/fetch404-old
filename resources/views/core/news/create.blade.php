@@ -43,7 +43,7 @@
     </div>
     {!! Form::close() !!}
 @stop
-@section('footer')
+@section('scripts')
     <script>
         $('#tag_list').select2({
             placeholder: 'What tags should be applied to this post?'

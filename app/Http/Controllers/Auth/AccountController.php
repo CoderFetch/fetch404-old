@@ -120,7 +120,7 @@ class AccountController extends Controller {
 			return redirect()->to('/');
 		}
 
-		if ($username != $user->name)
+		if ($username != $user->name && $username != '')
 		{
 			$user->update(array(
 				'name' => $username
@@ -139,7 +139,7 @@ class AccountController extends Controller {
 			}
 		}
 
-		if ($email != $user->email)
+		if ($email != $user->email && $email != '')
 		{
 			$user->update(array(
 				'email' => $email

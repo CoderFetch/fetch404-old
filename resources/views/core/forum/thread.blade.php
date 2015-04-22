@@ -3,11 +3,6 @@
 @section('title', $thread->title)
 
 @section('content')
-<!-- 
-	@foreach($thread->posts as $post)
-	@eval(print($post->user->name))
-	@endforeach
- -->
 @if (count($errors) > 0)
 <div class="alert alert-danger">
 	<strong>Whoops!</strong> There were some problems with your input.<br><br>
@@ -28,29 +23,27 @@
 </ol>
 <div class="page-header">
 	@if($thread->canReply)
-  	<div class='btn-toolbar pull-right'>
-    	<div class='btn-group'>
-			<a class="btn btn-info pull-right" href="{{{ $thread->showReplyRoute }}}">Full Reply</a>
-			&nbsp;
-			<a class="btn btn-success pull-right" href="#quickReply">Quick Reply</a>
-    	</div>
+  	<div class='pull-right'>
+		<a class="btn btn-info" href="{{{ $thread->showReplyRoute }}}">Full Reply</a>
+		&nbsp;
+		<a class="btn btn-success" href="#quickReply">Quick Reply</a>
   	</div>
 	@endif
 	<h1 style="font-size: 19pt;">
 		{{{ $thread->title }}}
 	</h1>
-	<small class="text-muted">Discussion in '{{{ $thread->channel->title }}}' started by {{{ $thread->user->name }}}, {{{ date('l \a\t g:h A', strtotime($thread->created_at)) }}}</small>
+	<small class="text-muted">Discussion in '{{{ $thread->channel->name }}}' started by {{{ $thread->user->name }}}, {{{ date('l \a\t g:h A', strtotime($thread->created_at)) }}}</small>
 </div>
 @foreach($thread->postsPaginated as $i => $post)
 	<div class="panel panel-default" id="post-{{{ $post->id }}}">
 		<div class="panel-heading">
 		  <a href="{{{ $thread->Route }}}">@if ($post->getArrayIndex() > 0)RE: @endif{{{ $thread->title }}}</a>
 		</div>
-		<div class="panel-body" id="post-1">
+		<div class="panel-body">
 		  <div class="row">
 			<div class="col-md-3">
 				<center>
-					<img class="img-rounded" src="{{{ Auth::user()->getAvatarURL(true) }}}" height="50" width="50" />
+					<img class="img-rounded" src="{{{ $post->user->getAvatarURL(true) }}}" height="80" width="80" />
 					<br /><br />
 
 					<strong><a href="{{{ $post->user->profileURL }}}">{{{ $post->user->name }}}</a></strong>
@@ -91,4 +84,7 @@
 <p>Please confirm your account to post on the forums.</p>
 @endif
 @endif
+@endsection
+
+@section('scripts')
 @endsection

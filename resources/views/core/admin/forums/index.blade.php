@@ -10,7 +10,7 @@
 					{{{ $title }}}
 
 					<div class="pull-right">
-						<a href="{{{ URL::to('admin/users/create') }}}" class="btn btn-small btn-info"><span class="glyphicon glyphicon-plus-sign"></span> Create</a>
+						<a href="{{{ route('admin.forum.get.create.category') }}}" class="btn btn-small btn-info"><span class="glyphicon glyphicon-plus-sign"></span> Create</a>
 					</div>
 				</h3>
 			</div>
@@ -43,6 +43,8 @@
 					@endif
 					@endforeach
 					</ul>
+					@else
+					<p>No channels have been defined for this category.</p>
 					@endif
 				</div>
 			</div>

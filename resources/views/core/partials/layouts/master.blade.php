@@ -32,6 +32,8 @@
 		@if ($recaptcha_enabled)
 		<script src='https://www.google.com/recaptcha/api.js'></script>
 		@endif
+
+		<script src="/assets/js/dropzone.js"></script>
 	</head>
 	
 	<body style="position: relative; padding-top: 60px; font-family: 'Source Sans Pro'; font-weight: 300;"@yield('extra_attributes')>
@@ -133,5 +135,7 @@
 			@yield('content')
 			<hr>
 		</div>
+
+		@yield('scripts')
 	</body>
 </html>

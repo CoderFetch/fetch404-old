@@ -41,7 +41,9 @@ $router->group(['middleware' => ['installed', 'csrf']], function() use ($router)
 
         # Forum Management
         $router->group(['prefix' => 'forum'], function () use ($router) {
-            $router->controller('/', 'Admin\AdminForumsController');
+            $router->get('/', ['as' => 'admin.forum.get.index', 'uses' => 'Admin\AdminForumsController@index']);
+            $router->get('/create', ['as' => 'admin.forum.get.create.category', 'uses' => 'Admin\AdminForumsController@showCreateCategory']);
+            $router->post('/create', ['as' => 'admin.forum.post.create.category', 'uses' => 'Admin\AdminForumsController@storeCategory']);
         });
 
         Entrust::routeNeedsPermission('admin*', 'accessAdminPanel');

@@ -30,7 +30,8 @@
                                 <i class="fa fa-comment fa-fw"></i>
                                 {!! link_to($result->Route, str_limit(strip_tags($result->content), 50)) !!}
                             @elseif ($key == 'topics')
-                                <i class="fa fa-comments-o fa-fw"></i> {!! str_highlight(str_limit($result->title, 50), $searchQuery) !!}
+                                <i class="fa fa-comments-o fa-fw"></i>
+                                {!! link_to($result->Route, str_limit(strip_tags($result->title), 50)) !!}
                             @endif
                         </li>
                     @endforeach

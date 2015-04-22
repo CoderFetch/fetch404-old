@@ -1,3 +1,25 @@
 .page-header {
-    border-bottom: 1px solid lightgray !important;
+    border-bottom: 1px solid #F1F1F1 !important;
+}
+
+.navbar {
+    border-radius: 0px !important;
+}
+
+.form-control {
+    border: 1px solid #cccccc !important;
+    border-radius: 0.25em !important;
+
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    -webkit-transition: none !important;
+    -o-transition: none !important;
+    transition: none !important;
+
+}
+.form-control:focus {
+    border-color: #cccccc !important;
+    outline: 0 !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
 }

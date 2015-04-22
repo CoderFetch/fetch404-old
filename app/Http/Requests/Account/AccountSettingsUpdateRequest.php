@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Hash;
 class AccountSettingsUpdateRequest extends FormRequest
 {
     protected $rules = [
-        'name' => 'required'
     ];
 
     public function rules()

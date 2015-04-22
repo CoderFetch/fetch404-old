@@ -26,6 +26,8 @@
 					<hr>
 					@endif
 					@endforeach
+					@else
+					<p>No channels have been defined for this category.</p>
 					@endif
 				</div>
 			</div>
