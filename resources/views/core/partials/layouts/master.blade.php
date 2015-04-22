@@ -6,6 +6,7 @@
 		</title>
 		<meta charset="UTF-8"></meta>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="csrf-token" content="{{ csrf_token() }}" />
 		
 		<link href="/assets/css/themes/{{{ $theme_id }}}.css" rel="stylesheet" type="text/css" media="all" />
 		<link href="/assets/css/summernote.css" rel="stylesheet" type="text/css" media="all" />
@@ -28,12 +29,22 @@
 		@endif
 		<script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-rc.2/js/select2.min.js"></script>
 		<script src="/assets/js/main.js"></script>
+		<script src="/assets/js/login.js"></script>
+		<script src="/assets/js/register.js"></script>
 
 		@if ($recaptcha_enabled)
 		<script src='https://www.google.com/recaptcha/api.js'></script>
 		@endif
 
 		<script src="/assets/js/dropzone.js"></script>
+
+		<script type="text/javascript">
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
+		</script>
 	</head>
 	
 	<body style="position: relative; padding-top: 60px; font-family: 'Source Sans Pro'; font-weight: 300;"@yield('extra_attributes')>
@@ -81,10 +92,10 @@
 					<ul class="nav navbar-nav navbar-right">
 						@if (!Auth::check())
 						<li>
-							<a href="{{{ route('auth.get.login') }}}"><i class="fa fa-sign-in fa-fw"></i> Log in</a>
+							<a href="#" data-toggle="modal" data-target="#login"><i class="fa fa-sign-in fa-fw"></i> Log in</a>
 						</li>
 						<li>
-							<a href="{{{ route('auth.get.register') }}}"><i class="fa fa-user-plus fa-fw"></i> Sign up</a>
+							<a href="#" data-toggle="modal" data-target="#register"><i class="fa fa-user-plus fa-fw"></i> Sign up</a>
 						</li>
 						@else
 						<li class="dropdown">
@@ -137,5 +148,73 @@
 		</div>
 
 		@yield('scripts')
+
+		<div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="loginModal" aria-hidden="true">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true"><i class="fa fa-fw fa-times"></i></span>
+						</button>
+						<h3 class="modal-title">Log In</h3>
+					</div>
+					<div class="modal-body">
+						<div class="form-centered">
+							<div class="form-group">
+								<input class="form-control" placeholder="Username or Email" name="email" type="text" id="username">
+							</div>
+							<div class="form-group">
+								<input class="form-control" placeholder="Password" name="password" type="password" id="password">
+							</div>
+							<div class="form-group">
+								<button type="submit" class="btn btn-primary btn-block" id="loginBtn">Log In</button>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<p class="forgot-password-link" style="margin: 0 0 9px;">
+							<a href="#">Forgot password?</a>
+						</p>
+						<p class="sign-up-link" style="margin: 0 0 9px;">
+							Don't have an account?
+							<a href="#" class="switch-to-signup" onclick="switchToSignup(); return false;">Sign Up</a>
+						</p>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+
+		<div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="registerModal" aria-hidden="true">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h3 class="modal-title">Sign Up</h3>
+					</div>
+					<div class="modal-body">
+						<div class="form-centered">
+							<div class="form-group">
+								<input class="form-control" placeholder="Username" name="username" type="text">
+							</div>
+							<div class="form-group">
+								<input class="form-control" placeholder="Email" name="email" type="text">
+							</div>
+							<div class="form-group">
+								<input class="form-control" placeholder="Password" name="password" type="password">
+							</div>
+							<div class="form-group">
+								<button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<p class="log-in-link">
+							Already have an account?
+							<a href="#" class="switch-to-login">Log In</a>
+						</p>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
 	</body>
 </html>

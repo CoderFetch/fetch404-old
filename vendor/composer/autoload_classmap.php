@@ -17,6 +17,8 @@ return array(
     'CreateAccountConfirmationsTable' => $baseDir . '/database/migrations/2015_04_03_161145_create_account_confirmations_table.php',
     'CreateCategoriesTable' => $baseDir . '/database/migrations/2015_04_06_140311_create_categories_table.php',
     'CreateChannelsTable' => $baseDir . '/database/migrations/2015_04_06_153306_create_channels_table.php',
+    'CreateForumGroupsTable' => $baseDir . '/database/migrations/2015_04_22_171229_create_forum_groups_table.php',
+    'CreateForumPermissionsTable' => $baseDir . '/database/migrations/2015_04_22_171236_create_forum_permissions_table.php',
     'CreateMessagesTable' => $baseDir . '/database/migrations/2014_10_28_175710_create_messages_table.php',
     'CreateNameChangesTable' => $baseDir . '/database/migrations/2015_04_21_204313_create_name_changes_table.php',
     'CreateNewsTable' => $baseDir . '/database/migrations/2015_04_14_232118_create_news_table.php',
