@@ -227,6 +227,17 @@ class ForumController extends Controller {
 					'user_id' => Auth::id(),
 					'content' => $body
 				]);
+
+				if ($post->topic->user->id != Auth::id())
+				{
+					$post->topic->user->notifications()->create(array(
+						'subject_id' => $post->id,
+						'subject_type' => get_class($post),
+						'name' => 'thread_replied',
+						'user_id' => $post->topic->user->id,
+						'sender_id' => $post->user->id
+					));
+				}
 				
 				return redirect('/forum/topic/' . $thread->slug . '.' . $thread->id . ($thread->postsPaginated->hasPages() ? '?page=' . $thread->postsPaginated->lastPage() : ''));
 			}

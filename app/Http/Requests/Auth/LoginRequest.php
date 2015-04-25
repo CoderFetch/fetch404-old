@@ -70,6 +70,15 @@ class LoginRequest extends FormRequest {
 		return $rules;
 	}
 
+	public function messages()
+	{
+		return [
+			'name_or_email.required' => 'Please enter a username or email address.',
+			'name_or_email.email' => 'Please enter a valid email.',
+			'password.required' => 'Please enter a password.'
+		];
+	}
+
 	public function forbiddenResponse()
 	{
 		// Optionally, send a custom response on authorize failure

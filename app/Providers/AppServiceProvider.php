@@ -8,6 +8,8 @@ use Carbon\Carbon;
 
 use App\Setting;
 
+use Illuminate\Support\Facades\Auth;
+
 class AppServiceProvider extends ServiceProvider {
 
 	/**
@@ -30,6 +32,43 @@ class AppServiceProvider extends ServiceProvider {
 			$view->with('site_title', ($site_title != null ? e($site_title->value) : 'Fetch404'));
 			$view->with('theme_id', ($site_theme != null ? e($site_theme->value) : '1'));
 			$view->with('navbar_style', ($navbar_style != null ? e($navbar_style->value) : '0'));
+
+			if (Auth::check())
+			{
+				$user = Auth::user();
+				$view->with('user', $user);
+
+				$notifications = $user->notifications;
+
+				$notifications = $notifications->sortByDesc(function($item)
+				{
+					return $item->created_at;
+				});
+
+				$notifications = $notifications->filter(function($item)
+				{
+					return (
+						time() - strtotime($item->created_at) < (60 * 60 * (24 / 2))
+					);
+				});
+
+				$view->with('notifications', $notifications->take(5));
+
+				$messages = $user->threads;
+
+				$messages = $messages->sortByDesc(function($item) {
+					return $item->created_at;
+				});
+
+				$messages = $messages->filter(function($item)
+				{
+					return (
+						time() - strtotime($item->created_at) < (60 * 60 * (24 / 2))
+					);
+				});
+
+				$view->with('messages', $messages);
+			}
 		});
 
 		view()->composer('core.admin.layouts.default', function($view) {

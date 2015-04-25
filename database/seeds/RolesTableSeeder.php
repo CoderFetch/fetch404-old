@@ -25,6 +25,11 @@ class RolesTableSeeder extends Seeder {
 				$role->is_superuser = 1;
 			}
 
+			if ($group == 'Member')
+			{
+				$role->is_default = 1;
+			}
+
 			$role->save();
 		}
     }

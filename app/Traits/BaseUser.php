@@ -70,6 +70,29 @@ trait BaseUser {
     }
 
     /*
+     * Get all of the user's recent notifications.
+     *
+     * @return mixed
+     */
+    public function notifications()
+    {
+        return $this->hasMany('App\Notification')
+            ->with(['user', 'subject'])
+            ->take(5)
+            ->latest();
+    }
+
+    /*
+     * Get all of the user's unread notifications.
+     *
+     * @return mixed
+     */
+    public function unreadNotifications()
+    {
+        return $this->notifications()->unread($this->id);
+    }
+
+    /*
      * Get the user's account confirmation object.
      *
      * @return App\AccountConfirmation
@@ -267,4 +290,28 @@ trait BaseUser {
         return $i;
     }
 
+    public function genNotificationHTML()
+    {
+        if ($this->unreadNotifications()->count() < 1)
+        {
+            return '<ul class="list notificationsList"><li><p>You have no new notifications.</p></li><li id="viewAllNotifications"><a href="#">View all notifications »</a></li></ul>';
+        }
+        else
+        {
+            $html = '<ul class="list notificationsList">';
+            foreach($this->notifications()->latest('created_at')->take(5) as $notification)
+            {
+                $html .= '<li class="notification">
+                                <a href="#">
+                                    <span class="avatar">' . strtoupper(substr(strip_tags($notification->sender->name), 0, 1)) . '</span>
+                                    test
+                                    <small class="time pull-right">' . $notification->created_at->diffForHumans() . '</small>
+                                </a>
+                            </li>';
+            }
+
+            $html .= '<li id="viewAllNotifications"><a href="#">View all notifications »</a></li></ul>';
+            return $html;
+        }
+    }
 }

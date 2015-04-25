@@ -45,6 +45,11 @@
 				}
 			});
 		</script>
+
+		@if (Auth::check())
+		<script src="/assets/js/notifications.js"></script>
+		<script src="/assets/js/messages.js"></script>
+		@endif
 	</head>
 	
 	<body style="position: relative; padding-top: 60px; font-family: 'Source Sans Pro'; font-weight: 300;"@yield('extra_attributes')>
@@ -100,18 +105,84 @@
 						@else
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								{{{ Auth::user()->name }}}
+								{{{ $user->name }}}
 								<b class="caret"></b>
 							</a>
 							<ul class="dropdown-menu">
-								<li><a href="{{{ route('profile.get.show', ['slug' => Auth::user()->slug, 'id' => Auth::id()]) }}}"><i class="fa fa-user fa-fw"></i> Profile</a></li>
-								<li><a href="{{{ route('conversations') }}}"><i class="fa fa-envelope fa-fw"></i> Conversations <span class="badge" style="background-color: gray; color: white;">{{{ Auth::user()->newMessagesCount() }}}</span></a></li>
-								<li><a href="{{{ route('tickets') }}}"><i class="fa fa-list-alt fa-fw"></i>Tickets <span class="badge" style="background-color: gray; color: white;">{{{ Auth::user()->unreadTicketsCount() }}}</span> </a></li>
+								<li><a href="{{{ route('profile.get.show', ['slug' => $user->slug, 'id' => $user->id]) }}}"><i class="fa fa-user fa-fw"></i> Profile</a></li>
+								<li><a href="{{{ route('conversations') }}}"><i class="fa fa-envelope fa-fw"></i> Conversations <span class="badge" style="background-color: gray; color: white;">{{{ $user->newMessagesCount() }}}</span></a></li>
+								<li><a href="{{{ route('tickets') }}}"><i class="fa fa-list-alt fa-fw"></i>Tickets <span class="badge" style="background-color: gray; color: white;">{{{ $user->unreadTicketsCount() }}}</span> </a></li>
 								<li><a href="{{{ route('account.get.show.settings') }}}"><i class="fa fa-cog fa-fw"></i> Settings</a></li>
 								<li><a href="{{{ route('auth.get.logout') }}}"><i class="fa fa-sign-out fa-fw"></i> Log out</a></li>
 							</ul>
 						</li>
-						@if (Auth::user()->can('accessAdminPanel'))
+						<li>
+							<a href="#" id="messages">
+								<i class="fa fa-envelope fa-fw"></i>
+								<span class="badge" id="messagesCount">
+									{{{ $notifications->count() }}}
+								</span>
+							</a>
+							<div id="messagesPopup" class="popup right" style="display: none; position: absolute; top: 49px; right: 0px;">
+								<h3>Messages</h3>
+								<div class="">
+									<ul class="list messagesList">
+										@if ($messages->isEmpty())
+										<li>
+											<p>
+												You have no new messages.
+											</p>
+										</li>
+										@else
+										@foreach($messages as $pm)
+										<li class="message">
+											<a href="{{{ route('conversations.show', $pm) }}}">
+												<span class="avatar">{{{ strtoupper(substr(strip_tags($pm->latestMessage->user->name), 0, 1)) }}}</span>
+												{{{ $pm->latestMessage->user->name }}}
+												<small class="time pull-right">{{{ $pm->latestMessage->created_at->diffForHumans() }}}</small>
+												<br />
+												<p style="font-size: 13px;">
+													{{{ str_limit(strip_tags($pm->latestMessage->body), 50) }}}
+												</p>
+											</a>
+										</li>
+										@endforeach
+										@endif
+										<li id="viewAllMessages"><a href="#">View all messages »</a></li>
+									</ul>
+								</div>
+							</div>
+						</li>
+						<li>
+							<a href="#" id="notifications">
+								<i class="fa fa-bell fa-fw"></i>
+								<span class="badge" id="notificationsCount">
+									{{{ $notifications->count() }}}
+								</span>
+							</a>
+							<div id="notificationsPopup" class="popup right" style="display: none; position: absolute; top: 49px; right: 0px;">
+								<h3>Notifications</h3>
+								<div class="">
+									<ul class="list notificationsList">
+										@if ($notifications->isEmpty())
+										<li>
+											<p>
+												You have no new notifications.
+											</p>
+										</li>
+										@else
+										@foreach($notifications as $notification)
+										@if (view()->exists('core.notifications.types.' . $notification->name))
+										@include('core.notifications.types.' . $notification->name)
+										@endif
+										@endforeach
+										@endif
+										<li id="viewAllNotifications"><a href="#">View all notifications »</a></li>
+									</ul>
+								</div>
+							</div>
+						</li>
+						@if ($user->can('accessAdminPanel'))
 						<li>
 							<a href="{{{ route('admin.get.index') }}}">
 								<i class="fa fa-cog"></i>
@@ -127,12 +198,12 @@
 			<!-- /.container -->
 		</nav>
 		<div class="container">
-			@if (Auth::check() && !Auth::user()->isConfirmed())
+			@if (Auth::check() && !$user->isConfirmed())
 			<br>
 			<div class="alert alert-info">
 				<i class="fa fa-exclamation fa-fw"></i>
-				 Your account has not been confirmed! An email should have been sent to <b>{{{ Auth::user()->email }}}</b>.
-				 If you did not get an email, <a href="{{{ URL::to('/account/confirm/' . Auth::user()->getAccountConfirmation()->code) }}}" style="color: #ccc; font-weight: bold;">click here</a> to confirm your account.
+				 Your account has not been confirmed! An email should have been sent to <b>{{{ $user->email }}}</b>.
+				 If you did not get an email, <a href="{{{ URL::to('/account/confirm/' . $user->getAccountConfirmation()->code) }}}" style="color: #ccc; font-weight: bold;">click here</a> to confirm your account.
 			</div>
 			@endif
 			@if (Session::has('flash_notification.message'))

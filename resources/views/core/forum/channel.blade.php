@@ -13,7 +13,7 @@
 		<div class="col-lg-7">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					@if ($channel->canCreateThread)
+					@if ($channel->can(1, Auth::user()))
 					<a class="btn btn-success btn-xs pull-right" href="{{{ route('forum.get.channel.create.thread', ['slug' => $channel->slug]) }}}">Create thread</a>
 					@endif
 					<h3 class="panel-title">

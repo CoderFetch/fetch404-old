@@ -25,6 +25,7 @@
 			@foreach($categories as $category)
 			<div class="panel panel-default">
 				<div class="panel-heading">
+					<a class="btn btn-success btn-xs pull-right" href="{{{ route('admin.forum.get.edit.category', ['category' => $category->id]) }}}">Edit</a>
 					<h3 class="panel-title">{{{ $category->name }}}</h3>
 				</div>
 				<div class="panel-body">
@@ -33,7 +34,7 @@
 					@foreach($category->channels as $i => $channel)
 					<span>
 						<div class="pull-right">
-							<button class="btn btn-info btn-sm">Edit</button>
+							<a class="btn btn-info btn-sm">Edit</a>
 							<button class="btn btn-danger btn-sm">Delete</button>
 						</div>
 						<h4 style="margin-top: 5px;">{{{ $channel->name }}}</h4>

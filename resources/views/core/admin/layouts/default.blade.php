@@ -13,6 +13,7 @@
 		<!-- CSS -->
 		{!! HTML::style('assets/css/themes/' . $theme_id . '.css') !!}
 		{!! HTML::style('assets/css/admin/main.css') !!}
+		<link href="/assets/css/select2.min.css" rel="stylesheet" />
 		<link href="//cdn.datatables.net/plug-ins/1.10.6/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet" type="text/css" media="all" />
 		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" media="all">
 		<link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700|PT+Sans:400,700|Roboto:400,100,300,500,700" rel="stylesheet" type="text/css" media="all">
@@ -21,6 +22,8 @@
 		{!! HTML::script('assets/js/bootstrap.min.js') !!}
 		<script src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
 		{!! HTML::script('assets/js/datatables-bootstrap.js') !!}
+		<script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-rc.2/js/select2.min.js"></script>
+
 		<style>
 		body {
 			font-family: 'Source Sans Pro';
@@ -63,19 +66,18 @@
 						</li>
 					</ul>
 					<ul class="nav navbar-nav pull-right">
-						<li><a href="{{{ URL::to('/') }}}">View Site</a></li>
-						<li class="divider-vertical"></li>
 						<li class="dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#">
 								<span class="fa fa-user"></span> {{{ Auth::user()->name }}}
 								<span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu">
-								<li><a href="{{{ URL::to('account/settings') }}}"><span class="fa fa-wrench"></span> Settings</a></li>
-								<li class="divider"></li>
-								<li><a href="{{{ URL::to('auth/logout') }}}"><span class="fa fa-share"></span> Logout</a></li>
+								<li><a href="{{{ route('account.get.show.settings') }}}"><span class="fa fa-wrench"></span> Settings</a></li>
 							</ul>
 						</li>
+						<li class="divider-vertical"></li>
+						<li><a href="{{{ route('home.show') }}}">View Site</a></li>
+						<li><a href="{{{ route('auth.get.logout') }}}"><span class="fa fa-share"></span> Log out</a></li>
 					</ul>
 				</div>
 			</div>

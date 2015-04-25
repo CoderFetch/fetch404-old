@@ -4,20 +4,29 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class InstallRequest extends FormRequest
 {
+    protected $rules = [
+        'mysqlHost' => 'required',
+        'mysqlUser' => 'required',
+        'mysqlPass' => 'required',
+        'mysqlDB' => 'required',
+
+        'username' => 'required|min:5|max:13|regex:/[A-Za-z0-9\-_!\.\s]/',
+        'email' => 'required|email',
+        'password' => 'required|min:8|max:30|confirmed|regex:/[A-Za-z0-9\-_!\$\^\@\#]/',
+
+        'outgoing_email' => 'required|email'
+    ];
+
     public function rules()
     {
-        return [
-            'mysqlHost' => 'required',
-            'mysqlUser' => 'required',
-            'mysqlPass' => 'required',
-            'mysqlDB' => 'required',
+        $rules = $this->rules;
 
-            'username' => 'required|min:5|max:13|regex:/[A-Za-z0-9\-_!\.\s]/',
-            'email' => 'required|email',
-            'password' => 'required|min:8|max:30|confirmed|regex:/[A-Za-z0-9\-_!\$\^\@\#]/',
+        if ($this->has('base_url'))
+        {
+            $rules['base_url'] = 'url';
+        }
 
-            'outgoing_email' => 'required|email'
-        ];
+        return $rules;
     }
 
     public function messages()
@@ -41,7 +50,7 @@ class InstallRequest extends FormRequest
             'password.regex' => 'You are using characters that are not allowed. Allowed characters: A through Z, a through z, 0 through 9, !, -, _, $, ^, @, #',
 
             'outgoing_email.required' => 'An outgoing email address is required.',
-            'outgoing_email.email' => 'Please enter a valid email.',
+            'outgoing_email.email' => 'Please enter a valid email.'
         ];
     }
 

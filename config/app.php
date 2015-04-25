@@ -225,5 +225,5 @@ return [
 		'Topic' => 'App\Topic',
 		'User' => 'App\User'
 	],
-
+	'url_prefix' => ''
 ];

@@ -104,3 +104,137 @@
 .btn-primary {
     font-weight: 700;
 }
+
+#notificationsPopup {
+    width: 450px;
+    font-size: 100%;
+}
+
+#messagesPopup {
+    width: 450px;
+    font-size: 100%;
+}
+
+.popup {
+    text-shadow: none;
+    background: #fff;
+    color: #000;
+    border: 1px solid #666;
+    border-bottom-width: 2px;
+    border-radius: 2px;
+    z-index: 300;
+}
+
+.notificationsList li {
+    padding: 0 !important;
+    line-height: 1.95em !important;
+}
+
+#notificationsPopup ul {
+    padding: 0;
+}
+
+.messagesList li {
+    padding: 0 !important;
+    line-height: 1.95em !important;
+}
+
+#messagesPopup ul {
+    padding: 0;
+}
+
+.list {
+    margin: 0;
+    border-bottom: 1px solid #e1e1e1;
+    line-height: 1.5em;
+    padding: 0;
+    list-style-type: none;
+}
+
+.list > li {
+    border: solid #e1e1e1;
+    border-width: 1px 0;
+    padding: 12px 0;
+    margin: -1px 0;
+}
+
+.list > li:hover {
+    background-color: #f6f6f6;
+}
+
+.list .controls {
+    visibility: hidden;
+}
+
+.list > li:hover .controls {
+    visibility: visible;
+}
+
+.popup .list > li:last-child {
+    border-bottom: 0;
+}
+
+.popup h3 {
+    margin: 0;
+    padding: 10px;
+}
+
+.notificationsList li > p {
+    display: block;
+    padding: 7px 1px 1px 10px !important;
+    white-space: normal;
+}
+
+.notificationsList li > a {
+    display: block;
+    padding: 7px 10px 7px 60px !important;
+    white-space: normal;
+}
+
+.avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 3px;
+    background: #eee;
+    text-align: center;
+    font-size: 30px;
+    line-height: 64px;
+    color: #bbb;
+    display: inline-block;
+}
+
+.avatar {
+    border-radius: 32px;
+}
+
+.notificationsList li a .avatar {
+    float: left;
+    margin-left: -50px;
+    width: 30px;
+    height: 33px;
+    line-height: 37px;
+    font-size: 21px;
+    margin-top: -3px;
+}
+
+.messagesList li a .avatar {
+    float: left;
+    margin-left: -50px;
+    width: 30px;
+    height: 33px;
+    line-height: 37px;
+    font-size: 21px;
+    margin-top: -3px;
+}
+
+.messagesList li > p {
+    display: block;
+    padding: 7px 1px 1px 10px !important;
+    white-space: normal;
+}
+
+.messagesList li > a {
+    display: block;
+    padding: 7px 10px 7px 60px !important;
+    white-space: normal;
+}

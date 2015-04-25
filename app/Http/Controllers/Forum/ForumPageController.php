@@ -81,7 +81,11 @@ class ForumPageController extends Controller {
 		
 		if ($category)
 		{
-		
+			if (!$category->canView(Auth::user()))
+			{
+				abort(403);
+			}
+
 			return view('core.forum.category', [
 				'category' => $category
 			]);
@@ -152,6 +156,11 @@ class ForumPageController extends Controller {
 		
 		if ($channel)
 		{
+			if (!$channel->canView(Auth::user()))
+			{
+				abort(403);
+			}
+
 			return view('core.forum.channel', [
 				'channel' => $channel
 			]);

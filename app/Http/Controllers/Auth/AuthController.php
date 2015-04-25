@@ -4,12 +4,14 @@
 use App\Http\Controllers\Controller;
 
 // Models
+use App\Http\Requests\Auth\LoginJSONRequest;
 use App\User;
 use App\Role;
 use App\AccountConfirmation;
 
 use App\Http\Requests\Auth\LoginRequest;
 // Illuminate stuff
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 
 // The Laracasts libraries
@@ -37,6 +39,8 @@ class AuthController extends Controller {
 	| authentication of existing users. 
 	|
 	*/
+
+	protected $auth;
 	
 	/**
 	 * Show the login page
@@ -69,12 +73,39 @@ class AuthController extends Controller {
 		Flash::success('Logged in');
 		return redirect('/');
 	}
-	
+
+	public function postJSONLogin(LoginJSONRequest $request)
+	{
+		$username = $request->input('name_or_email');
+		$password = $request->input('password');
+
+		$db_field = (filter_var($username, FILTER_VALIDATE_EMAIL) ? 'email' : 'name');
+		$user = User::where(
+			$db_field,
+			'=',
+			$username
+		)->first();
+
+		if (!$user || $user == null)
+		{
+			return response()->json(array('message' => 'User not found'));
+		}
+
+		if (!Hash::check($password, $user->password))
+		{
+			return response()->json(array('message' => 'Invalid password'));
+		}
+
+		if ($this->auth->attempt(array($db_field => $username, 'password' => $password), $request->has('remember')))
+		{
+			return response()->json(array('status' => 'success'));
+		}
+	}
+
 	/**
 	 * Attempt to register a user in the database
-	 * 
-	 * @param Illuminate\Http\Request $request
-	 * @return void
+	 *
+	 * @param Request $request
 	 */
 	public function postRegister(Request $request)
 	{
@@ -159,9 +190,9 @@ class AuthController extends Controller {
 	
 	public function getLogout()
 	{
-		if (Auth::check()) 
+		if ($this->auth->check())
 		{
-			Auth::logout();
+			$this->auth->logout();
 			Session::flush();
 			
 			return redirect()
@@ -173,15 +204,16 @@ class AuthController extends Controller {
 				->to('/');
 		}
 	}
-	 
+
 
 	/**
 	 * Create a new authentication controller instance.
 	 *
-	 * @return mixed
+	 * @param Guard $auth
 	 */
-	public function __construct()
-	{	
+	public function __construct(Guard $auth)
+	{
+		$this->auth = $auth;
 		$this->middleware('guest', ['except' => 'getLogout']);
 	}
 

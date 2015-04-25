@@ -1,5 +1,5 @@
 <?php
-
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -11,7 +11,7 @@
 |
 */
 
-$router->group(['middleware' => ['installed', 'csrf']], function() use ($router)
+$router->group(['middleware' => ['installed', 'write_config'], 'prefix' => config('app.url_prefix', '')], function() use ($router)
 {
 	# Route Models
 	$router->model('role', 'App\Role');
@@ -44,6 +44,12 @@ $router->group(['middleware' => ['installed', 'csrf']], function() use ($router)
 		$router->post('/login', ['uses' => 'Auth\AuthController@postLogin', 'as' => 'auth.post.login']);
 		$router->post('/register', ['uses' => 'Auth\AuthController@postRegister', 'as' => 'auth.post.register']);
 		$router->get('/logout', ['uses' => 'Auth\AuthController@getLogout', 'as' => 'auth.get.logout']);
+	});
+
+	$router->group(['prefix' => 'json/auth'], function() use ($router)
+	{
+		$router->post('/login', ['uses' => 'Auth\AuthController@postJSONLogin', 'as' => 'auth.post.login']);
+		$router->post('/register', ['uses' => 'Auth\AuthController@postRegister', 'as' => 'auth.post.register']);
 	});
 
 	# JSON routes
@@ -80,7 +86,7 @@ $router->group(['middleware' => ['installed', 'csrf']], function() use ($router)
 	});
 
 	# Account management routes
-	$router->group(['middleware' => 'auth'], function() use ($router)
+	$router->group(['middleware' => ['auth', 'csrf']], function() use ($router)
 	{
 		$router->get('/account/settings', ['as' => 'account.get.show.settings', function()
 		{
@@ -88,6 +94,26 @@ $router->group(['middleware' => ['installed', 'csrf']], function() use ($router)
 		}]);
 
 		$router->post('/account/settings', ['uses' => 'Auth\AccountController@updateSettings', 'as' => 'account.post.update.settings']);
+
+		$router->get('/settings/notifications/view', function() {
+			return response()->json(array(
+				'notifications' => Auth::user()->notifications()->take(5),
+				'count' => Auth::user()->notifications()->count(),
+				'html' => Auth::user()->genNotificationHTML()
+			));
+		});
+
+		$router->post('/settings/notifications/markAsRead', function() {
+			$user = Auth::user();
+
+			$user->notifications()->where('is_read', '=', 0)->update(array(
+				'is_read' => 1
+			));
+
+			return response()->json(array(
+				'status' => 'success'
+			));
+		});
 	});
 
 	$router->get('/account/confirm/{token}', ['uses' => 'Auth\AccountController@activateAccount', 'as' => 'account.get.confirm']);
@@ -99,7 +125,7 @@ $router->group(['middleware' => ['installed', 'csrf']], function() use ($router)
 	$router->get('/play', ['uses' => 'MCPlayController@index', 'as' => 'play.get.show']);
 
 	# Private messaging
-	$router->group(['prefix' => 'conversations', 'middleware' => 'auth'], function () use ($router)
+	$router->group(['prefix' => 'conversations', 'middleware' => ['auth', 'csrf']], function () use ($router)
 	{
 		$router->get('/', ['as' => 'conversations', 'uses' => 'Messaging\MessagesController@index']);
 		$router->get('create', ['as' => 'conversations.create', 'uses' => 'Messaging\MessagesController@create']);
@@ -117,7 +143,7 @@ $router->group(['middleware' => ['installed', 'csrf']], function() use ($router)
 	});
 
 	# Ticket management
-	$router->group(['prefix' => 'tickets', 'middleware' => 'auth'], function() use ($router)
+	$router->group(['prefix' => 'tickets', 'middleware' => ['auth', 'csrf']], function() use ($router)
 	{
 		$router->get('/', ['as' => 'tickets', 'uses' => 'Tickets\TicketsController@index']);
 		$router->post('/', ['as' => 'tickets.store', 'uses' => 'Tickets\TicketsController@store']);

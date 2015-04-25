@@ -118,6 +118,10 @@ class InstallController extends Controller
                 'name', '=', 'Administrator'
             )->first();
 
+            $modRole = $this->role->where(
+                'name', '=', 'Moderator'
+            )->first();
+
             if ($role)
             {
                 $adminUser->attachRole($role);
@@ -162,6 +166,13 @@ class InstallController extends Controller
                 'slug' => 'example-channel-3'
             ));
 
+            $exampleCategory1->categoryPermissions()->sync(array(
+               20 => array(
+                   'role_id' => [1, 3],
+                   'category_id' => $exampleCategory1->id
+               ),
+
+            ));
             // Step 4: Create settings
             $data = array(
                 0 => array(

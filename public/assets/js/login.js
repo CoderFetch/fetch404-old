@@ -5,27 +5,21 @@ $(document).ready(function() {
         var name = $('#username').val();
         var password = $('#password').val();
 
-        var ajax = $.ajax({
-           type: 'POST',
-           url: '/auth/login',
-           dataType: 'json',
-           data: {
-               name_or_email: name,
-               password: password
-           }
-        });
+        $.ajax({
+            type: 'post',
+            url: '/json/auth/login',
+            data: {
+                name_or_email: name,
+                password: password
+            },
+            dataType: 'json'
+        }).success(function(data) {
 
-        ajax.success(function(data) {
-           if (data.status) {
-               if (data.status == 'success') {
-                   window.location.href = '/';
-               }
-           } else {
-                console.log(data);
-           }
+        }).fail(function(data) {
+            var errors = data.responseText;
+            console.log(errors);
         });
     });
-
 });
 
 function switchToSignup() {

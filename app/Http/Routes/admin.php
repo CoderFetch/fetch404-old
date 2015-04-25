@@ -13,6 +13,8 @@
 
 $router->group(['middleware' => ['installed', 'csrf']], function() use ($router) {
 
+    $router->model('category', 'App\Category');
+
     # Administration routes
     $router->group(['prefix' => 'admin'], function () use ($router) {
         $router->get('/', ['uses' => 'Admin\AdminPageController@showIndex', 'as' => 'admin.get.index']);
@@ -44,6 +46,9 @@ $router->group(['middleware' => ['installed', 'csrf']], function() use ($router)
             $router->get('/', ['as' => 'admin.forum.get.index', 'uses' => 'Admin\AdminForumsController@index']);
             $router->get('/create', ['as' => 'admin.forum.get.create.category', 'uses' => 'Admin\AdminForumsController@showCreateCategory']);
             $router->post('/create', ['as' => 'admin.forum.post.create.category', 'uses' => 'Admin\AdminForumsController@storeCategory']);
+
+            $router->get('/{category}/edit', ['as' => 'admin.forum.get.edit.category', 'uses' => 'Admin\AdminForumsController@showEditCategory']);
+            $router->post('/{category}/edit', ['as' => 'admin.forum.post.edit.category', 'uses' => 'Admin\AdminForumsController@editCategory']);
         });
 
         Entrust::routeNeedsPermission('admin*', 'accessAdminPanel');

@@ -9,16 +9,21 @@ use Response;
 
 use Zizaco\Entrust\EntrustFacade as Entrust;
 
-class CreateCategoryRequest extends FormRequest
+class EditCategoryRequest extends FormRequest
 {
     protected $rules = [
-        'name' => 'required|min:5|max:20|unique:categories',
+        'name' => 'required|min:5|max:20',
         'allowed_groups' => 'required'
     ];
 
     public function rules()
     {
         $rules = $this->rules;
+
+        if ($this->input('name') != $this->route()->getParameter('category')->name)
+        {
+            $rules['name'] = 'required|min:5|max:20|unique:categories';
+        }
 
         if ($this->has('weight'))
         {

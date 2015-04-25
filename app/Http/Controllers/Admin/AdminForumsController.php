@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Admin;
 
 // Custom controller
+use App\CategoryPermission;
 use App\Http\Controllers\AdminController;
 
 // Facades
@@ -8,7 +9,11 @@ use App\Category;
 use App\Channel;
 use App\Http\Requests\Admin\Forum\CreateCategoryRequest;
 
+use App\Http\Requests\Admin\Forum\EditCategoryRequest;
+use App\Http\Requests\Admin\Forum\EditChannelRequest;
 use Laracasts\Flash\Flash;
+
+use App\Role;
 
 class AdminForumsController extends AdminController 
 {
@@ -44,6 +49,47 @@ class AdminForumsController extends AdminController
     public function showCreateCategory()
     {
         return view('core.admin.forums.create');
+    }
+
+    public function showEditCategory($category)
+    {
+        $groups = Role::lists('name', 'id');
+
+        $permissions = CategoryPermission::where('category_id', '=', $category->id)->get();
+
+        return view('core.admin.forums.edit', array(
+            'category' => $category,
+            'groups' => $groups,
+            'permissions' => $permissions
+        ));
+    }
+
+    public function editCategory(EditCategoryRequest $request)
+    {
+        $category = $request->route()->getParameter('category');
+
+        foreach($request->input('allowed_groups') as $groupId)
+        {
+            $category->categoryPermissions()->sync([20 => ['role_id' => $groupId, 'category_id' => $category->id, 'created_at' => date('U'), 'updated_at' => date('U')]]);
+        }
+
+        Flash::success('Updated category!');
+
+        return redirect(route('admin.forum.get.index'));
+    }
+
+    public function editChannel(EditChannelRequest $request)
+    {
+        $channel = $request->route()->getParameter('channel');
+
+        foreach($request->input('allowed_groups') as $groupId)
+        {
+            $channel->channelPermissions()->sync([20 => ['role_id' => $groupId, 'channel_id' => $channel->id, 'created_at' => date('U'), 'updated_at' => date('U')]]);
+        }
+
+        Flash::success('Updated channel!');
+
+        return redirect(route('admin.forum.get.index'));
     }
 
     /*

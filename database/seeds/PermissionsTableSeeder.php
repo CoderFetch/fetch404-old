@@ -2,9 +2,6 @@
 
 use Illuminate\Database\Seeder;
 
-// composer require laracasts/testdummy
-use Laracasts\TestDummy\Factory as TestDummy;
-
 class PermissionsTableSeeder extends Seeder {
 
     public function run()
@@ -57,7 +54,7 @@ class PermissionsTableSeeder extends Seeder {
         $register->name = 'register';
         $register->save();
 
-        //
+        
         $accessAdminPanel = new Permission();
         $accessAdminPanel->name = 'accessAdminPanel';
         $accessAdminPanel->save();
@@ -74,6 +71,26 @@ class PermissionsTableSeeder extends Seeder {
         $editUser->name = 'editUser';
         $editUser->save();
 
+        $viewDiscussion = new Permission();
+        $viewDiscussion->name = 'viewDiscussion';
+        $viewDiscussion->save();
+
+        $lockDiscussion = new Permission();
+        $lockDiscussion->name = 'lockDiscussion';
+        $lockDiscussion->save();
+
+        $pinDiscussion = new Permission();
+        $pinDiscussion->name = 'pinDiscussion';
+        $pinDiscussion->save();
+
+        $viewCategory = new Permission();
+        $viewCategory->name = 'viewCategory';
+        $viewCategory->save();
+        
+        $viewChannel = new Permission();
+        $viewChannel->name = 'viewChannel';
+        $viewChannel->save();
+        
         $adminPerms = array(
             $startDiscussion,
             $editOwnDiscussion,
@@ -90,36 +107,51 @@ class PermissionsTableSeeder extends Seeder {
             $accessAdminPanel,
             $banUser,
             $deleteUser,
-            $editUser
+            $editUser,
+            $viewDiscussion,
+            $lockDiscussion,
+            $pinDiscussion,
+            $viewChannel,
+            $viewCategory
         );
         $moderatorPerms = array(
-              $startDiscussion,
-              $editOwnDiscussion,
-              $editAllDiscussions,
-              $deleteOwnDiscussion,
-              $reply,
-              $editOwnPost,
-              $editAllPosts,
-              $deleteOwnPost,
-              $login,
-              $register,
-              $banUser
+            $startDiscussion,
+            $editOwnDiscussion,
+            $editAllDiscussions,
+            $deleteOwnDiscussion,
+            $reply,
+            $editOwnPost,
+            $editAllPosts,
+            $deleteOwnPost,
+            $login,
+            $register,
+            $banUser,
+            $pinDiscussion,
+            $viewDiscussion,
+            $lockDiscussion,
+            $viewChannel,
+            $viewCategory
         );
         $memberPerms = array(
-          $startDiscussion,
-          $reply,
-          $editOwnPost,
-          $editOwnDiscussion,
-          $deleteOwnPost,
-          $deleteOwnDiscussion,
-          $login,
-          $register
+            $startDiscussion,
+            $reply,
+            $editOwnPost,
+            $editOwnDiscussion,
+            $deleteOwnPost,
+            $deleteOwnDiscussion,
+            $login,
+            $register,
+            $viewDiscussion,
+            $viewCategory,
+            $viewChannel
         );
         $guestPerms = array(
             $login,
-            $register
+            $register,
+            $viewDiscussion,
+            $viewChannel,
+            
         );
-//        $groups = ['Administrator', 'Guest', 'Member', 'Moderator', 'Staff'];
         $groups = ['Guest', 'Member', 'Moderator', 'Administrator'];
         foreach($groups as $group)
         {
