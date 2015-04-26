@@ -1,4 +1,4 @@
-<?php namespace App\Http\Requests;
+<?php namespace App\Http\Requests\Auth;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -13,7 +13,7 @@ class RegisterRequest extends FormRequest {
 	 */
 	public function authorize()
 	{
-		return false;
+		return true;
 	}
 
 	/**
@@ -23,19 +23,29 @@ class RegisterRequest extends FormRequest {
 	 */
 	public function rules()
 	{
-		$rules = [
-			'name_or_email' => 'required',
-			'password' => 'required'
+		return [
+			'name' => 'required|min:5|max:13|regex:/[A-Za-z0-9\-_!\.\s]/|unique:users',
+			'email' => 'required|unique:users|email',
+			'password' => 'required|min:8|max:30|confirmed|regex:/[A-Za-z0-9\-_!\$\^\@\#]/'
 		];
-
-		$name_or_email = $this->input('name_or_email');
-
-		if (filter_var($name_or_email, FILTER_VALIDATE_EMAIL))
-		{
-			$rules['name_or_email'] = 'required|email';
-		}
-
-		return $rules;
 	}
 
+	public function messages()
+	{
+		return [
+			'name.required' => 'A username is required.',
+			'name.min' => 'Usernames must be at least 5 characters long.',
+			'name.max' => 'Usernames can be up to 13 characters long.',
+			'name.regex' => 'You are using characters that are not allowed. Allowed characters: A through Z, a through z, 0 through 9, -, _, !, and . (period)',
+			'name.unique' => 'That username is taken. Try another!',
+			'email.required' => 'An email address is required.',
+			'email.unique' => 'Another account is using this email. Contact support if you don\'t know anything about this.',
+			'email.email' => 'Please enter a valid email. Without this, we are unable to provide email-based support.',
+			'password.required' => 'A password is required.',
+			'password.min' => 'Passwords must be at least 8 characters long.',
+			'password.max' => 'Passwords can be up to 30 characters long.',
+			'password.confirmed' => 'Your passwords do not match. Please verify that the confirmation matches the original.',
+			'password.regex' => 'You are using characters that are not allowed. Allowed characters: A through Z, a through z, 0 through 9, !, -, _, $, ^, @, #'
+		];
+	}
 }

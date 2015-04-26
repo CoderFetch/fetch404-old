@@ -18,7 +18,7 @@
 					Stats
 				</div>
 				<div class="panel-body">
-					<label>Joined:</label> {{{ $user->created_at->format('M j, Y') }}}
+					<label>Joined:</label> {{{ $user->getJoinedOn() }}}
 					<br>
 					<label>Messages: </label> {{{ $user->posts()->count() }}}
 					<br>
@@ -47,6 +47,11 @@
 				<div class="panel-heading">
 					<h2 class="panel-title">
 						{{{ $user->name }}}
+						@foreach($user->roles as $role)
+						<span class="label label-{{{ $role->is_superuser == 1 ? 'danger' : 'success' }}}">
+							{{{ $role->name }}}
+						</span>
+						@endforeach
 					</h2>
 				</div>
 				<div class="panel-body">

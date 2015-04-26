@@ -1,10 +1,12 @@
 <?php namespace App\Http\Controllers\Auth;
 
 // External libraries (well, sort of)
+use App\Events\UserWasRegistered;
 use App\Http\Controllers\Controller;
 
 // Models
 use App\Http\Requests\Auth\LoginJSONRequest;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\User;
 use App\Role;
 use App\AccountConfirmation;
@@ -41,7 +43,9 @@ class AuthController extends Controller {
 	*/
 
 	protected $auth;
-	
+
+	protected $user;
+
 	/**
 	 * Show the login page
 	 *
@@ -105,87 +109,87 @@ class AuthController extends Controller {
 	/**
 	 * Attempt to register a user in the database
 	 *
-	 * @param Request $request
+	 * @param RegisterRequest $request
 	 */
-	public function postRegister(Request $request)
+	public function postRegister(RegisterRequest $request)
 	{
 		$name = $request->input('name');
 		$email = $request->input('email');
-		
 		$password = $request->input('password');
-		$password_confirmation = $request->input('password_confirmation');
-		
-		$validator = Validator::make(
-			[
-				'name' => $name,
-				'email' => $email,
-				'password' => $password,
-				'password_confirmation' => $password_confirmation
-			],
-			[
-				'name' => 'required|min:5|max:13|regex:/[A-Za-z0-9\-_!\.\s]/|unique:users',
-				'email' => 'required|unique:users|email',
-				'password' => 'required|min:8|max:30|confirmed|regex:/[A-Za-z0-9\-_!\$\^\@\#]/',
-			],
-			[
-				'name.required' => 'A username is required.',
-				'name.min' => 'Usernames must be at least 5 characters long.',
-				'name.max' => 'Usernames can be up to 13 characters long.',
-				'name.regex' => 'You are using characters that are not allowed. Allowed characters: A through Z, a through z, 0 through 9, -, _, !, and . (period)',
-				'name.unique' => 'That username is taken. Try another!',
-				'email.required' => 'An email address is required.',
-				'email.unique' => 'Another account is using this email. Contact support if you don\'t know anything about this.',
-				'email.email' => 'Please enter a valid email. Without this, we are unable to provide email-based support.',
-				'password.required' => 'A password is required.',
-				'password.min' => 'Passwords must be at least 8 characters long.',
-				'password.max' => 'Passwords can be up to 30 characters long.',
-				'password.confirmed' => 'Your passwords do not match. Please verify that the confirmation matches the original.',
-				'password.regex' => 'You are using characters that are not allowed. Allowed characters: A through Z, a through z, 0 through 9, !, -, _, $, ^, @, #'
-			]
-		);
-		
-		if ($validator->passes())
+
+		$user = $this->user->create(array(
+			'name' => $name,
+			'email' => $email,
+			'password' => Hash::make($password),
+			'confirmed' => 0,
+			'slug' => str_slug($name, "-")
+		));
+
+		event(new UserWasRegistered($user));
+
+		if ($this->auth->attempt(array('email' => $email, 'password' => $password), 1))
 		{
-			$user = User::create([
-				'name' => $name,
-				'email' => $email,
-				'password' => Hash::make($password),
-				'confirmed' => 0,
-				'slug' => str_slug($name, "-")
-			]);
-			
-			$confirmation = AccountConfirmation::create([
-				'user_id' => $user->id,
-				'expires_at' => (time() + 3600),
-				'code' => str_random(30)
-			]);
-			
-			$defaultRole = Role::where('is_default', '=', 1)->first();
-			
-			if ($defaultRole)
-			{
-				$user->attachRole($defaultRole);
-			}
-
-			$outgoingEmail = Setting::where('name', '=', 'outgoing_email')->first();
-			$siteName = Setting::where('name', '=', 'sitename')->first();
-
-			Mail::send('core.emails.auth.confirm', ['user' => $user, 'confirmation' => $confirmation, 'siteName' => $siteName], function($message) use ($email, $outgoingEmail, $siteName)
-			{
-				$message->from($outgoingEmail->value)->to($email)->subject('Confirm your' . $siteName . ' account');
-			});
-			
-			Flash::success('You have registered on our website! Please check your inbox for a confirmation email.');
-			
-			return redirect()
-				->to('/');
+			Flash::success('You have registered on our site! Please check your inbox for a confirmation email.');
+			return redirect()->to('/');
 		}
 		else
 		{
-			return redirect()->to('/register')
-				->withErrors($validator->messages())
-				->withInput();
+			Flash::success('You have registered on our site! Please check your inbox for a confirmation email.');
+			return redirect()->to('/');
 		}
+
+//		$validator = Validator::make(
+//			[
+//				'name' => $name,
+//				'email' => $email,
+//				'password' => $password,
+//				'password_confirmation' => $password_confirmation
+//			],
+//			[
+//				'name' => 'required|min:5|max:13|regex:/[A-Za-z0-9\-_!\.\s]/|unique:users',
+//				'email' => 'required|unique:users|email',
+//				'password' => 'required|min:8|max:30|confirmed|regex:/[A-Za-z0-9\-_!\$\^\@\#]/',
+//			],
+//			[
+//				'name.required' => 'A username is required.',
+//				'name.min' => 'Usernames must be at least 5 characters long.',
+//				'name.max' => 'Usernames can be up to 13 characters long.',
+//				'name.regex' => 'You are using characters that are not allowed. Allowed characters: A through Z, a through z, 0 through 9, -, _, !, and . (period)',
+//				'name.unique' => 'That username is taken. Try another!',
+//				'email.required' => 'An email address is required.',
+//				'email.unique' => 'Another account is using this email. Contact support if you don\'t know anything about this.',
+//				'email.email' => 'Please enter a valid email. Without this, we are unable to provide email-based support.',
+//				'password.required' => 'A password is required.',
+//				'password.min' => 'Passwords must be at least 8 characters long.',
+//				'password.max' => 'Passwords can be up to 30 characters long.',
+//				'password.confirmed' => 'Your passwords do not match. Please verify that the confirmation matches the original.',
+//				'password.regex' => 'You are using characters that are not allowed. Allowed characters: A through Z, a through z, 0 through 9, !, -, _, $, ^, @, #'
+//			]
+//		);
+//
+//		if ($validator->passes())
+//		{
+//			$user = $this->user->create(array(
+//				'name' => $name,
+//				'email' => $email,
+//				'password' => Hash::make($password),
+//				'confirmed' => 0,
+//				'slug' => str_slug($name, "-")
+//			));
+//
+//			event(new UserWasRegistered($user));
+//
+//			Flash::success('You have registered on our website! Please check your inbox for a confirmation email.');
+//
+//			return redirect()
+//				->to('/');
+//		}
+//		else
+//		{
+//			return redirect()->to('/register')
+//				->withErrors($validator->messages())
+//				->withInput();
+//		}
 	}
 	
 	public function getLogout()
@@ -210,10 +214,12 @@ class AuthController extends Controller {
 	 * Create a new authentication controller instance.
 	 *
 	 * @param Guard $auth
+	 * @param User $user
 	 */
-	public function __construct(Guard $auth)
+	public function __construct(Guard $auth, User $user)
 	{
 		$this->auth = $auth;
+		$this->user = $user;
 		$this->middleware('guest', ['except' => 'getLogout']);
 	}
 

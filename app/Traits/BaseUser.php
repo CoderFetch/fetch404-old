@@ -1,5 +1,6 @@
 <?php namespace App\Traits;
 
+use Carbon\Carbon;
 use Cmgmyr\Messenger\Models\Thread;
 
 use App\AccountConfirmation;
@@ -313,5 +314,35 @@ trait BaseUser {
             $html .= '<li id="viewAllNotifications"><a href="#">View all notifications »</a></li></ul>';
             return $html;
         }
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    public function getJoinedOn()
+    {
+        $now = Carbon::now();
+        $now->subDays(7);
+
+        return ($this->created_at > $now->toDateTimeString() ? $this->created_at->diffForHumans() : $this->created_at->format('M j, Y'));
+    }
+
+    public function postCount()
+    {
+        $posts = $this->posts;
+
+        return $posts->count();
     }
 }

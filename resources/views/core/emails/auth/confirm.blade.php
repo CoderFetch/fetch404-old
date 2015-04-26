@@ -4,7 +4,7 @@
     <body>
         Hey, {{{ $user->name }}}!
         <br />
-        Someone (we hope it's you!) has signed up to the forum '{{{ $siteName->value }}}' with this email address.
+        Someone (we hope it's you!) has signed up to the forum '{{{ $siteName }}}' with this email address.
         <br />
         If this was you, simply visit the following link and your account will be activated:
         <br />
