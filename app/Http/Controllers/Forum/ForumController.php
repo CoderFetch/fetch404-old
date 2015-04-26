@@ -255,11 +255,13 @@ class ForumController extends Controller {
 	/**
 	 * Create a new forum page controller instance.
 	 *
-	 * @return void
+	 * @return mixed
 	 */
 	public function __construct()
 	{
 		$this->middleware('auth');
+		$this->middleware('confirmed');
+		$this->middleware('csrf');
 	}
 
 }

@@ -3,6 +3,10 @@
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
+use App\Events\UserWasRegistered;
+
+use App\Handlers\Events\SendConfirmationEmail;
+
 class EventServiceProvider extends ServiceProvider {
 
 	/**
@@ -13,6 +17,9 @@ class EventServiceProvider extends ServiceProvider {
 	protected $listen = [
 		'event.name' => [
 			'EventListener',
+		],
+		UserWasRegistered::class => [
+			SendConfirmationEmail::class
 		],
 	];
 

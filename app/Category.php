@@ -52,8 +52,16 @@ class Category extends Model {
 		return route('forum.get.show.forum', ['slug' => $this->slug]);
 	}
 
-	public function canView($user = null)
+	public function can($permissionId, $user)
 	{
+		if ($user == null)
+		{
+			if ($permissionId == 17 || $permissionId == 20)
+			{
+				return true;
+			}
+		}
+
 		$queryObj = CategoryPermission::select(array(
 			'category_permission.permission_id',
 			'category_permission.role_id',
@@ -68,50 +76,39 @@ class Category extends Model {
 			'permission'
 		)->where('category_id', '=', $this->id);
 
-		$roleIds = $queryObj->lists('role_id', 'role_id');
+		$permissions = $queryObj->get();
 
-		$success = false;
-
-		$accessibleChannelCount = 0;
-
-		foreach($this->channels as $channel)
+		if ($user && $user->roles->contains(1))
 		{
-			if ($channel->canView(Auth::user()))
-			{
-				$accessibleChannelCount++;
-			}
+			return true;
 		}
 
-		if ($accessibleChannelCount == 0)
+		foreach($permissions as $permission)
 		{
-			// They can't see anything in the category anyway, so don't show it.
-			$success = false;
-		}
+			$permissionById = Permission::find($permissionId);
 
-		if ($accessibleChannelCount > 0)
-		{
-			if ($user)
+			if ($permissionById)
 			{
-				foreach($user->roles as $role)
+				if ($permission->permission->id == $permissionId)
 				{
-					if (in_array($role->id, $roleIds))
+					if ($user && $user->roles->contains($permission->role->id))
 					{
-						$success = true;
+						return true;
+					}
+
+					if (!$user)
+					{
+						return $permission->role->id == 3;
 					}
 				}
 			}
-
-			if (in_array(3, $roleIds))
-			{
-				return true;
-			}
-
-			if ($user)
-			{
-				return $user->roles->contains(3) || in_array(3, $roleIds) || in_array(1, $roleIds);
-			}
 		}
 
-		return $success;
+		return false;
+	}
+
+	public function canView($user = null)
+	{
+		return $this->can(20, $user);
 	}
 }

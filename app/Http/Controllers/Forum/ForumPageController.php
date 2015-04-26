@@ -41,19 +41,16 @@ class ForumPageController extends Controller {
 	/**
 	 * Attempt to show the forum index page
 	 *
-	 * @param Illuminate\Http\Request $request
 	 * @return void
 	 */
-	public function showIndex(Request $request)
+	public function showIndex()
 	{
 		$categories = Category::with('channels')->get();
-		
-		$topPosters = new Collection(User::with('posts')->get());
 
-// 		$topPosters->sortByDesc(function($item)
-// 		{
-// 			return $item->posts;
-// 		});
+		$categories = $categories->filter(function($item)
+		{
+			return $item->can(21, Auth::user());
+		});
 		
 		return view('core.forum.index', [
 			'categories' => $categories
@@ -63,10 +60,10 @@ class ForumPageController extends Controller {
 	/**
 	 * Attempt to show a certain forum
 	 *
-	 * @param Illuminate\Http\Request $request
+	 * @param string $slug
 	 * @return void
 	 */
-	public function showForum($slug, Request $request)
+	public function showForum($slug)
 	{
 		if (!$slug)
 		{
@@ -99,10 +96,10 @@ class ForumPageController extends Controller {
 	/**
 	 * Attempt to show a certain forum (by finding the entry with a certain ID)
 	 *
-	 * @param Illuminate\Http\Request $request
+	 * @param integer $id
 	 * @return void
 	 */
-	public function showForumById($id, Request $request)
+	public function showForumById($id)
 	{
 		if (!$id)
 		{
@@ -134,14 +131,14 @@ class ForumPageController extends Controller {
 			return redirect()->to('/forum');
 		}
 	}
-	
+
 	/**
 	 * Attempt to show a certain channel
 	 *
-	 * @param Illuminate\Http\Request $request
+	 * @param $slug
 	 * @return void
 	 */
-	public function showChannel($slug, Request $request)
+	public function showChannel($slug)
 	{
 		if (!$slug)
 		{
@@ -174,8 +171,8 @@ class ForumPageController extends Controller {
 	/**
 	 * Attempt to show a certain thread
 	 *
-	 * @param Illuminate\Http\Request $request
 	 * @param string $slug
+	 * @param $id
 	 * @return void
 	 */
 	public function showThread($slug, $id)
@@ -211,10 +208,9 @@ class ForumPageController extends Controller {
 	 * Show the "create thread" page
 	 *
 	 * @param string $slug
-	 * @param Illuminate\Http\Request $request
 	 * @return void
 	 */
-	public function showCreateThread($slug, Request $request)
+	public function showCreateThread($slug)
 	{
 		if (!$slug)
 		{
@@ -244,10 +240,9 @@ class ForumPageController extends Controller {
 	 *
 	 * @param string $slug
 	 * @param int $id
-	 * @param Illuminate\Http\Request $request
 	 * @return void
 	 */	 
-	public function showReplyToThread($slug, $id, Request $request)
+	public function showReplyToThread($slug, $id)
 	{
 		if (!$slug || !$id)
 		{

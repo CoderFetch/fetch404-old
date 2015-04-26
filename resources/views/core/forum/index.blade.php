@@ -9,7 +9,6 @@
 	<br />
 	@if (!$categories->isEmpty())
 	@foreach($categories->all() as $category)
-	@if ($category->canView(Auth::user() != null ? Auth::user() : null))
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<h3 class="panel-title"><a href="{{{ $category->Route }}}">{{{ $category->name }}}</a></h3>
@@ -38,9 +37,8 @@
 			@endif
 		</div>
 	</div>
-	@endif
 	@endforeach
 	@else
-	<p>No categories or channels have been defined! Uh-oh.</p>
+	<p>Either no categories have been defined, or you don't have permission to access any of them. :(</p>
 	@endif
 @stop

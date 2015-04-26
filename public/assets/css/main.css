@@ -204,24 +204,24 @@
 }
 
 .avatar {
-    border-radius: 32px;
+    /*border-radius: 32px;*/
 }
 
 .notificationsList li a .avatar {
     float: left;
     margin-left: -50px;
-    width: 30px;
+    width: 33px;
     height: 33px;
-    line-height: 37px;
-    font-size: 21px;
+    line-height: 32px;
     margin-top: -3px;
+    font-size: 23px;
 }
 
 .messagesList li a .avatar {
     float: left;
     margin-left: -50px;
     width: 30px;
-    height: 33px;
+    height: 35px;
     line-height: 37px;
     font-size: 21px;
     margin-top: -3px;

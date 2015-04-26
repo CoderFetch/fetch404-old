@@ -20,8 +20,10 @@ class ForumPostController extends ForumController
     public function __construct(Post $post)
     {
         $this->post = $post;
+
         $this->middleware('auth');
         $this->middleware('confirmed');
+        $this->middleware('csrf');
     }
 
     /*

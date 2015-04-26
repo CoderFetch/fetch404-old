@@ -40,13 +40,7 @@
 
                 <div class="form-group">
                     {!! Form::label('allowed_groups', 'Allowed groups', ['class' => 'control-label']) !!}
-                    <select name="allowed_groups[]" id="groups_list" class="form-control" multiple="multiple">
-                        @foreach(Role::get() as $role)
-                        <option value="{{{ $role->id }}}"{{{ $permissions->contains($role->id) ? 'selected=selected' : '' }}}>
-                            {{{ $role->name }}}
-                        </option>
-                        @endforeach
-                    </select>
+                    {!! Form::select('allowed_groups[]', $groups, null, ['id' => 'groups_list', 'class' => 'form-control', 'multiple']) !!}
                 </div>
 
                 <!-- Submit Form Input -->

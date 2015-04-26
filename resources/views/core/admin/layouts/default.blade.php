@@ -64,6 +64,7 @@
 								<li{{ (Request::is('admin/roles*') ? ' class=active' : '') }}><a href="{{{ URL::to('admin/roles') }}}"><span class="fa fa-users"></span> Roles</a></li>
 							</ul>
 						</li>
+						<li{{{ Request::is('admin/general') ? ' class=active' : '' }}}><a href="{{{ route('admin.get.general') }}}"><span class="fa fa-cog"></span> Settings</a></li>
 					</ul>
 					<ul class="nav navbar-nav pull-right">
 						<li class="dropdown">

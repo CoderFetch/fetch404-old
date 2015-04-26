@@ -1,7 +1,11 @@
 <?php namespace App\Http\Controllers;
 
+use App\Events\UserWasRegistered;
 use App\News;
 use App\Tag;
+use Illuminate\Support\Facades\Event;
+
+use Auth;
 
 class HomeController extends Controller {
 
@@ -51,6 +55,8 @@ class HomeController extends Controller {
 	 */
 	public function index()
 	{
+		//Event::fire(new UserWasRegistered(Auth::user()));
+
 		return view('core.index', ['news' => $this->news->orderBy('created_at', 'desc')]);
 	}
 

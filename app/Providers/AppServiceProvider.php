@@ -3,6 +3,7 @@
 use App\Role;
 use App\Ticket;
 use App\User;
+use Cmgmyr\Messenger\Models\Thread;
 use Illuminate\Support\ServiceProvider;
 use Carbon\Carbon;
 
@@ -48,23 +49,23 @@ class AppServiceProvider extends ServiceProvider {
 				$notifications = $notifications->filter(function($item)
 				{
 					return (
-						time() - strtotime($item->created_at) < (60 * 60 * (24 / 2))
+						time() - strtotime($item->created_at) < (60 * 60 * (24 * 3))
 					);
 				});
 
 				$view->with('notifications', $notifications->take(5));
 
-				$messages = $user->threads;
+				$messages = Thread::forUserWithNewMessages($user->id)->get();
 
 				$messages = $messages->sortByDesc(function($item) {
 					return $item->created_at;
 				});
 
-				$messages = $messages->filter(function($item)
+				$messages = $messages->filter(function($item) use ($user)
 				{
 					return (
-						time() - strtotime($item->created_at) < (60 * 60 * (24 / 2))
-					);
+						time() - strtotime($item->created_at) < (60 * 60 * (24 * 3))
+					) && $item->isUnread($user->id);
 				});
 
 				$view->with('messages', $messages);

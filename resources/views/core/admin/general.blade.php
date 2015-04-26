@@ -3,6 +3,16 @@
 {{-- Content here --}}
 @section('content')
     <div class="row">
+        <div class="col-lg-12">
+            <div class="page-header">
+                <h3>
+                    General Settings
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
         @include('core.admin.partials.sidebar')
         <div class="col-md-9">
             @if (count($errors) > 0)
