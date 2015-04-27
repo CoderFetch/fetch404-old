@@ -1,8 +1,11 @@
 <?php namespace App\Handlers\Events;
 
-use App\Events\UserWasBanned;
+use App\Events\UserWasUnbanned;
 
-class BanUser {
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldBeQueued;
+
+class UnbanUser {
 
 	/**
 	 * Create the event handler.
@@ -17,25 +20,24 @@ class BanUser {
 	/**
 	 * Handle the event.
 	 *
-	 * @param  UserWasBanned  $event
+	 * @param  UserWasUnbanned  $event
 	 * @return void
 	 */
-	public function handle(UserWasBanned $event)
+	public function handle(UserWasUnbanned $event)
 	{
 		//
 		$user = $event->getUser();
-		$banTime = $event->getBannedUntil();
 		$currentUser = $event->getResponsibleUser();
 
 		$user->update(array(
-			'is_banned' => 1,
-			'banned_until' => $banTime
+			'is_banned' => 0,
+			'banned_until' => null
 		));
 
 		$user->notifications()->create(array(
 			'subject_id' => $currentUser->getId(),
 			'subject_type' => get_class($currentUser),
-			'name' => 'user_banned',
+			'name' => 'user_unbanned',
 			'user_id' => $user->getId(),
 			'sender_id' => $currentUser->getId(),
 			'is_read' => 0

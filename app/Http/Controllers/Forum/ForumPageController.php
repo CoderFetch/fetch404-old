@@ -49,9 +49,17 @@ class ForumPageController extends Controller {
 
 		$categories = $categories->filter(function($item)
 		{
-			return $item->can(21, Auth::user());
+			return $item->can(20, Auth::user());
 		});
-		
+
+		foreach($categories as $category)
+		{
+			$category->channels = $category->channels->filter(function($item)
+			{
+				return $item->can(21, Auth::user());
+			});
+		}
+
 		return view('core.forum.index', [
 			'categories' => $categories
 		]);

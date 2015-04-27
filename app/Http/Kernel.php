@@ -29,7 +29,8 @@ class Kernel extends HttpKernel {
 		'confirmed' => 'App\Http\Middleware\Confirmed',
 		'installed' => 'App\Http\Middleware\Installed',
 		'csrf' => 'App\Http\Middleware\VerifyCsrfToken',
-		'write_config' => 'App\Http\Middleware\WriteConfig'
+		'write_config' => 'App\Http\Middleware\WriteConfig',
+		'bancheck' => 'App\Http\Middleware\BanCheck'
 	];
 
 }

@@ -2,17 +2,14 @@
 
 use App\Events\Event;
 
+use App\User;
 use Illuminate\Queue\SerializesModels;
 
-use App\User;
-use Illuminate\Support\Facades\Auth;
-
-class UserWasBanned extends Event {
+class UserWasUnbanned extends Event {
 
 	use SerializesModels;
 
 	public $user;
-	public $bannedUntil;
 	public $responsibleUser;
 
 	/**
@@ -20,13 +17,12 @@ class UserWasBanned extends Event {
 	 *
 	 * @param User $user
 	 * @param User $responsibleUser
-	 * @param $bannedUntil
+	 * @type mixed
 	 */
-	public function __construct(User $user, User $responsibleUser, $bannedUntil)
+	public function __construct(User $user, User $responsibleUser)
 	{
 		//
 		$this->user = $user;
-		$this->bannedUntil = $bannedUntil;
 		$this->responsibleUser = $responsibleUser;
 	}
 
@@ -38,16 +34,6 @@ class UserWasBanned extends Event {
 	public function getUser()
 	{
 		return $this->user;
-	}
-
-	/**
-	 * Get the date when the ban expires.
-	 *
-	 * @return string
-	 */
-	public function getBannedUntil()
-	{
-		return $this->bannedUntil;
 	}
 
 	/**

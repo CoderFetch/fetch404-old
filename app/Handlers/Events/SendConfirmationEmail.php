@@ -57,7 +57,7 @@ class SendConfirmationEmail {
 
 			$this->mail->send('core.emails.auth.confirm', ['user' => $user, 'confirmation' => $confirmation, 'siteName' => $siteName->value], function($message) use ($user, $outgoingEmail, $siteName)
 			{
-				$message->from($outgoingEmail->value)->to($user->getEmail())->subject('Confirm your' . $siteName->value . ' account');
+				$message->from($outgoingEmail->value)->to($user->getEmail())->subject('Confirm your ' . $siteName->value . ' account');
 			});
 		}
 

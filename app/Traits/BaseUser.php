@@ -345,4 +345,33 @@ trait BaseUser {
 
         return $posts->count();
     }
+
+    public function isBanned()
+    {
+        if ($this->banned_until != null && $this->banned_until < Carbon::now()->toDateTimeString() && $this->is_banned == 1)
+        {
+            $this->update(array(
+                'is_banned' => 0,
+                'banned_until' => null
+            ));
+        }
+
+        if ($this->banned_until != null)
+        {
+            return ($this->is_banned == 1 && $this->banned_until > Carbon::now()->toDateTimeString());
+        }
+
+        return $this->is_banned == 1;
+    }
+
+    /**
+     * Query scopes
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeBanned($query)
+    {
+        return $query->where('is_banned', '=', 1);
+    }
 }

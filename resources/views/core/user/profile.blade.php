@@ -5,7 +5,7 @@
 @section('content')
 	<ol class="breadcrumb">
 		<li><a href="/">Home</a></li>
-		<li><a href="/members">Members</a></li>
+		<li><a href="{{{ route('members.get.index') }}}">Members</a></li>
 		<li class="active"><a href="{{{ $user->profileURL }}}">{{{ $user->name }}}</a></li>
 	</ol>
 	<div class="row">
@@ -66,7 +66,31 @@
 						<!-- Tab panes -->
 						<div class="tab-content">
 							<div role="tabpanel" class="tab-pane fade in active" id="profile-posts">
-								Coming soon
+								<div class="status-post">
+									<!-- Status Form Input -->
+									<div class="form-group">
+										{!! Form::textarea('body', null, ['class' => 'form-control', 'rows' => 3, 'placeholder' => "What's on your mind?"]) !!}
+									</div>
+
+									<div class="form-group status-post-submit">
+										{!! Form::submit('Post Status', ['class' => 'btn btn-primary btn-xs']) !!}
+									</div>
+								</div>
+								<article class="media status-media">
+									<div class="pull-left">
+										<a href="{{{ $user->profileURL }}}">
+											<img class="media-object" src="https://cravatar.eu/avatar/{{{ $user->slug }}}/30" alt="{{ $user->name }}">
+										</a>
+										{{--@include ('users.partials.avatar', ['user' => $status->user, 'class' => 'status-media-object'])--}}
+									</div>
+
+									<div class="media-body status-media-body">
+										<h4 class="media-heading status-media-heading">{{{ $user->name }}}</h4>
+										<p><small class="status-media-time">1 minute ago</small></p>
+
+										Hi there!
+									</div>
+								</article>
 							</div>
 							<div role="tabpanel" class="tab-pane fade" id="postings">
 								Coming soon

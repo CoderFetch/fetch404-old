@@ -1,6 +1,10 @@
 <?php namespace App\Providers;
 
+use App\Events\UserWasBanned;
+use App\Events\UserWasUnbanned;
+use App\Handlers\Events\BanUser;
 use App\Handlers\Events\SetMemberRole;
+use App\Handlers\Events\UnbanUser;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -23,6 +27,12 @@ class EventServiceProvider extends ServiceProvider {
 			SendConfirmationEmail::class,
 			SetMemberRole::class
 		],
+		UserWasBanned::class => [
+			BanUser::class
+		],
+		UserWasUnbanned::class => [
+			UnbanUser::class
+		]
 	];
 
 	/**

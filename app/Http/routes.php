@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 |
 */
 
-$router->group(['middleware' => ['installed', 'write_config'], 'prefix' => config('app.url_prefix', '')], function() use ($router)
+$router->group(['middleware' => ['installed', 'write_config', 'bancheck'], 'prefix' => config('app.url_prefix', '')], function() use ($router)
 {
 	# Route Models
 	$router->model('role', 'App\Role');
@@ -85,6 +85,12 @@ $router->group(['middleware' => ['installed', 'write_config'], 'prefix' => confi
 
 	});
 
+	# Member list
+	$router->get('/members', [
+		'uses' => 'UsersController@showMembers',
+		'as' => 'members.get.index'
+	]);
+
 	# Account management routes
 	$router->group(['middleware' => ['auth', 'csrf']], function() use ($router)
 	{
@@ -117,9 +123,6 @@ $router->group(['middleware' => ['installed', 'write_config'], 'prefix' => confi
 	});
 
 	$router->get('/account/confirm/{token}', ['uses' => 'Auth\AccountController@activateAccount', 'as' => 'account.get.confirm']);
-
-	# User routes
-	$router->get('/profile/{slug}.{id}', ['uses' => 'ProfileController@showProfile', 'as' => 'profile.get.show']);
 
 	# Pages
 	$router->get('/play', ['uses' => 'MCPlayController@index', 'as' => 'play.get.show']);
@@ -174,6 +177,9 @@ $router->group(['middleware' => ['installed', 'write_config'], 'prefix' => confi
 
 		Entrust::routeNeedsPermission('news/create', 'create_news_posts');
 	});
+
+	# User routes
+	$router->get('@{slug}.{id}', ['uses' => 'ProfileController@showProfile', 'as' => 'profile.get.show']);
 });
 
 $router->get('/install', ['as' => 'install.get', 'uses' => 'InstallController@show']);
