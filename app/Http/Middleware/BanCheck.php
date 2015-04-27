@@ -57,9 +57,6 @@ class BanCheck {
 
 		if ($user->isBanned() && $routeName != 'auth.get.logout')
 		{
-			$this->auth->logout();
-			$this->session->flush();
-
 			return response(view('core.errors.banned', array('user' => $user, 'site_title' => ($site_title ? $site_title->value : 'N/A'))), 500);
 		}
 
