@@ -42,7 +42,7 @@
 {!! Form::close() !!}
 @stop
 
-@section('footer')
+@section('scripts')
 	<script>
 		$('#user_list').select2({
 			placeholder: 'Who should we send the message to?'

@@ -66,7 +66,7 @@ class NewsController extends Controller
         $user = Auth::user();
         $news = $user->news()->create($request->except('tags'));
 
-        $news->tags()->sync($request->input('tags'));
+        $news->tags()->sync(($request->has('tags') ? $request->input('tags') : []));
 
         return redirect(route('news.show', ['news' => $news->id]));
     }

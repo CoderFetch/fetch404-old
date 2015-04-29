@@ -4,19 +4,24 @@
 @section('content')
 	<h1>
 		Viewing conversation
-		@if ($thread->canManage)
 		<div class="pull-right">
 			<div class="btn-group">
-			  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-				<i class="fa fa-cog"></i></span>
-			  </button>
-			  <ul class="dropdown-menu" role="menu">
-				<li><a href="#">Disable replies</a></li>
-				<li><a href="{{{ route('conversations.delete', ['id' => $thread->id]) }}}">Delete conversation</a></li>
-			  </ul>
+				{{--@if ($thread->canManage)--}}
+				{{--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">--}}
+					{{--<i class="fa fa-cog"></i></span>--}}
+				{{--</button>--}}
+				{{--<ul class="dropdown-menu" role="menu">--}}
+					{{--<li><a href="#">Disable replies</a></li>--}}
+					{{--<li><a href="{{{ route('conversations.delete', ['id' => $thread->id]) }}}">Delete conversation</a></li>--}}
+				{{--</ul>--}}
+				{{--@endif--}}
+				{!! Form::open(['route' => array('conversations.leave', $thread)]) !!}
+				<button type="submit" class="btn btn-default">
+					Leave Conversation
+				</button>
+				{!! Form::close() !!}
 			</div>
 		</div>
-		@endif
 	</h1>
 	@if (count($errors) > 0)
 	<div class="alert alert-danger">

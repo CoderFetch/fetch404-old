@@ -1,5 +1,7 @@
 <?php namespace App\Traits;
 
+use Carbon\Carbon;
+
 trait BasePost {
     /*
      * Get the user associated with this post.
@@ -21,9 +23,26 @@ trait BasePost {
         return $this->belongsTo('App\Topic');
     }
 
+    public function formattedCreatedAt()
+    {
+        $now = Carbon::now();
+        $now->subDays(7);
+
+        if ($this->created_at > $now->toDateTimeString())
+        {
+            return $this->created_at->diffForHumans();
+        }
+        else
+        {
+            return $this->created_at->format('M j, Y');
+        }
+
+        return $this->created_at->format('M j, Y');
+    }
+
     /*
      * Get the page number for this post.
-     * NOTE: This is very buggy!
+     *
      * @return integer
      */
     public function getPageNumberAttribute()

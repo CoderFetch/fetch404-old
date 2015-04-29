@@ -25,7 +25,14 @@ class Topic extends Model {
 	{
 		return $this->hasMany('App\Post');
 	}
-	
+
+	public function getLatestPost()
+	{
+		$posts = $this->posts()->orderBy('created_at', 'desc');
+
+		return $posts->first();
+	}
+
 	public function getPostsPaginatedAttribute()
 	{
 		return $this->posts()->paginate(config('forumsettings.threads.postsPerPage', 5));
@@ -71,5 +78,10 @@ class Topic extends Model {
 	public function getCanReplyAttribute()
 	{
 		return Auth::check() && Auth::user()->isConfirmed() && $this->locked == 0;
+	}
+
+	public function getUser()
+	{
+		return $this->user;
 	}
 }

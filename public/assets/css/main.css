@@ -1,14 +1,10 @@
-.page-header {
-    border-bottom: 1px solid #F1F1F1 !important;
-}
-
 .navbar {
     border-radius: 0px !important;
 }
 
 .form-control {
     border: 1px solid #cccccc !important;
-    border-radius: 0.25em !important;
+    border-radius: 0.25em;
 
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
@@ -277,13 +273,14 @@
     padding: 0; }
 .status-post textarea {
     border: none;
-    border-radius: 0; }
+    border-radius: 0;
+    resize: none; }
 .status-post textarea:focus {
     -webkit-box-shadow: none;
     box-shadow: none; }
 .status-post .status-post-submit {
     /*border-top: 1px solid #E9E9E9;*/
-    padding: 0.5em 0.2em;
+    padding: 0.5em 0.4em;
     margin-bottom: 0;
     overflow: hidden;
 }
@@ -302,7 +299,10 @@
     margin-bottom: 3em; }
 
 .user-block {
-    text-align: center; }
+    /*text-align: center; */
+    border-right: 1px solid silver;
+}
 
 .user-block .media-object {
-    margin: auto; }
+    margin: auto;
+}

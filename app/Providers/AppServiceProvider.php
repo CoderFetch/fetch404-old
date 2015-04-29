@@ -11,6 +11,9 @@ use App\Setting;
 
 use Illuminate\Support\Facades\Auth;
 
+use App\Category;
+use App\Topic;
+
 class AppServiceProvider extends ServiceProvider {
 
 	/**
@@ -117,6 +120,20 @@ class AppServiceProvider extends ServiceProvider {
 
 			$view->with('recaptcha_enabled', ($recaptcha_enabled != null ? ($recaptcha_enabled->value == 'true' ? 'true' : 'false') : 'false'));
 			$view->with('recaptcha_key', ($recaptcha_key != null ? e($recaptcha_key->value) : ''));
+		});
+
+		view()->composer('core.forum.partials.latest-threads', function($view) {
+			$threads = Topic::all()->take(5);
+
+			$threads = $threads->filter(function($item) {
+				return $item->channel->category->canView(Auth::user()) && $item->channel->canView(Auth::user());
+			});
+
+			$threads = $threads->sortByDesc(function($item) {
+				return $item->getLatestPost()->created_at;
+			});
+
+			$view->with('threads', $threads);
 		});
 	}
 

@@ -77,6 +77,11 @@ class ProfileController extends Controller {
 			{
 				return view('core.errors.modelnotfound');
 			}
+
+			if ($user->isBanned())
+			{
+				return view('core.errors.profilenotavailable', array('user' => $user));
+			}
 			
 			return view('core.user.profile', [
 				'user' => $user

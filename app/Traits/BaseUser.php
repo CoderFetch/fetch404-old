@@ -1,5 +1,6 @@
 <?php namespace App\Traits;
 
+use App\User;
 use Carbon\Carbon;
 use Cmgmyr\Messenger\Models\Thread;
 
@@ -339,6 +340,19 @@ trait BaseUser {
         return ($this->created_at > $now->toDateTimeString() ? $this->created_at->diffForHumans() : $this->created_at->format('M j, Y'));
     }
 
+    public function getLastActivity()
+    {
+        $now = Carbon::now();
+        $now->subDays(7);
+
+        if ($this->last_active == null)
+        {
+            return ($this->created_at == null ? "Never" : ($this->created_at > $now->toDateTimeString() ? $this->created_at->diffForHumans() : $this->created_at->format('M j, Y')));
+        }
+
+        return ($this->last_active > $now->toDateTimeString() ? $this->last_active->diffForHumans() : $this->last_active->format('M j, Y'));
+    }
+
     public function postCount()
     {
         $posts = $this->posts;
@@ -346,6 +360,13 @@ trait BaseUser {
         return $posts->count();
     }
 
+    /**
+     * Check to see if the current user is banned.
+     * Will automatically update the ban data when this is called.
+     * TODO: Move the ban updating to the scheduler.
+     *
+     * @return bool
+     */
     public function isBanned()
     {
         if ($this->banned_until != null && $this->banned_until < Carbon::now()->toDateTimeString() && $this->is_banned == 1)
@@ -362,6 +383,32 @@ trait BaseUser {
         }
 
         return $this->is_banned == 1;
+    }
+
+    /**
+     * Check to see if the current user "is" a certain user
+     * You can provide either a name or a user ID.
+     *
+     * @param User $user
+     * @return boolean
+     */
+    public function isUser(User $user)
+    {
+        if (is_null($user)) return false;
+
+        return $this->getId() == $user->getId();
+    }
+
+    /**
+     * Get a user's current "status" (their latest profile post)
+     *
+     * @return object
+     */
+    public function currentStatus()
+    {
+        $profilePost = $this->profilePosts()->where('from_user_id', '=', $this->getId())->where('to_user_id', '=', $this->getId())->first();
+
+        return $profilePost;
     }
 
     /**

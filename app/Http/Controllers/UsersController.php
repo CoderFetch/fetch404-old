@@ -31,7 +31,14 @@ class UsersController extends Controller {
      */
     public function showMembers()
     {
-        $users = new Collection(User::all());
+        $users = User::orderBy('name', 'asc')->get();
+
+        $users = $users->filter(function($item)
+        {
+            // Only show if the user is not banned and they have confirmed
+            // their account. This is to prevent spambot clutter.
+            return (!$item->isBanned()) && $item->isConfirmed();
+        });
 
         return view('core.forum.members', compact('users'));
     }

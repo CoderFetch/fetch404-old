@@ -1,11 +1,11 @@
 <?php namespace App\Handlers\Events;
 
-use App\Events\;
+use App\Events\UserRepliedToThread;
 
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldBeQueued;
 
-class SendReplyNotification {
+class CreatePostOnThread {
 
 	/**
 	 * Create the event handler.
@@ -20,10 +20,10 @@ class SendReplyNotification {
 	/**
 	 * Handle the event.
 	 *
-	 * @param  Events  $event
+	 * @param  UserRepliedToThread  $event
 	 * @return void
 	 */
-	public function handle(Events $event)
+	public function handle(UserRepliedToThread $event)
 	{
 		//
 	}

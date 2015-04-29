@@ -20,11 +20,13 @@ class MessagesManagingController extends Controller
 	public function __construct()
 	{
 		$this->middleware('auth');
+        $this->middleware('confirmed');
 	}
-	
-	/**
+
+    /**
      * Delete a conversation
      *
+     * @param $id
      * @return mixed
      */
     public function deleteConversation($id)
@@ -54,7 +56,39 @@ class MessagesManagingController extends Controller
         
         return redirect('conversations');
     }
-    
+
+    /**
+     * Leave a conversation
+     *
+     * @param $id
+     * @return void
+     */
+    public function leaveConversation($id)
+    {
+        try
+        {
+            $thread = Thread::findOrFail($id);
+            $thread->getParticipantFromUser(Auth::id());
+        }
+        catch (ModelNotFoundException $e)
+        {
+            Flash::error('The requested conversation does not exist.');
+            return redirect('conversations');
+        }
+
+        $participant = $thread->getParticipantFromUser(Auth::id());
+
+        $user = $participant->user;
+
+        $thread->messages()->where('user_id', '=', $user->id)->delete();
+
+        $participant->delete();
+
+        Flash::success('You have left the conversation.');
+
+        return redirect('conversations');
+    }
+
     public function toJSON(Thread $thread)
     {
     	return response()->json($thread->participants);

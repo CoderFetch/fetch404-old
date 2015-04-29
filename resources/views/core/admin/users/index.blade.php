@@ -19,7 +19,7 @@
 	<div class="row">
 		@include('core.admin.partials.sidebar')
 		<div class="col-md-9">
-			<div class="panel panel-default" style="border-top: 1px solid #E9E9E9;">
+			<div class="panel panel-default">
 				@if ($users->count() < 1)
 				<p>
 					There are no registered users.
@@ -31,6 +31,13 @@
 						<a href="{{{ $user->profileURL }}}">
 							{{{ $user->name }}}
 						</a>
+						&nbsp;
+						@if ($user->isConfirmed())
+							<span class="fa fa-check text-success" title="Confirmed"></span>
+						@else
+							<span class="fa fa-times text-danger" title="Not yet confirmed"></span>
+						@endif
+
 						<div class="pull-right">
 							@if ($user->isBanned())
 							{!! Form::open(['route' => array('admin.users.post.unban', $user)]) !!}

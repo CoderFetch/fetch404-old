@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Messaging;
 
+use App\Http\Requests\Messaging\ConversationCreateRequest;
 use App\User;
 use Carbon\Carbon;
 use Cmgmyr\Messenger\Models\Thread;
@@ -13,7 +14,6 @@ use Validator;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ConversationCreateRequest;
 
 class MessagesController extends Controller
 {

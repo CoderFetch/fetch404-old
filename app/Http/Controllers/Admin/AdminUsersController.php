@@ -452,6 +452,12 @@ class AdminUsersController extends AdminController {
 			return redirect(route('admin.users.get.index'));
 		}
 
+		if ($user->isUser($request->user()))
+		{
+			Flash::error('You can not ban yourself.');
+			return redirect(route('admin.users.get.index'));
+		}
+
 		event(new UserWasBanned($user, $request->user(), null));
 
 		Flash::success('User has been banned.');
