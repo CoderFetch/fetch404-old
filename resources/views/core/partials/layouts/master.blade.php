@@ -44,6 +44,23 @@
 					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 				}
 			});
+
+			$('[data-method]:not(.disabled)').click(function(event) {
+				$('<form action="' + $(this).attr('href') + '" method="POST">' +
+				'<input type="hidden" name="_method" value="' + $(this).data('method') + '">' +
+				'<input type="hidden" name="_token" value="{{{ csrf_token() }}}"' +
+				'</form>').submit();
+
+				event.preventDefault();
+			});
+
+			$('[data-submit]:not(.disabled)').click(function(event) {
+				var form = $(this).closest('form');
+
+				form.submit();
+
+				event.preventDefault();
+			});
 		</script>
 
 		@if (Auth::check())

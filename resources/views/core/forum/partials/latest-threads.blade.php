@@ -1,4 +1,3 @@
-<div class="col-md-3">
     <div class="well well-sm">
         <h4>Latest Threads</h4>
         <hr>
@@ -19,6 +18,12 @@
             </li>
             @endforeach
         </ul>
+        @endunless
+
+        @unless(!$threads->isEmpty())
+        <p>
+            There are no new threads.
+        </p>
         @endunless
     </div>
 </div>

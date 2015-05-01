@@ -1,6 +1,7 @@
 <?php namespace App\Handlers\Events;
 
 use App\Events\UserWasBanned;
+use Carbon\Carbon;
 
 class BanUser {
 
@@ -27,9 +28,16 @@ class BanUser {
 		$banTime = $event->getBannedUntil();
 		$currentUser = $event->getResponsibleUser();
 
+		$now = Carbon::now();
+
+		$now->addDays(4);
+		$now->addHours(2);
+		$now->addMinutes(1);
+		$now->addSeconds(4);
+
 		$user->update(array(
 			'is_banned' => 1,
-			'banned_until' => $banTime
+			'banned_until' => $now->toDateTimeString()
 		));
 
 		$user->notifications()->create(array(

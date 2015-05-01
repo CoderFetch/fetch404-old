@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'AddBannedToUsers' => $baseDir . '/database/migrations/2015_04_26_175824_add_banned_to_users.php',
     'AddIdToTicketParticipantsTable' => $baseDir . '/database/migrations/2015_04_10_215048_add_id_to_ticket_participants_table.php',
+    'AddIsOnlineToUsersTable' => $baseDir . '/database/migrations/2015_04_30_195055_add_is_online_to_users_table.php',
     'AddLastActiveToUsers' => $baseDir . '/database/migrations/2015_04_28_005713_add_last_active_to_users.php',
     'AddNullableToLastReadInParticipantsTable' => $baseDir . '/database/migrations/2014_11_10_083449_add_nullable_to_last_read_in_participants_table.php',
     'AddSoftDeletesToParticipantsTable' => $baseDir . '/database/migrations/2014_11_03_154831_add_soft_deletes_to_participants_table.php',
@@ -22,6 +23,7 @@ return array(
     'CreateChannelsTable' => $baseDir . '/database/migrations/2015_04_06_153306_create_channels_table.php',
     'CreateFollowsTable' => $baseDir . '/database/migrations/2015_04_27_224708_create_follows_table.php',
     'CreateForumPermissionsTable' => $baseDir . '/database/migrations/2015_04_22_171236_create_forum_permissions_table.php',
+    'CreateLikesTable' => $baseDir . '/database/migrations/2015_04_30_231304_create_likes_table.php',
     'CreateMessagesTable' => $baseDir . '/database/migrations/2014_10_28_175710_create_messages_table.php',
     'CreateNameChangesTable' => $baseDir . '/database/migrations/2015_04_21_204313_create_name_changes_table.php',
     'CreateNewsTable' => $baseDir . '/database/migrations/2015_04_14_232118_create_news_table.php',

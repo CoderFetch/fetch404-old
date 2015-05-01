@@ -347,7 +347,7 @@ trait BaseUser {
 
         if ($this->last_active == null)
         {
-            return ($this->created_at == null ? "Never" : ($this->created_at > $now->toDateTimeString() ? $this->created_at->diffForHumans() : $this->created_at->format('M j, Y')));
+            return ($this->created_at == null ? "never" : ($this->created_at > $now->toDateTimeString() ? $this->created_at->diffForHumans() : $this->created_at->format('M j, Y')));
         }
 
         return ($this->last_active > $now->toDateTimeString() ? $this->last_active->diffForHumans() : $this->last_active->format('M j, Y'));
@@ -363,19 +363,19 @@ trait BaseUser {
     /**
      * Check to see if the current user is banned.
      * Will automatically update the ban data when this is called.
-     * TODO: Move the ban updating to the scheduler.
+     * TODO: Move the ban updating to the scheduler. ** DONE **
      *
      * @return bool
      */
     public function isBanned()
     {
-        if ($this->banned_until != null && $this->banned_until < Carbon::now()->toDateTimeString() && $this->is_banned == 1)
-        {
-            $this->update(array(
-                'is_banned' => 0,
-                'banned_until' => null
-            ));
-        }
+//        if ($this->banned_until != null && $this->banned_until < Carbon::now()->toDateTimeString() && $this->is_banned == 1)
+//        {
+//            $this->update(array(
+//                'is_banned' => 0,
+//                'banned_until' => null
+//            ));
+//        }
 
         if ($this->banned_until != null)
         {

@@ -47,7 +47,11 @@ class ProfileController extends Controller {
 			if (Auth::check())
 			{
 				$user = Auth::user();
-				
+
+				$user->update(array(
+					'last_active_desc' => 'Viewing ' . $user->name . '\'s profile'
+				));
+
 				return view('core.user.profile', [
 					'user' => Auth::user()
 				]);
@@ -82,7 +86,14 @@ class ProfileController extends Controller {
 			{
 				return view('core.errors.profilenotavailable', array('user' => $user));
 			}
-			
+
+//			if (Auth::check())
+//			{
+//				Auth::user()->update(array(
+//					'last_active_desc' => 'Viewing ' . $user->name . '\'s profile'
+//				));
+//			}
+
 			return view('core.user.profile', [
 				'user' => $user
 			]);

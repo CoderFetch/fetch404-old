@@ -6,7 +6,7 @@
  * Time: 7:18 PM
  */
 
-$router->group(['middleware' => ['installed', 'auth', 'csrf'], 'prefix' => 'users', 'namespace' => 'Users'], function() use ($router)
+$router->group(['middleware' => ['installed', 'auth', 'csrf', 'bancheck', 'update_last_activity'], 'prefix' => 'users', 'namespace' => 'Users'], function() use ($router)
 {
    $router->post('{user}/follow', array(
        'as' => 'user.post.follow',

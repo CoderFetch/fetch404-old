@@ -42,7 +42,8 @@ class UpdateLastActivity {
 		$user = $request->user();
 
 		$user->update(array(
-			'last_active' => Carbon::now()->toDateTimeString()
+			'last_active' => Carbon::now()->toDateTimeString(),
+			'is_online' => 1
 		));
 
 		return $next($request);

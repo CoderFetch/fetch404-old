@@ -41,8 +41,8 @@ class LoginRequest extends FormRequest {
 			return false;
 		}
 
-		if (!$user->isBanned())
-		{
+//		if (!$user->isBanned())
+//		{
 			if (Auth::attempt([$db_field => $name_or_email, 'password' => $password], $this->has('remember')))
 			{
 				return true;
@@ -52,12 +52,12 @@ class LoginRequest extends FormRequest {
 				Flash::error('You could not be logged in due to an unknown error.');
 				return false;
 			}
-		}
-		else
-		{
-			Flash::error('You have been banned.');
-			return false;
-		}
+//		}
+//		else
+//		{
+//			Flash::error('You have been banned.');
+//			return false;
+//		}
 
 		return false;
 	}

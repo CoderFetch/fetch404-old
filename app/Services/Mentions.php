@@ -1,5 +1,6 @@
 <?php namespace App\Services;
 
+use App\NameChange;
 use App\User;
 
 /**
@@ -33,12 +34,20 @@ class Mentions
       		$user = null;
       		while((strlen($possible_username) > 0) && !$user)
 			{
-				if ($user = User::where('name', '=', $possible_username)->first())
+				$user = User::where('name', '=', $possible_username)->first();
+				if ($user)
 				{
-					$value = preg_replace("/".preg_quote("@{$possible_username}", "/")."/", "<a href=\"{$user->profileURL}\">@{$possible_username}</a>", $value);
+					$value = preg_replace("/".preg_quote("@{$possible_username}", "/")."/", "<a href=\"{$user->profileURL}\"><img src=\"{$user->getAvatarURL(20)}\" height=\"25\" width=\"20\" style=\"margin-bottom: 6px;\" />&nbsp;{$possible_username}</a>", $value);
 					break;
 				}
-				
+
+				$nameChange = NameChange::where('old_name', '=', $possible_username)->first();
+				if ($nameChange)
+				{
+					$value = preg_replace("/".preg_quote("@{$possible_username}", "/")."/", "<a href=\"{$nameChange->user->profileURL}\"><img src=\"{$nameChange->user->getAvatarURL(20)}\" height=\"25\" width=\"20\" style=\"margin-bottom: 6px;\" />&nbsp;{$nameChange->new_name}</a>", $value);
+					break;
+				}
+
 				// chop last word off of it
 				$new_possible_username = preg_replace("/([^A-Za-z0-9]{1}|[A-Za-z0-9]+)$/", "", $possible_username);
 				if ($new_possible_username !== $possible_username)

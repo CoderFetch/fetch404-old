@@ -26,29 +26,47 @@ class Kernel extends ConsoleKernel {
 	 */
 	protected function schedule(Schedule $schedule)
 	{
-//		$schedule->command('inspire')
-//				 ->hourly();
-//		if (Schema::has('migrations'))
-//		{
-//			$users = User::banned()->all();
-//
-//			$schedule->call(function() use ($users)
-//			{
-//				foreach($users as $u)
-//				{
-//					if ($u->banned_until != null)
-//					{
-//						if ($u->banned_until < Carbon::now()->toDateTimeString())
-//						{
-//							$u->update(array(
-//								'is_banned' => 0,
-//								'banned_until' => null
-//							));
-//						}
-//					}
-//				}
-//			})->everyFiveMinutes();
-//		}
+		$banned = User::banned()->get();
+		$all = User::all();
+
+		$schedule->call(function() use ($banned)
+		{
+			foreach($banned as $u)
+			{
+				if ($u->banned_until != null)
+				{
+					if ($u->banned_until < Carbon::now()->toDateTimeString())
+					{
+						$u->update(array(
+							'is_banned' => 0,
+							'banned_until' => null
+						));
+					}
+				}
+			}
+		})->when(function()
+		{
+			return Schema::hasTable('users') && Schema::hasTable('migrations') && User::banned()->count() > 0;
+		})->cron('* * * * *');
+
+		$schedule->call(function() use ($all)
+		{
+			$now = Carbon::now();
+			$now->subMinutes(15); // A user is offline if they do nothing for 15 minutes
+
+			foreach($all as $u)
+			{
+				if ($u->last_active != null && $u->last_active < $now->toDateTimeString())
+				{
+					$u->update(array(
+						'is_online' => 0
+					));
+				}
+			}
+		})->when(function()
+		{
+			return Schema::hasTable('users') && Schema::hasTable('migrations') && User::all()->count() > 0;
+		})->cron('* * * * *');
 	}
 
 }

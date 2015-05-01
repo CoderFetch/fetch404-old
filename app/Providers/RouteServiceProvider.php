@@ -34,6 +34,7 @@ class RouteServiceProvider extends ServiceProvider {
 		$router->model('news', 'App\News');
 		$router->model('tag', 'App\Tag');
 		$router->model('profile_post', 'App\ProfilePost');
+		$router->model('post', 'App\Post');
 
 		$router->bind('conversation', function($value)
 		{

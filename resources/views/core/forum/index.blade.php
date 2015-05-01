@@ -8,7 +8,6 @@
 	</ol>
 	<br />
 	<div class="row">
-		@include('core.forum.partials.latest-threads')
 		<div class="col-md-9">
 		@if (!$categories->isEmpty())
 			@foreach($categories->all() as $category)
@@ -44,6 +43,10 @@
 			@else
 				<p>Either no categories have been defined, or you don't have permission to access any of them. :(</p>
 			@endif
+		</div>
+		<div class="col-md-3">
+		@include('core.forum.partials.online-users')
+		@include('core.forum.partials.latest-threads')
 		</div>
 	</div>
 @stop

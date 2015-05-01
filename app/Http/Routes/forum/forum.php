@@ -38,5 +38,19 @@ $router->group(['middleware' => ['installed', 'csrf']], function() use ($router)
         $router->get('/topic/{slug}.{id}/reply', ['uses' => 'Forum\ForumPageController@showReplyToThread', 'as' => 'forum.get.show.thread.reply']);
         $router->post('/topic/{slug}.{id}/reply', ['uses' => 'Forum\ForumController@postReplyToThread', 'as' => 'forum.post.thread.reply']);
 
+        $router->group(['prefix' => 'posts', 'namespace' => 'Forum'], function() use ($router)
+        {
+            $router->post('/{post}/like', [
+                'as' => 'forum.post.posts.like',
+                'uses' => 'LikesController@store',
+                'middleware' => ['auth', 'confirmed', 'csrf']
+            ]);
+
+            $router->post('/{post}/dislike', [
+                'as' => 'forum.post.posts.dislike',
+                'uses' => 'LikesController@destroy',
+                'middleware' => ['auth', 'confirmed', 'csrf']
+            ]);
+        });
     });
 });

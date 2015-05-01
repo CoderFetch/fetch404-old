@@ -45,7 +45,10 @@ class Channel extends Model {
 	{
 		if ($user == null)
 		{
-			return $this->canView($user);
+			if ($permissionId == 17 || $permissionId == 20)
+			{
+				return true;
+			}
 		}
 
 		$queryObj = ChannelPermission::select(array(
@@ -63,6 +66,11 @@ class Channel extends Model {
 		)->where('channel_id', '=', $this->id);
 
 		$permissions = $queryObj->get();
+
+		if ($user == null)
+		{
+			return in_array(3, $queryObj->lists('role_id')) && ($permissionId == 17 || $permissionId == 20);
+		}
 
 		if ($user && $user->roles->contains(1))
 		{

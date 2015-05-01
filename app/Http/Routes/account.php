@@ -1,7 +1,7 @@
 <?php
 
 # Account management routes
-$router->group(['middleware' => ['auth', 'csrf']], function() use ($router)
+$router->group(['middleware' => ['auth', 'csrf', 'bancheck', 'update_last_activity']], function() use ($router)
 {
     $router->get('/account/settings', ['as' => 'account.get.show.settings', function()
     {

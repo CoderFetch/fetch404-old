@@ -33,7 +33,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['name', 'email', 'password', 'slug', 'confirmed', 'is_banned', 'banned_until', 'last_active_desc', 'last_active'];
+	protected $fillable = ['name', 'email', 'password', 'slug', 'confirmed', 'is_banned', 'banned_until', 'last_active_desc', 'last_active', 'is_online'];
 
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -42,6 +42,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 */
 	protected $hidden = ['password', 'remember_token'];
 	
-	protected $dates = ['deleted_at', 'last_active'];
+	protected $dates = ['deleted_at', 'last_active', 'banned_until'];
 
 }

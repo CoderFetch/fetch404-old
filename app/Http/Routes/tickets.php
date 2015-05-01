@@ -1,7 +1,7 @@
 <?php
 
 # Ticket management
-$router->group(['prefix' => 'tickets', 'middleware' => ['auth', 'csrf']], function() use ($router)
+$router->group(['prefix' => 'tickets', 'middleware' => ['auth', 'csrf', 'bancheck', 'update_last_activity']], function() use ($router)
 {
     $router->get('/', ['as' => 'tickets', 'uses' => 'Tickets\TicketsController@index']);
     $router->post('/', ['as' => 'tickets.store', 'uses' => 'Tickets\TicketsController@store']);

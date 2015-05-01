@@ -57,7 +57,14 @@ class BanCheck {
 
 		if ($user->isBanned() && $routeName != 'auth.get.logout')
 		{
-			return response(view('core.errors.banned', array('user' => $user, 'site_title' => ($site_title ? $site_title->value : 'N/A'))), 500);
+			return response(
+				view('core.errors.banned',
+					array(
+						'user' => $user, 'site_title' => ($site_title ? $site_title->value : 'N/A'), 'banned_until' => $user->banned_until
+					)
+				),
+				500
+			);
 		}
 
 		else

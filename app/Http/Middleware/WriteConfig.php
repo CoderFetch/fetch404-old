@@ -43,6 +43,8 @@ class WriteConfig {
             Config::set('app.url', $baseURL != null ? $baseURL->value : route('home.show'));
         }
 
+        Config::set('app.debug', true);
+
         return $next($request);
     }
 

@@ -125,15 +125,25 @@ class AppServiceProvider extends ServiceProvider {
 		view()->composer('core.forum.partials.latest-threads', function($view) {
 			$threads = Topic::all()->take(5);
 
-			$threads = $threads->filter(function($item) {
-				return $item->channel->category->canView(Auth::user()) && $item->channel->canView(Auth::user());
-			});
-
 			$threads = $threads->sortByDesc(function($item) {
 				return $item->getLatestPost()->created_at;
 			});
 
 			$view->with('threads', $threads);
+		});
+
+		view()->composer('core.forum.partials.online-users', function($view) {
+			$online = User::where('is_online', '=', 1)->orderBy('name', 'asc')->get();
+
+			$view->with('users', $online);
+		});
+
+		view()->composer('core.forum.partials.stats', function($view) {
+			$users = User::all();
+			$latestUser = User::latest('created_at')->first();
+
+			$view->with('users', $users);
+			$view->with('latestUser', $latestUser);
 		});
 	}
 

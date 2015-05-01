@@ -54,19 +54,39 @@
 			</div>
 
 			<div class="col-md-9">
-			  By <a href="{{{ $post->user->profileURL }}}">{{{ $post->user->name }}}</a>
-			  &raquo;
-			  <span data-type="tooltip" data-trigger="hover" data-original-title="{{{ date('l \a\t g:h A', strtotime($thread->created_at)) }}}">{{{ $post->created_at->diffForHumans() }}}</span>
-			  <hr>
-			  {!! Mentions::parse(Purifier::clean($post->content)) !!}
+			  	By <a href="{{{ $post->user->profileURL }}}">{{{ $post->user->name }}}</a>
+				&raquo;
+			  	<span data-type="tooltip" data-trigger="hover" data-original-title="{{{ date('l \a\t g:h A', strtotime($post->created_at)) }}}">{{{ $post->created_at->diffForHumans() }}}</span>
+				<span class="pull-right">
+					{!! Form::open(['route' => 'forum.post.posts.like', 'style' => 'display: inline;']) !!}
+						{!! Form::button('<span class="glyphicon glyphicon-exclamation-sign"></span>', array('class' => 'btn btn-warning btn-xs', 'type' => 'submit')) !!}
+					{!! Form::close() !!}
+					{{--<a rel="tooltip" title="Report post" href="/forum/report_post/?pid=21&amp;tid=3" class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-exclamation-sign"></span></a>--}}
 
-			  <br />
-			  <hr>
+					{{--<a rel="tooltip" title="Quote post" href="/forum/create_post/?tid=3&amp;qid=21&amp;fid=2" class="btn btn-info btn-xs"><span class="glyphicon glyphicon-share"></span></a>--}}
+  	      	  	</span>
+				<hr>
+			  	{!! Mentions::parse(Purifier::clean($post->content)) !!}
+			  	<br />
+				@unless(Auth::check() && Auth::id() == $post->user->id)
+				<span class="pull-right">
+					@unless($post->isLikedBy(Auth::user()))
+					{!! Form::open(['route' => array('forum.post.posts.like', $post), 'style' => 'display: inline;']) !!}
+						<button data-type="tooltip" title="Give reputation" type="submit" class="btn btn-success btn-sm give-rep"><span class="glyphicon glyphicon-thumbs-up"></span></button>
+					{!! Form::close() !!}
+					@endunless
+					@unless(!$post->isLikedBy(Auth::user()))
+					{!! Form::open(['route' => array('forum.post.posts.dislike', $post), 'style' => 'display: inline;']) !!}
+						<button data-type="tooltip" title="Remove reputation" type="submit" class="btn btn-danger btn-sm give-rep"><span class="glyphicon glyphicon-thumbs-down"></span></button>
+					{!! Form::close() !!}
+					@endunless
+					<button class="btn btn-default btn-sm count-rep"><strong>{{{ $post->likes()->count() }}}</strong></button>
+  	      	  	</span>
+				<br />
+				@endunless
+			  	<hr>
 			</div>
 		  </div>
-		</div>
-		<div class="panel-footer" style="border-top: 1px solid #eee;font-size: 11px;padding: 14px 14px;margin: 1px 0 0;">
-			<i class="fa fa-thumbs-o-up" style="font-size: 15px;"></i>
 		</div>
 	</div>
 @endforeach

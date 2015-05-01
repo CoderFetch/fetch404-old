@@ -43,7 +43,7 @@ class ForumController extends Controller {
 	 * Attempt to create a thread
 	 *
 	 * @param string $slug
-	 * @param Illuminate\Http\Request $request
+	 * @param Request $request
 	 * @return void
 	 */
 	public function postCreateThread($slug, Request $request)
@@ -119,9 +119,10 @@ class ForumController extends Controller {
 	 * Attempt to quick-reply to a thread
 	 *
 	 * @param string $slug
-	 * @param Illuminate\Http\Request $request
+	 * @param $id
+	 * @param Request $request
 	 * @return void
-	 */	
+	 */
 	public function postQuickReplyToThread($slug, $id, Request $request)
 	{	
 		if (!$slug || !$id)
@@ -182,7 +183,8 @@ class ForumController extends Controller {
 	 * Attempt to reply to a thread
 	 *
 	 * @param string $slug
-	 * @param Illuminate\Http\Request $request
+	 * @param integer $id
+	 * @param Request $request
 	 * @return void
 	 */	
 	public function postReplyToThread($slug, $id, Request $request)

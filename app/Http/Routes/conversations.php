@@ -1,7 +1,7 @@
 <?php
 
 # Private messaging
-$router->group(['prefix' => 'conversations', 'middleware' => ['auth', 'csrf'], 'namespace' => 'Messaging'], function () use ($router)
+$router->group(['prefix' => 'conversations', 'middleware' => ['auth', 'csrf', 'bancheck', 'update_last_activity'], 'namespace' => 'Messaging'], function () use ($router)
 {
     $router->get('/', ['as' => 'conversations', 'uses' => 'MessagesController@index']);
     $router->get('create', ['as' => 'conversations.create', 'uses' => 'MessagesController@create']);

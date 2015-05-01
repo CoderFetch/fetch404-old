@@ -54,13 +54,13 @@ class Category extends Model {
 
 	public function can($permissionId, $user)
 	{
-		if ($user == null)
-		{
-			if ($permissionId == 17 || $permissionId == 20)
-			{
-				return true;
-			}
-		}
+//		if ($user == null)
+//		{
+//			if ($permissionId == 17 || $permissionId == 20)
+//			{
+//				return true;
+//			}
+//		}
 
 		$queryObj = CategoryPermission::select(array(
 			'category_permission.permission_id',
@@ -77,6 +77,11 @@ class Category extends Model {
 		)->where('category_id', '=', $this->id);
 
 		$permissions = $queryObj->get();
+
+		if ($user == null)
+		{
+			return in_array(3, $queryObj->lists('role_id')) && ($permissionId == 17 || $permissionId == 20);
+		}
 
 		if ($user && $user->roles->contains(1))
 		{

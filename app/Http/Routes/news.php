@@ -1,7 +1,7 @@
 <?php
 
 # News management
-$router->group(['prefix' => 'news'], function() use ($router)
+$router->group(['prefix' => 'news', 'middleware' => ['bancheck', 'update_last_activity']], function() use ($router)
 {
     $router->get('/', ['as' => 'news.index', 'uses' => 'News\NewsController@showIndex']);
 

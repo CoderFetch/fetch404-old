@@ -196,6 +196,10 @@ class AuthController extends Controller {
 	{
 		if ($this->auth->check())
 		{
+			$this->auth->user()->update(array(
+				'is_online' => 0
+			));
+
 			$this->auth->logout();
 			Session::flush();
 			

@@ -3,7 +3,9 @@
 use App\Events\ProfilePostWasDeleted;
 use App\Events\TopicWasLocked;
 use App\Events\TopicWasPinned;
+use App\Events\UserDislikedSomething;
 use App\Events\UserFollowedSomeone;
+use App\Events\UserLikedSomething;
 use App\Events\UserUnfollowedSomeone;
 use App\Events\UserWasBanned;
 use App\Events\UserWasUnbanned;
@@ -15,6 +17,9 @@ use App\Handlers\Events\DeleteProfilePost;
 use App\Handlers\Events\LockTopic;
 use App\Handlers\Events\PinTopic;
 use App\Handlers\Events\RemoveUserFollower;
+use App\Handlers\Events\SendDislikeNotification;
+use App\Handlers\Events\SendFollowerNotification;
+use App\Handlers\Events\SendLikeNotification;
 use App\Handlers\Events\SendProfilePostNotification;
 use App\Handlers\Events\SetMemberRole;
 use App\Handlers\Events\UnbanUser;
@@ -53,7 +58,8 @@ class EventServiceProvider extends ServiceProvider {
 			PinTopic::class
 		],
 		UserFollowedSomeone::class => [
-			AddUserFollower::class
+			AddUserFollower::class,
+			SendFollowerNotification::class
 		],
 		UserUnfollowedSomeone::class => [
 			RemoveUserFollower::class
@@ -64,6 +70,12 @@ class EventServiceProvider extends ServiceProvider {
 		],
 		ProfilePostWasDeleted::class => [
 			DeleteProfilePost::class
+		],
+		UserLikedSomething::class => [
+			SendLikeNotification::class
+		],
+		UserDislikedSomething::class => [
+			SendDislikeNotification::class
 		]
 	];
 

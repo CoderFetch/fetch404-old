@@ -1,6 +1,7 @@
-<?php namespace App\Http\Requests\Fetch404\Posts;
+<?php namespace App\Http\Requests\Forum\Posts;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class PostLikeRequest extends FormRequest {
 
@@ -11,7 +12,7 @@ class PostLikeRequest extends FormRequest {
      */
     public function authorize()
     {
-        return false;
+        return Auth::check() && Auth::user()->isConfirmed();
     }
 
     /**

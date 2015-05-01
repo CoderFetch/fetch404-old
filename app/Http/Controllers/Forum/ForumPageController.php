@@ -47,18 +47,18 @@ class ForumPageController extends Controller {
 	{
 		$categories = Category::with('channels')->get();
 
-		$categories = $categories->filter(function($item)
-		{
-			return $item->can(20, Auth::user());
-		});
+//		$categories = $categories->filter(function($item)
+//		{
+//			return $item->can(20, Auth::user());
+//		});
 
-		foreach($categories as $category)
-		{
-			$category->channels = $category->channels->filter(function($item)
-			{
-				return $item->can(21, Auth::user());
-			});
-		}
+//		foreach($categories as $category)
+//		{
+//			$category->channels = $category->channels->filter(function($item)
+//			{
+//				return $item->can(21, Auth::user());
+//			});
+//		}
 
 		return view('core.forum.index', [
 			'categories' => $categories
@@ -86,10 +86,10 @@ class ForumPageController extends Controller {
 		
 		if ($category)
 		{
-			if (!$category->canView(Auth::user()))
-			{
-				abort(403);
-			}
+//			if (!$category->canView(Auth::user()))
+//			{
+//				abort(403);
+//			}
 
 			return view('core.forum.category', [
 				'category' => $category
@@ -122,6 +122,11 @@ class ForumPageController extends Controller {
 		
 		if ($category)
 		{
+//			if (!$category->canView(Auth::user()))
+//			{
+//				abort(403);
+//			}
+
 			$topPosters = new Collection($category->posts());
 			
 			$topPosters->sortByDesc(function($item)
@@ -161,10 +166,10 @@ class ForumPageController extends Controller {
 		
 		if ($channel)
 		{
-			if (!$channel->canView(Auth::user()))
-			{
-				abort(403);
-			}
+//			if (!$channel->canView(Auth::user()))
+//			{
+//				abort(403);
+//			}
 
 			return view('core.forum.channel', [
 				'channel' => $channel

@@ -1,7 +1,7 @@
 <?php
 
 # Search
-$router->group(['prefix' => 'search'], function() use ($router)
+$router->group(['prefix' => 'search', 'middleware' => ['bancheck', 'update_last_activity']], function() use ($router)
 {
     $router->get('/', ['as' => 'search', 'uses' => 'Searching\SearchController@showIndex']);
 
