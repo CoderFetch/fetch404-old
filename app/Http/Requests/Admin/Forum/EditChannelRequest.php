@@ -12,9 +12,7 @@ use Zizaco\Entrust\EntrustFacade as Entrust;
 class EditChannelRequest extends FormRequest
 {
     protected $rules = [
-        'name' => 'required|min:5|max:20',
-        'allowed_groups' => 'required',
-        'create_threads' => 'required'
+        'name' => 'required|min:5|max:20'
     ];
 
     public function rules()
@@ -55,9 +53,7 @@ class EditChannelRequest extends FormRequest
             'name.min' => 'Channel titles must be at least 5 characters long.',
             'name.max' => 'Channel titles can be up to 20 characters long.',
             'name.unique' => 'That name is in use. Try another.',
-            'weight.numeric' => 'Please enter a valid number.',
-            'allowed_groups.required' => 'You must allow at least 1 group to view this channel.',
-            'create_threads.required' => 'You must allow at least 1 group to create threads in this channel.'
+            'weight.numeric' => 'Please enter a valid number.'
         ];
     }
 

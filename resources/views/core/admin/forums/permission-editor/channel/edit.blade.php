@@ -14,6 +14,16 @@
     <div class="row">
         @include('core.admin.partials.sidebar')
         <div class="col-md-9">
+            @if (count($errors) > 0)
+                <div class="alert alert-danger">
+                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             {!! Form::open(['route' => array('admin.forum.get.permissions.channels.edit', $channel)]) !!}
             <div class="form-group">
                 {!! Form::label('allowed_groups', 'Allowed groups', ['class' => 'control-label']) !!}
@@ -26,13 +36,17 @@
 
             <div class="form-group">
                 {!! Form::label('create_threads', 'Who can create threads?', ['class' => 'control-label']) !!}
-                {!! Form::select('create_threads[]', $groups, $createThread, ['id' => 'create_threads', 'class' => 'form-control', 'multiple']) !!}
+                <select name="create_threads[]" id="create_threads" class="form-control" multiple>
+                    @foreach($groups as $i => $g)
+                        <option value="{{{ $i }}}"{{{ in_array($i, $createThread) ? ' selected=selected' : '' }}}>{{{ $g }}}</option>
+                    @endforeach
+                </select>
             </div>
 
             <div class="form-group">
                 {!! Form::submit('Save changes', ['class' => 'btn btn-success']) !!}
             </div>
-            
+
             {!! Form::close() !!}
         </div>
     </div>

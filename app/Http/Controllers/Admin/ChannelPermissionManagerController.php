@@ -5,8 +5,10 @@ use App\ChannelPermission;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\Http\Requests\Admin\Forum\UpdateChannelPermissionsRequest;
 use App\Role;
 use Illuminate\Http\Request;
+use Laracasts\Flash\Flash;
 
 class ChannelPermissionManagerController extends Controller {
 
@@ -23,26 +25,6 @@ class ChannelPermissionManagerController extends Controller {
 		return view('core.admin.forums.permission-editor.channel.index', array(
 			'channels' => $channels
 		));
-	}
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		//
-	}
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		//
 	}
 
 	/**
@@ -97,23 +79,45 @@ class ChannelPermissionManagerController extends Controller {
 	/**
 	 * Update the specified resource in storage.
 	 *
-	 * @param  int  $id
+	 * @param UpdateChannelPermissionsRequest $request
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(UpdateChannelPermissionsRequest $request)
 	{
 		//
-	}
+		$channel = $request->route()->getParameter('channel');
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
+		$accessChannel = $request->input('allowed_groups');
+		$createThreads = $request->input('create_threads');
+
+		ChannelPermission::where('channel_id', '=', $channel->id)
+			->where('permission_id', '=', 21)
+			->orWhere('permission_id', '=', 1)
+			->delete();
+
+		foreach($accessChannel as $id)
+		{
+			$perm = ChannelPermission::firstOrCreate(array(
+				'permission_id' => 21,
+				'role_id' => $id,
+				'channel_id' => $channel->id
+			));
+		}
+
+		foreach($createThreads as $id)
+		{
+			$create_threads = ChannelPermission::firstOrCreate(array(
+				'permission_id' => 1,
+				'role_id' => $id,
+				'channel_id' => $channel->id
+			));
+		}
+
+		Flash::success('Updated channel permissions!');
+
+		return redirect(route('admin.forum.get.permissions.channels.edit', array(
+			$channel
+		)));
 	}
 
 }
