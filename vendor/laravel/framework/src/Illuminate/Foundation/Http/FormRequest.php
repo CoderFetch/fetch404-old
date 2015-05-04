@@ -145,6 +145,12 @@ class FormRequest extends Request implements ValidatesWhenResolved {
 	 */
 	public function forbiddenResponse()
 	{
+//		return new Response('Forbidden', 403);
+		if (view()->exists('core.errors.403'))
+		{
+			return new Response(view('core.errors.403'), 403);
+		}
+
 		return new Response('Forbidden', 403);
 	}
 

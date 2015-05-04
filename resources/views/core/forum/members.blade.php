@@ -11,7 +11,7 @@
                 <img class="media-object" src="{{ $u->getAvatarURL(40) }}" alt="{{ $u->name }}">
             </a>
             <h4>
-                {{{ $u->name }}}
+                {!! link_to($u->profileURL, $u->name) !!}
             </h4>
         </div>
     @endforeach

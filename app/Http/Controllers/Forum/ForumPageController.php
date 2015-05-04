@@ -25,6 +25,7 @@ use Response;
 use Redirect;
 use Session;
 use Validator;
+use Zizaco\Entrust\EntrustFacade;
 
 class ForumPageController extends Controller {
 
@@ -47,18 +48,25 @@ class ForumPageController extends Controller {
 	{
 		$categories = Category::with('channels')->get();
 
-//		$categories = $categories->filter(function($item)
-//		{
-//			return $item->can(20, Auth::user());
-//		});
+		$categories = $categories->filter(function($item)
+		{
+			return $item->can(20, Auth::user());
+		});
 
-//		foreach($categories as $category)
-//		{
-//			$category->channels = $category->channels->filter(function($item)
-//			{
-//				return $item->can(21, Auth::user());
-//			});
-//		}
+		foreach($categories as $category)
+		{
+			$category->channels = $category->channels->filter(function($item)
+			{
+				return $item->can(21, Auth::user());
+			});
+		}
+
+		if (Auth::check())
+		{
+			Auth::user()->update(array(
+				'last_active_desc' => 'Viewing forum index'
+			));
+		}
 
 		return view('core.forum.index', [
 			'categories' => $categories
@@ -86,10 +94,22 @@ class ForumPageController extends Controller {
 		
 		if ($category)
 		{
-//			if (!$category->canView(Auth::user()))
-//			{
-//				abort(403);
-//			}
+			if (!$category->canView(Auth::user()))
+			{
+				abort(403);
+			}
+
+			if (Auth::check())
+			{
+				Auth::user()->update(array(
+					'last_active_desc' => 'Viewing category "' . $category->name . '"'
+				));
+			}
+
+			$category->channels = $category->channels->filter(function($item)
+			{
+				return $item->can(21, Auth::user());
+			});
 
 			return view('core.forum.category', [
 				'category' => $category
@@ -122,10 +142,17 @@ class ForumPageController extends Controller {
 		
 		if ($category)
 		{
-//			if (!$category->canView(Auth::user()))
-//			{
-//				abort(403);
-//			}
+			if (!$category->canView(Auth::user()))
+			{
+				abort(403);
+			}
+
+			if (Auth::check())
+			{
+				Auth::user()->update(array(
+					'last_active_desc' => 'Viewing category "' . $category->name . '"'
+				));
+			}
 
 			$topPosters = new Collection($category->posts());
 			
@@ -166,10 +193,17 @@ class ForumPageController extends Controller {
 		
 		if ($channel)
 		{
-//			if (!$channel->canView(Auth::user()))
-//			{
-//				abort(403);
-//			}
+			if (!$channel->canView(Auth::user()))
+			{
+				abort(403);
+			}
+
+			if (Auth::check())
+			{
+				Auth::user()->update(array(
+					'last_active_desc' => 'Viewing channel "' . $channel->name . '"'
+				));
+			}
 
 			return view('core.forum.channel', [
 				'channel' => $channel
@@ -204,9 +238,25 @@ class ForumPageController extends Controller {
 			'=',
 			$id
 		)->with('channel', 'user', 'posts')->first();
-		
+
 		if ($thread)
 		{
+			$thread->posts = $thread->posts->filter(function($item)
+			{
+				return ($item->reports->isEmpty() ? true : EntrustFacade::can('viewReportedPosts'));
+			});
+
+			if (Auth::check())
+			{
+				if (!$thread->old && !is_null(Auth::user()))
+				{
+					$thread->markAsRead(Auth::id());
+				}
+
+				Auth::user()->update(array(
+					'last_active_desc' => 'Viewing thread "' . $thread->title . '"'
+				));
+			}
 			return view('core.forum.thread', [
 				'thread' => $thread
 			]);
@@ -317,6 +367,7 @@ class ForumPageController extends Controller {
 			'totalPosts' => $totalPosts
 		]);
 	}
+
 	/**
 	 * Create a new forum page controller instance.
 	 *

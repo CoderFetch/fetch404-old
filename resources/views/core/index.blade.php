@@ -46,5 +46,9 @@
 			<p>There is no news.</p>
 			@endif
 		</div>
+
+		<div class="col-md-3">
+			@include('core.forum.partials.online-users')
+		</div>
 	</div>
 @stop

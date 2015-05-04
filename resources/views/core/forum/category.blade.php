@@ -9,7 +9,7 @@
 	</ol>
 	<br />
 	<div class="row">
-		<div class="col-lg-7">
+		<div class="col-md-8">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h3 class="panel-title">{{{ $category->name }}}</h3>
@@ -17,6 +17,7 @@
 				<div class="panel-body">
 					@if (!$category->channels->isEmpty())
 					@foreach($category->channels as $i => $channel)
+					@if ($channel->canView(Auth::user()))
 					<span>
 						<i class="fa fa-comment fa-fw fa-2x pull-left"></i>
 						<h3 style="margin-top: 5px;"><a href="{{{ $channel->Route }}}"@if ($channel->description != null)data-type="tooltip" data-original-title="{{{ $channel->description }}}" @endif>{{{ $channel->name }}}</a></h3>
@@ -25,9 +26,10 @@
 					@if ($i != sizeof($category->channels) - 1)
 					<hr>
 					@endif
+					@endif
 					@endforeach
 					@else
-					<p>No channels have been defined for this category.</p>
+					<p>Either no channels have been defined, or you don't have permission to access any of them. :(</p>
 					@endif
 				</div>
 			</div>
@@ -41,9 +43,9 @@
 				<div class="panel-body">
 					<label>Posts:</label> {{{ sizeof($category->getPosts()) }}}
 					<br>
-					<label>Discussions:</label> {{{ sizeof($category->topics) }}}
+					<label>Discussions:</label> {{{ sizeof($category->getTopics()) }}}
 				</div>
-			</div>	
+			</div>
 		</div>
 	</div>
 @stop

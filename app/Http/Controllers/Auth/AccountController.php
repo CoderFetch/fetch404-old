@@ -113,7 +113,6 @@ class AccountController extends Controller {
 		$user = $request->user(); // Set $user to the request's current user.
 
 		$oldName = $user->name;
-		$oldEmail = $user->email;
 
 		if (!$user)
 		{

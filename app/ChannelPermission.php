@@ -6,7 +6,7 @@ class ChannelPermission extends Model {
     //
 
     protected $table = 'channel_permission';
-    protected $fillable = [];
+    protected $fillable = ['permission_id', 'channel_id', 'role_id'];
 
     public function channel()
     {

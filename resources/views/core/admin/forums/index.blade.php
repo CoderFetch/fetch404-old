@@ -34,7 +34,7 @@
 					@foreach($category->channels as $i => $channel)
 					<span>
 						<div class="pull-right">
-							<a class="btn btn-info btn-sm">Edit</a>
+							<a class="btn btn-info btn-sm" href="{{{ route('admin.forum.get.edit.channel', $channel) }}}">Edit</a>
 							<button class="btn btn-danger btn-sm">Delete</button>
 						</div>
 						<h4 style="margin-top: 5px;">{{{ $channel->name }}}</h4>

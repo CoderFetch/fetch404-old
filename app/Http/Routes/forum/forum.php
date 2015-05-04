@@ -11,7 +11,7 @@
 |
 */
 
-$router->group(['middleware' => ['installed', 'csrf']], function() use ($router) {
+$router->group(['middleware' => ['installed', 'csrf', 'bancheck', 'update_last_activity']], function() use ($router) {
 
     # Forum routes
     $router->group(['prefix' => 'forum'], function() use ($router)
@@ -38,6 +38,21 @@ $router->group(['middleware' => ['installed', 'csrf']], function() use ($router)
         $router->get('/topic/{slug}.{id}/reply', ['uses' => 'Forum\ForumPageController@showReplyToThread', 'as' => 'forum.get.show.thread.reply']);
         $router->post('/topic/{slug}.{id}/reply', ['uses' => 'Forum\ForumController@postReplyToThread', 'as' => 'forum.post.thread.reply']);
 
+        $router->group(['prefix' => 'topics', 'namespace' => 'Forum'], function() use ($router)
+        {
+            $router->get('/{topic}/lock', [
+                'as' => 'forum.post.topics.lock',
+                'uses' => 'ModerationController@lock',
+                'middleware' => ['auth', 'confirmed', 'csrf']
+            ]);
+
+            $router->get('/{topic}/unlock', [
+                'as' => 'forum.post.topics.unlock',
+                'uses' => 'ModerationController@unlock',
+                'middleware' => ['auth', 'confirmed', 'csrf']
+            ]);
+        });
+
         $router->group(['prefix' => 'posts', 'namespace' => 'Forum'], function() use ($router)
         {
             $router->post('/{post}/like', [
@@ -51,6 +66,25 @@ $router->group(['middleware' => ['installed', 'csrf']], function() use ($router)
                 'uses' => 'LikesController@destroy',
                 'middleware' => ['auth', 'confirmed', 'csrf']
             ]);
+
+            $router->get('/{post}/report', [
+                'as' => 'forum.get.posts.report',
+                'uses' => 'PostReportsController@show',
+                'middleware' => ['auth', 'confirmed', 'csrf']
+            ]);
+
+            $router->post('/{post}/report', [
+                'as' => 'forum.post.posts.report',
+                'uses' => 'PostReportsController@store',
+                'middleware' => ['auth', 'confirmed', 'csrf']
+            ]);
+
+            $router->post('/{post}/edit', [
+                'as' => 'forum.get.posts.edit',
+                'uses' => 'PostsController@edit',
+                'middleware' => ['auth', 'confirmed', 'csrf']
+            ]);
         });
     });
+
 });

@@ -165,6 +165,8 @@ class ForumController extends Controller {
 					'user_id' => Auth::id(),
 					'content' => $body
 				]);
+
+				$post->topic->touch();
 				
 				return redirect('/forum/topic/' . $thread->slug . '.' . $thread->id . ($thread->postsPaginated->hasPages() ? '?page=' . $thread->postsPaginated->lastPage() : ''));
 			}
@@ -229,6 +231,8 @@ class ForumController extends Controller {
 					'user_id' => Auth::id(),
 					'content' => $body
 				]);
+
+				$post->topic->touch();
 
 				if ($post->topic->user->id != Auth::id())
 				{

@@ -6,7 +6,7 @@ class CategoryPermission extends Model {
     //
 
     protected $table = 'category_permission';
-    protected $fillable = [];
+    protected $fillable = ['permission_id', 'category_id', 'role_id'];
 
     public function category()
     {

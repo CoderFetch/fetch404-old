@@ -14,7 +14,9 @@
 $router->group(['middleware' => ['installed', 'csrf']], function() use ($router)
 {
     $router->model('category', 'App\Category');
+    $router->model('channel', 'App\Channel');
     $router->model('user', 'App\User');
+    $router->model('report', 'App\Report');
 
     # Administration routes
     $router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function () use ($router)
@@ -53,6 +55,56 @@ $router->group(['middleware' => ['installed', 'csrf']], function() use ($router)
 
             $router->get('/{category}/edit', ['as' => 'admin.forum.get.edit.category', 'uses' => 'AdminForumsController@showEditCategory']);
             $router->post('/{category}/edit', ['as' => 'admin.forum.post.edit.category', 'uses' => 'AdminForumsController@editCategory']);
+
+            $router->get('/channel/{channel}/edit', ['as' => 'admin.forum.get.edit.channel', 'uses' => 'AdminForumsController@showEditChannel']);
+            $router->post('/channel/{channel}/edit', ['as' => 'admin.forum.post.edit.channel', 'uses' => 'AdminForumsController@editChannel']);
+
+            $router->group(['prefix' => 'permissions'], function() use ($router)
+            {
+                $router->get('/categories', [
+                    'as' => 'admin.forum.get.permissions.categories.index',
+                    'uses' => 'CategoryPermissionManagerController@index'
+                ]);
+
+                $router->get('/channels', [
+                    'as' => 'admin.forum.get.permissions.channels.index',
+                    'uses' => 'ChannelPermissionManagerController@index'
+                ]);
+
+                $router->get('/channels/{channel}/edit', [
+                    'as' => 'admin.forum.get.permissions.channels.edit',
+                    'uses' => 'ChannelPermissionManagerController@edit'
+                ]);
+
+                $router->post('/channels/{channel}/edit', [
+                    'as' => 'admin.forum.get.permissions.channels.edit',
+                    'uses' => 'ChannelPermissionManagerController@update'
+                ]);
+
+                $router->get('/categories/{category}/edit', [
+                    'as' => 'admin.forum.get.permissions.category.edit',
+                    'uses' => 'CategoryPermissionManagerController@edit'
+                ]);
+
+                $router->post('/categories/{category}/edit', [
+                    'as' => 'admin.forum.post.permissions.category.edit',
+                    'uses' => 'CategoryPermissionManagerController@update'
+                ]);
+            });
+        });
+
+        # Reports
+        $router->group(['prefix' => 'reports'], function () use ($router)
+        {
+            $router->get('/', [
+                'as' => 'reports.index',
+                'uses' => 'AdminReportsController@index'
+            ]);
+
+            $router->get('/{report}', [
+                'as' => 'reports.view',
+                'uses' => 'AdminReportsController@show'
+            ]);
         });
 
         Entrust::routeNeedsPermission('admin*', 'accessAdminPanel');

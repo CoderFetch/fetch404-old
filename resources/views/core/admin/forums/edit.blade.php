@@ -2,7 +2,12 @@
 @section('title', 'Editing category')
     {{-- Content here --}}
 @section('content')
-    <h1>Editing category</h1>
+    <h1>
+        <a class="btn btn-info btn-md pull-right" href="{{{ route('admin.forum.get.permissions.category.edit', $category) }}}">
+            Manage permissions
+        </a>
+        Editing category
+    </h1>
     <hr>
     {!! Form::open(['route' => array('admin.forum.post.edit.category', $category)]) !!}
     <div class="row">

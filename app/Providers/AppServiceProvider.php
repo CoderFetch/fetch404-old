@@ -1,5 +1,7 @@
 <?php namespace App\Providers;
 
+use App\ProfilePost;
+use App\Report;
 use App\Role;
 use App\Ticket;
 use App\User;
@@ -72,6 +74,23 @@ class AppServiceProvider extends ServiceProvider {
 				});
 
 				$view->with('messages', $messages);
+
+				if ($user->can('viewReports'))
+				{
+					$reports = Report::all();
+
+					$reports = $reports->sortByDesc(function($item)
+					{
+						return $item->updated_at;
+					});
+
+					$reports = $reports->filter(function($item) use ($user)
+					{
+						return !$item->isClosed();
+					});
+
+					$view->with('reports', $reports);
+				}
 			}
 		});
 
@@ -83,6 +102,27 @@ class AppServiceProvider extends ServiceProvider {
 			$view->with('site_title', ($site_title != null ? e($site_title->value) : 'Fetch404'));
 			$view->with('theme_id', ($site_theme != null ? e($site_theme->value) : '1'));
 			$view->with('navbar_style', ($navbar_style != null ? e($navbar_style->value) : '0'));
+
+			$user = Auth::user();
+
+			$view->with('user', $user);
+
+			if ($user->can('viewReports'))
+			{
+				$reports = Report::all();
+
+				$reports = $reports->sortByDesc(function($item)
+				{
+					return $item->updated_at;
+				});
+
+				$reports = $reports->filter(function($item) use ($user)
+				{
+					return !$item->isClosed();
+				});
+
+				$view->with('reports', $reports);
+			}
 		});
 
 		view()->composer('core.admin.general', function($view) {
@@ -125,6 +165,10 @@ class AppServiceProvider extends ServiceProvider {
 		view()->composer('core.forum.partials.latest-threads', function($view) {
 			$threads = Topic::all()->take(5);
 
+			$threads = $threads->filter(function($item) {
+				return $item->channel->category->canView(Auth::user()) && $item->channel->canView(Auth::user());
+			});
+
 			$threads = $threads->sortByDesc(function($item) {
 				return $item->getLatestPost()->created_at;
 			});
@@ -144,6 +188,20 @@ class AppServiceProvider extends ServiceProvider {
 
 			$view->with('users', $users);
 			$view->with('latestUser', $latestUser);
+		});
+
+		view()->composer('core.forum.partials.latest-statuses', function($view) {
+			$statuses = ProfilePost::
+
+			$statuses = $statuses->filter(function($item) {
+				return $item->channel->category->canView(Auth::user()) && $item->channel->canView(Auth::user());
+			});
+
+			$statuses = $statuses->sortByDesc(function($item) {
+				return $item->getLatestPost()->created_at;
+			});
+
+			$view->with('statuses', $statuses);
 		});
 	}
 

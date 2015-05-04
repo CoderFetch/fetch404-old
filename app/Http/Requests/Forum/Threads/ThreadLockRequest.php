@@ -1,6 +1,8 @@
-<?php namespace App\Http\Requests;
+<?php namespace App\Http\Requests\Forum\Threads;
 
 use Illuminate\Foundation\Http\FormRequest;
+
+use Zizaco\Entrust\EntrustFacade as Entrust;
 
 class ThreadLockRequest extends FormRequest {
 
@@ -11,7 +13,9 @@ class ThreadLockRequest extends FormRequest {
 	 */
 	public function authorize()
 	{
-		return false;
+		$topic = $this->route()->getParameter('topic');
+
+		return Entrust::can('moderateThreads') && Entrust::can('lockThreads') && $topic->canView;
 	}
 
 	/**

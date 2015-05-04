@@ -57,7 +57,9 @@
 			$('[data-submit]:not(.disabled)').click(function(event) {
 				var form = $(this).closest('form');
 
-				form.submit();
+				if (form.length > 0) {
+					form.submit();
+				}
 
 				event.preventDefault();
 			});
@@ -195,6 +197,18 @@
 								Admin
 							</a>
 						</li>
+						@if ($user->can('viewReports'))
+						@unless($reports->isEmpty())
+						<li>
+							<a href="{{{ route('reports.index') }}}">
+								<i class="fa fa-exclamation-circle"></i>
+								<span class="badge">
+									{{{ $reports->count() }}}
+								</span>
+							</a>
+						</li>
+						@endunless
+						@endif
 						@endif
 						@endif
 					</ul>

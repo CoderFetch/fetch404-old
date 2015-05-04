@@ -1,16 +1,23 @@
 <?php namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 use Auth;
 use URL;
+
+use Zizaco\Entrust\EntrustFacade as Entrust;
 
 class Topic extends Model {
 
 	//
 	protected $table = 'topics';
 	protected $fillable = ['title', 'user_id', 'channel_id', 'locked', 'pinned', 'slug'];
-	
+
+	// Thread constants
+	const     STATUS_UNREAD  = 'unread';
+	const     STATUS_UPDATED = 'updated';
+
 	public function channel()
 	{
 		return $this->belongsTo('App\Channel');
@@ -24,6 +31,16 @@ class Topic extends Model {
 	public function posts()
 	{
 		return $this->hasMany('App\Post');
+	}
+
+	public function isLocked()
+	{
+		return $this->locked == 1;
+	}
+
+	public function isPinned()
+	{
+		return $this->pinned == 1;
 	}
 
 	public function getLatestPost()
@@ -67,6 +84,11 @@ class Topic extends Model {
 	{
 		return route('forum.post.quick-reply.thread', ['slug' => $this->slug, 'id' => $this->id]);
 	}
+
+	public function getCanViewAttribute()
+	{
+		return ($this->channel->canView(Auth::user()) && $this->channel->category->canView(Auth::user()));
+	}
 	
 	public function getReplyCountAttribute()
 	{
@@ -77,11 +99,75 @@ class Topic extends Model {
 	
 	public function getCanReplyAttribute()
 	{
-		return Auth::check() && Auth::user()->isConfirmed() && $this->locked == 0;
+		if (Entrust::can('replyToAllThreads')) return true;
+
+		if (Auth::check() && Auth::user()->isConfirmed() && $this->locked == 0) return true;
+
+		return false;
 	}
 
 	public function getUser()
 	{
 		return $this->user;
+	}
+
+	public function getOldAttribute()
+	{
+		//return (!$cutoff || $this->updated_at->timestamp < strtotime($cutoff));
+		$now = Carbon::now();
+		$now->subMonths(1);
+
+		// The thread is old if there have been no posts since a month ago.
+
+		return $this->updated_at->toDateTimeString() < $now->toDateTimeString();
+	}
+
+	public function readers()
+	{
+		return $this->belongsToMany('App\User', 'forum_threads_read', 'topic_id', 'user_id')->withTimestamps();
+	}
+
+	// Current user: reader attributes
+	public function getReaderAttribute()
+	{
+		if (!is_null(Auth::user()))
+		{
+			$reader = $this->readers()->where('user_id', '=', Auth::id())->first();
+			return (!is_null($reader)) ? $reader->pivot : null;
+		}
+
+		return null;
+	}
+
+	public function getUserReadStatusAttribute()
+	{
+		if (!$this->old && !is_null(Auth::user()))
+		{
+			if (is_null($this->reader))
+			{
+				return self::STATUS_UNREAD;
+			}
+
+			return ($this->updatedSince($this->reader)) ? self::STATUS_UPDATED : false;
+		}
+
+		return false;
+	}
+
+	public function updatedSince(&$model)
+	{
+		return ($this->updated_at > $model->updated_at);
+	}
+
+	public function markAsRead($userID)
+	{
+		if (is_null($this->reader))
+		{
+			$this->readers()->attach($userID);
+		}
+		elseif ($this->updatedSince($this->reader))
+		{
+			$this->reader->touch();
+		}
 	}
 }

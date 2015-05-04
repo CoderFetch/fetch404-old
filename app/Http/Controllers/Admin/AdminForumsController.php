@@ -2,6 +2,7 @@
 
 // Custom controller
 use App\CategoryPermission;
+use App\ChannelPermission;
 use App\Http\Controllers\AdminController;
 
 // Facades
@@ -11,6 +12,7 @@ use App\Http\Requests\Admin\Forum\CreateCategoryRequest;
 
 use App\Http\Requests\Admin\Forum\EditCategoryRequest;
 use App\Http\Requests\Admin\Forum\EditChannelRequest;
+use App\Permission;
 use Laracasts\Flash\Flash;
 
 use App\Role;
@@ -83,57 +85,81 @@ class AdminForumsController extends AdminController
     public function editCategory(EditCategoryRequest $request)
     {
         $category = $request->route()->getParameter('category');
+        $groupIds = $request->input('allowed_groups');
 
-        $allowedGroups = array(20 => array());
+        CategoryPermission::where('category_id', '=', $category->id)->where('permission_id', '=', 20)->delete();
 
-//        foreach($request->input('allowed_groups') as $groupId)
-//        {
-//            $allowedGroups[20][$groupId] = array(
-//                'role_id' => $groupId,
-//                'category_id' => $category->id,
-//                'created_at' => date('U'),
-//                'updated_at' => date('U')
-//            );
-//        }
-
-        $allowedGroups[20][1] = array(
-            'role_id' => 1,
-            'category_id' => $category->id,
-            'created_at' => date('U'),
-            'updated_at' => date('U')
-        );
-
-        $allowedGroups[20][3] = array(
-            'role_id' => 3,
-            'category_id' => $category->id,
-            'created_at' => date('U'),
-            'updated_at' => date('U')
-        );
-
-        //dd($allowedGroups);
-
-//        $category->categoryPermissions()->detach([20]);
-//
-////        $category->categoryPermissions()->sync([20 => $allowedGroups[20]]);
-//
-//        foreach($allowedGroups[20] as $group)
-//        {
-//            $category->categoryPermissions()->sync([20 => $group]);
-//        }
-        $category->categoryPermissions()->sync([]);
+        foreach($groupIds as $id)
+        {
+            $perm = CategoryPermission::firstOrCreate(array(
+                'permission_id' => 20,
+                'role_id' => $id,
+                'category_id' => $category->id
+            ));
+        }
 
         Flash::success('Updated category!');
 
         return redirect(route('admin.forum.get.index'));
     }
 
+    public function showEditChannel($channel)
+    {
+        $groups = Role::lists('name', 'id');
+
+        //$permissions = CategoryPermission::where('category_id', '=', $category->id)->get();
+
+        $queryObj = ChannelPermission::select(array(
+            'channel_permission.permission_id',
+            'channel_permission.role_id',
+            'channel_permission.channel_id'
+        ))->leftJoin('channels as ch', function($join)
+        {
+            $join->on('channel_permission.channel_id', '=', 'ch.id');
+            //$join->on('category_forum_permission.role_id', '=', 1);
+        })->with(
+            'role',
+            'channel',
+            'permission'
+        )->where('channel_id', '=', $channel->id);
+
+        return view('core.admin.forums.channel.edit', array(
+            'channel' => $channel,
+            'groups' => $groups,
+            'permissions' => $queryObj->lists('role_id', 'role_id'),
+            'groupIds' => ($queryObj->where('permission_id', '=', 21)->lists('role_id', 'role_id')),
+            'createThreadIds' => ($queryObj->where('permission_id', '=', 1)->lists('role_id', 'role_id'))
+        ));
+    }
+
     public function editChannel(EditChannelRequest $request)
     {
         $channel = $request->route()->getParameter('channel');
 
-        foreach($request->input('allowed_groups') as $groupId)
+        $groupIds = $request->input('allowed_groups');
+        $createThreads = $request->input('create_threads');
+
+        ChannelPermission::where('channel_id', '=', $channel->id)
+            ->where('permission_id', '=', 21)
+            ->orWhere('permission_id', '=', 1)
+            ->delete();
+
+        foreach($groupIds as $id)
         {
-            $channel->channelPermissions()->sync([20 => ['role_id' => $groupId, 'channel_id' => $channel->id, 'created_at' => date('U'), 'updated_at' => date('U')]]);
+            $perm = ChannelPermission::firstOrCreate(array(
+                'permission_id' => 21,
+                'role_id' => $id,
+                'channel_id' => $channel->id
+            ));
+        }
+
+        foreach($createThreads as $id)
+        {
+            $create_threads = ChannelPermission::firstOrCreate(array(
+                'permission_id' => 1,
+                'role_id' => $id,
+                'channel_id' => $channel->id
+            ));
         }
 
         Flash::success('Updated channel!');

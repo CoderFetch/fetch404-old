@@ -34,7 +34,7 @@ class LockTopic {
 			'locked' => 1
 		));
 
-		$topic->getUser()->notifications()->create(array(
+		$user->notifications()->create(array(
 			'subject_id' => $currentUser->getId(),
 			'subject_type' => get_class($currentUser),
 			'name' => 'topic_locked',

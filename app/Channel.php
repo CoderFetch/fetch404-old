@@ -18,7 +18,9 @@ class Channel extends Model {
 	
 	public function topics()
 	{
-		return $this->hasMany('App\Topic', 'channel_id')->with('user', 'channel', 'posts');
+		return $this->hasMany('App\Topic', 'channel_id')
+			->with('user', 'channel', 'posts')
+			->orderBy('pinned', 'desc');
 	}
 	
 	public function posts()
@@ -43,14 +45,6 @@ class Channel extends Model {
 
 	public function can($permissionId, $user)
 	{
-		if ($user == null)
-		{
-			if ($permissionId == 17 || $permissionId == 20)
-			{
-				return true;
-			}
-		}
-
 		$queryObj = ChannelPermission::select(array(
 			'channel_permission.permission_id',
 			'channel_permission.role_id',
@@ -69,7 +63,14 @@ class Channel extends Model {
 
 		if ($user == null)
 		{
-			return in_array(3, $queryObj->lists('role_id')) && ($permissionId == 17 || $permissionId == 20);
+			if (in_array(3, $queryObj->lists('role_id')))
+			{
+				if ($permissionId == 17 || $permissionId == 21)
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 
 		if ($user && $user->roles->contains(1))

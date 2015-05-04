@@ -35,7 +35,7 @@
 					@endif
 					@endforeach
 					@else
-						<p>No channels have been defined for this category.</p>
+						<p>Either no channels have been defined, or you don't have permission to access any of them. :(</p>
 					@endif
 					</div>
 				</div>
@@ -47,6 +47,7 @@
 		<div class="col-md-3">
 		@include('core.forum.partials.online-users')
 		@include('core.forum.partials.latest-threads')
+		@include('core.forum.partials.stats')
 		</div>
 	</div>
 @stop

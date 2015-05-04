@@ -25,6 +25,16 @@ trait FollowableTrait {
     }
 
     /**
+     * Return an array of user IDs that the current user is following.
+     *
+     * @return array
+     */
+    public function followingIds()
+    {
+        return $this->followedUsers()->lists('followed_id');
+    }
+
+    /**
      * Determine if current user follows another user.
      *
      * @param User $otherUser

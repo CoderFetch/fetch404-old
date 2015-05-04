@@ -2,6 +2,7 @@
 
 use App\Events\UserWasRegistered;
 use App\News;
+use App\ProfilePost;
 use App\Tag;
 use Illuminate\Support\Facades\Event;
 
@@ -56,8 +57,21 @@ class HomeController extends Controller {
 	public function index()
 	{
 		//Event::fire(new UserWasRegistered(Auth::user()));
+		$data = [
+			'news' => $this->news->orderBy('created_at', 'desc')
+		];
 
-		return view('core.index', ['news' => $this->news->orderBy('created_at', 'desc')]);
+		if (Auth::check())
+		{
+			$userIds = Auth::user()->followingIds();
+			$data['statuses'] = [];
+
+			$statuses = ProfilePost::whereIn('from_user_id', $userIds)
+				->where('to_user_id', '!=', Auth::id())
+				->take(15);
+			$data['statuses'] = $statuses;
+		}
+
+		return view('core.index', $data);
 	}
-
 }

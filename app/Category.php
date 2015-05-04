@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Support\Collection;
 use URL;
 
 use Illuminate\Support\Facades\Auth;
@@ -31,19 +32,45 @@ class Category extends Model {
 	{
 		return $this->categoryPermissions()->lists('role_id', 'role_id');
 	}
-	
+
+	public function getTopics()
+	{
+		$topicsArray = array();
+
+		foreach($this->topics as $topic)
+		{
+			$topicsArray[] = $topic;
+		}
+
+		$topics = Collection::make($topicsArray);
+
+		$topics = $topics->filter(function($item)
+		{
+			return $item->channel->category->canView(Auth::user()) && $item->channel->canView(Auth::user());
+		});
+
+		return $topics;
+	}
+
 	public function getPosts()
 	{
-		$posts = array();
-		
+		$postsArray = array();
+
 		foreach($this->topics as $topic)
 		{
 			foreach($topic->posts as $post)
 			{
-				$posts[] = $post;
-			}	
+				$postsArray[] = $post;
+			}
 		}
-		
+
+		$posts = Collection::make($postsArray);
+
+		$posts = $posts->filter(function($item)
+		{
+			return $item->topic->channel->category->canView(Auth::user()) && $item->topic->channel->canView(Auth::user());
+		});
+
 		return $posts;
 	}
 	

@@ -32,11 +32,17 @@ class Confirmed {
 	 */
 	public function handle($request, Closure $next)
 	{
+		if (!$this->auth->check())
+		{
+			abort(403);
+		}
+
 		if (!$this->auth->user()->isConfirmed())
 		{
 			flash()->error('To access this page, you must confirm your account.');
 			return redirect('/');
 		}
+
 		return $next($request);
 	}
 

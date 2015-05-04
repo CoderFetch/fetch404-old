@@ -27,4 +27,19 @@ class Like extends Model {
     {
         return $this->morphTo();
     }
+
+    /**
+     * Get the array index of this "like" (in the likes array for the subject)
+     *
+     * @return integer
+     */
+    public function arrayIndex()
+    {
+        $likes = $this->subject->likes;
+
+        foreach($likes as $i => $l)
+        {
+            if ($l->id == $this->id) return $i;
+        }
+    }
 }

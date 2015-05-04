@@ -1,5 +1,6 @@
 <?php namespace App\Http\Requests\Auth;
 
+use App\NameChange;
 use Illuminate\Foundation\Http\FormRequest;
 
 use App\User;
@@ -28,6 +29,18 @@ class LoginRequest extends FormRequest {
 			'=',
 			$name_or_email
 		)->first();
+
+		if ($db_field == 'name')
+		{
+			$name_change = NameChange::where('old_name', '=', $name_or_email)->first();
+
+			if ($name_change != null)
+			{
+				// Username used to be the input, but it was changed
+				Flash::error('It seems like you\'re trying to log in with a username that has changed. Please use your new username.');
+				return false;
+			}
+		}
 
 		if ($user == null || !$user)
 		{

@@ -13,7 +13,8 @@ class EditChannelRequest extends FormRequest
 {
     protected $rules = [
         'name' => 'required|min:5|max:20',
-        'allowed_groups' => 'required'
+        'allowed_groups' => 'required',
+        'create_threads' => 'required'
     ];
 
     public function rules()
@@ -50,12 +51,13 @@ class EditChannelRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'A category title is required.',
+            'name.required' => 'A channel title is required.',
             'name.min' => 'Channel titles must be at least 5 characters long.',
             'name.max' => 'Channel titles can be up to 20 characters long.',
             'name.unique' => 'That name is in use. Try another.',
             'weight.numeric' => 'Please enter a valid number.',
-            'allowed_groups.required' => 'You must allow at least 1 group to view this channel.'
+            'allowed_groups.required' => 'You must allow at least 1 group to view this channel.',
+            'create_threads.required' => 'You must allow at least 1 group to create threads in this channel.'
         ];
     }
 

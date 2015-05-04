@@ -30,11 +30,13 @@ class RouteServiceProvider extends ServiceProvider {
 		# Route Models
 		$router->model('role', 'App\Role');
 		$router->model('user', 'App\User');
-		$router->model('conversation', 'Cmgmyr\Messenger\Models\Thread');
 		$router->model('news', 'App\News');
 		$router->model('tag', 'App\Tag');
 		$router->model('profile_post', 'App\ProfilePost');
 		$router->model('post', 'App\Post');
+		$router->model('topic', 'App\Topic');
+
+		$router->model('conversation', 'Cmgmyr\Messenger\Models\Thread');
 
 		$router->bind('conversation', function($value)
 		{
@@ -61,6 +63,7 @@ class RouteServiceProvider extends ServiceProvider {
 			require app_path('Http/Routes/search.php');
 			require app_path('Http/Routes/tickets.php');
 			require app_path('Http/Routes/users.php');
+			require app_path('Http/Routes/forum/reports.php');
 		});
 	}
 

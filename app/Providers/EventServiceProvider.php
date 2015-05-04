@@ -3,6 +3,7 @@
 use App\Events\ProfilePostWasDeleted;
 use App\Events\TopicWasLocked;
 use App\Events\TopicWasPinned;
+use App\Events\TopicWasUnlocked;
 use App\Events\UserDislikedSomething;
 use App\Events\UserFollowedSomeone;
 use App\Events\UserLikedSomething;
@@ -23,6 +24,7 @@ use App\Handlers\Events\SendLikeNotification;
 use App\Handlers\Events\SendProfilePostNotification;
 use App\Handlers\Events\SetMemberRole;
 use App\Handlers\Events\UnbanUser;
+use App\Handlers\Events\UnlockTopic;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -53,6 +55,9 @@ class EventServiceProvider extends ServiceProvider {
 		],
 		TopicWasLocked::class => [
 			LockTopic::class
+		],
+		TopicWasUnlocked::class => [
+			UnlockTopic::class
 		],
 		TopicWasPinned::class => [
 			PinTopic::class

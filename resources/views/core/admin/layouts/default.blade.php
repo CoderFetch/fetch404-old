@@ -76,6 +76,18 @@
 								<li><a href="{{{ route('account.get.show.settings') }}}"><span class="fa fa-wrench"></span> Settings</a></li>
 							</ul>
 						</li>
+						@if ($user->can('viewReports'))
+							@unless($reports->isEmpty())
+								<li>
+									<a href="{{{ route('reports.index') }}}">
+										<i class="fa fa-exclamation-circle"></i>
+										<span class="badge">
+											{{{ $reports->count() }}}
+										</span>
+									</a>
+								</li>
+							@endunless
+						@endif
 						<li class="divider-vertical"></li>
 						<li><a href="{{{ route('home.show') }}}">View Site</a></li>
 						<li><a href="{{{ route('auth.get.logout') }}}"><span class="fa fa-share"></span> Log out</a></li>

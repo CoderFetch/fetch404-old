@@ -23,11 +23,23 @@
 				<div class="panel-body">
 					@if (!$channel->topics->isEmpty())
 					@foreach($channel->topics as $i => $thread)
-					<span>
-						<i class="fa fa-comment fa-fw fa-2x pull-left"></i>
+					<span{{{ $thread->pinned == 1  }}}>
+						<span class="fa-stack pull-left">
+						  	<i class="fa fa-comment fa-stack-2x"></i>
+							@if($thread->userReadStatus == 'unread' || $thread->userReadStatus == 'updated')
+							<i class="fa fa-exclamation fa-stack-1x" style="color: black;"></i>
+							@endif
+						</span>
+						&nbsp;
 						<a href="{{{ $thread->Route }}}" data-type="tooltip" data-original-title="{{{ str_limit(strip_tags($thread->posts()->first()->content), 65) }}}">{{{ $thread->title }}}</a>
 						<span class="text-muted"> - by {{{ $thread->user->name }}}</span>
 						<span class="pull-right">
+							@if ($thread->isLocked())
+								<i class="fa fa-lock" data-type="tooltip" data-original-title="Locked"></i>
+							@endif
+							@if ($thread->isPinned())
+								<i class="fa fa-thumb-tack" data-type="tooltip" data-original-title="Pinned"></i>
+							@endif
 							{{{ $thread->replyCount }}} replies
 						</span>
 					</span>
