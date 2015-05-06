@@ -3,23 +3,15 @@
 {{-- Content here --}}
 @section('content')
     <h1>Search</h1>
-    {!! Form::open(['route' => 'search.send']) !!}
-    <div class="input-group">
-        <input type="text" class="form-control" name="query" placeholder="Search for something..." value="{{{ isset($searchQuery) ? $searchQuery : '' }}}"/>
-        <span class="input-group-btn">
-            {!! Form::submit('Search', ['class' => 'btn btn-default']) !!}
-        </span>
-    </div>
-    {!! Form::close() !!}
     <hr>
     <div class="well">
         @if (!isset($results))
-            <p>To start searching, just type something into the text box and press enter!</p>
+            <p>Please enter a search query.</p>
         @else
             @if (empty($results))
                 <p>No results were found.</p>
             @else
-                <h1>Your search returned {{{ $results->count() }}} {{{ Pluralizer::plural('result', $results->count()) }}}</h1>
+                <h1>Your search returned {{{ $resultCount }}} {{{ Pluralizer::plural('result', $resultCount) }}}</h1>
                 <ul class="list-group">
                 @foreach($results as $item)
                   <li class="list-group-item">
@@ -70,6 +62,7 @@
                   </li>
                 @endforeach
                 </ul>
+                {!! $results->render() !!}
             @endif
         @endif
     </div>

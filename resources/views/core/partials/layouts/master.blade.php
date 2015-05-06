@@ -113,7 +113,7 @@
 							{{--<input type="search" class="form-control" placeholder="Search" name="query" value="{{{ isset($searchQuery) ? $searchQuery : '' }}}"/>--}}
 						{{--</div>--}}
 					{{--{!! Form::close() !!}--}}
-					<form role="search" action="{{{ route('search.send') }}}" method="POST" class="navbar-form navbar-right">
+					<form role="search" action="{{{ route('search.send') }}}" method="GET" class="navbar-form navbar-right">
 						<div class="form-group">
 							<input type="search" class="form-control" placeholder="Search" name="query" value="{{{ isset($searchQuery) ? $searchQuery : '' }}}"/>
 						</div>

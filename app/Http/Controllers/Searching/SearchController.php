@@ -77,7 +77,7 @@ class SearchController extends Controller
      */
     public function search(SearchRequest $request)
     {
-        $searchQuery = $request->input('query');
+        $searchQuery = ($request->has('query') ? $request->input('query') : Input::old('query'));
 
         $resultsArray = [];
 
@@ -116,9 +116,9 @@ class SearchController extends Controller
             $resultsArray[] = $conv;
         }
 
-        $results = Collection::make($resultsArray);
+        $resultsCollection = Collection::make($resultsArray);
 
-        $results = $results->filter(function($item)
+        $resultsCollection = $resultsCollection->filter(function($item)
         {
             if ($item instanceof User)
             {
@@ -150,7 +150,7 @@ class SearchController extends Controller
             }
         });
 
-        $results = $results->sortBy(function($item)
+        $resultsCollection = $resultsCollection->sortBy(function($item)
         {
             if ($item instanceof Conversation)
             {
@@ -184,6 +184,22 @@ class SearchController extends Controller
 
         });
 
-        return view('core.search.search', compact('results', 'searchQuery'));
+        $resultCount = $resultsCollection->count();
+
+        $perPage = 10; // Item per page (change if needed)
+        $currentPage = Input::get('page') != null ? Input::get('page') : 1;
+
+        $pagedData = $resultsCollection->slice($currentPage * $perPage, $perPage)->all();
+
+        $results = new Paginator($pagedData, $perPage);
+
+        if ($results->count() == 0)
+        {
+            return redirect(route('search.send') . '?query=' . $searchQuery . '&page=1');
+        }
+
+        $results->setPath('search')->appends('query', $searchQuery);
+
+        return view('core.search.search', compact('results', 'resultCount', 'resultsCollection', 'searchQuery'));
     }
 }
