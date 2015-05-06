@@ -71,6 +71,89 @@ trait BaseUser {
         return $this->hasMany('App\NameChange');
     }
 
+    /**
+     * Get any likes that the user gave.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function likesGiven()
+    {
+        return $this->hasMany('App\Like', 'user_id');
+    }
+
+    /**
+     * Get any likes that the user received.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function likesReceived()
+    {
+        return $this->hasMany('App\Like', 'liked_user_id');
+    }
+
+    /**
+     * Get a user's settings.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function settings()
+    {
+        return $this->hasMany('App\UserSetting');
+    }
+
+    /**
+     * Get the value of a certain setting for this user.
+     * If it has not yet been set, a default value will be returned,
+     * or if none is specified, null.
+     *
+     * @param $name
+     * @param $default
+     * @return string
+     */
+    public function getSetting($name, $default = null)
+    {
+        $setting = $this->settings()->where('name', '=', $name)->first();
+
+        if ($setting == null)
+        {
+            return ($default == null ? null : $default);
+        }
+        else
+        {
+            return $setting->value;
+        }
+    }
+
+    /**
+     * Set a specific setting for this user.
+     * If it has not yet been set, it will be created with the given value.
+     *
+     * @param $name
+     * @param $value
+     * @return void
+     */
+    public function setSetting($name, $value)
+    {
+        $setting = $this->settings()->where('name', '=', $name)->first();
+
+        if ($setting == null)
+        {
+            return $this->settings()->create(array(
+                'name' => $name,
+                'value' => $value,
+                'user_id' => $this->getId()
+            ));
+        }
+        else
+        {
+            return $setting->update(array(
+                'value' => $value
+            ));
+        }
+
+        return false;
+    }
+
     /*
      * Get all of the user's recent notifications.
      *

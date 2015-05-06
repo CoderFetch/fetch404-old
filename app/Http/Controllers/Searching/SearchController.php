@@ -9,6 +9,7 @@ use App\Post;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Input;
 use Zizaco\Entrust\EntrustFacade as Entrust;
 
 use Cmgmyr\Messenger\Models\Thread as Conversation;

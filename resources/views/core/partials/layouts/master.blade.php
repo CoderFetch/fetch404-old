@@ -13,6 +13,7 @@
 		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" media="all">
 		<link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700|PT+Sans:400,700|Roboto:400,100,300,500,700" rel="stylesheet" type="text/css" media="all">
 		<link href="//vjs.zencdn.net/4.12/video-js.css" rel="stylesheet">
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.2/css/bootstrap2/bootstrap-switch.min.css" rel="stylesheet" />
 		@if (Request::is('admin*'))
 		<link href="/assets/css/admin/main.css" rel="stylesheet" type="text/css" media="all" />
 		@endif
@@ -37,6 +38,7 @@
 		@endif
 
 		<script src="/assets/js/dropzone.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.2/js/bootstrap-switch.min.js"></script>
 
 		<script type="text/javascript">
 			$.ajaxSetup({
@@ -63,7 +65,13 @@
 
 				event.preventDefault();
 			});
+
+			$(document).ready(function() {
+				$("[data-bswitch]").bootstrapSwitch();
+			});
 		</script>
+
+
 
 		@if (Auth::check())
 		<script src="/assets/js/notifications.js"></script>
@@ -100,11 +108,16 @@
 							</a>
 						</li>
 					</ul>
-					{!! Form::open(['route' => 'search.send', 'class' => 'navbar-form navbar-right']) !!}
+					{{--{!! Form::open(['route' => 'search.send', 'class' => 'navbar-form navbar-right', 'role' => 'search']) !!}--}}
+						{{--<div class="form-group">--}}
+							{{--<input type="search" class="form-control" placeholder="Search" name="query" value="{{{ isset($searchQuery) ? $searchQuery : '' }}}"/>--}}
+						{{--</div>--}}
+					{{--{!! Form::close() !!}--}}
+					<form role="search" action="{{{ route('search.send') }}}" method="POST" class="navbar-form navbar-right">
 						<div class="form-group">
-							<input type="text" class="form-control" placeholder="Search" name="query" value="{{{ isset($searchQuery) ? $searchQuery : '' }}}"/>
+							<input type="search" class="form-control" placeholder="Search" name="query" value="{{{ isset($searchQuery) ? $searchQuery : '' }}}"/>
 						</div>
-					{!! Form::close() !!}
+					</form>
 					<ul class="nav navbar-nav navbar-right">
 						@if (!Auth::check())
 						<li>

@@ -6,7 +6,7 @@ class Like extends Model {
 
 	//
     protected $table = 'likes';
-    protected $fillable = ['subject_id', 'subject_type', 'user_id'];
+    protected $fillable = ['subject_id', 'subject_type', 'user_id', 'liked_user_id'];
 
     /**
      * Get the user that liked whatever this is.
@@ -16,6 +16,16 @@ class Like extends Model {
     public function user()
     {
         return $this->belongsTo('App\User');
+    }
+
+    /**
+     * Get the owner of the liked content.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function likedUser()
+    {
+        return $this->belongsTo('App\User', 'liked_user_id');
     }
 
     /**

@@ -84,20 +84,6 @@ class AdminForumsController extends AdminController
 
     public function editCategory(EditCategoryRequest $request)
     {
-        $category = $request->route()->getParameter('category');
-        $groupIds = $request->input('allowed_groups');
-
-        CategoryPermission::where('category_id', '=', $category->id)->where('permission_id', '=', 20)->delete();
-
-        foreach($groupIds as $id)
-        {
-            $perm = CategoryPermission::firstOrCreate(array(
-                'permission_id' => 20,
-                'role_id' => $id,
-                'category_id' => $category->id
-            ));
-        }
-
         Flash::success('Updated category!');
 
         return redirect(route('admin.forum.get.index'));
@@ -135,32 +121,6 @@ class AdminForumsController extends AdminController
     public function editChannel(EditChannelRequest $request)
     {
         $channel = $request->route()->getParameter('channel');
-
-        $groupIds = $request->input('allowed_groups');
-        $createThreads = $request->input('create_threads');
-
-        ChannelPermission::where('channel_id', '=', $channel->id)
-            ->where('permission_id', '=', 21)
-            ->orWhere('permission_id', '=', 1)
-            ->delete();
-
-        foreach($groupIds as $id)
-        {
-            $perm = ChannelPermission::firstOrCreate(array(
-                'permission_id' => 21,
-                'role_id' => $id,
-                'channel_id' => $channel->id
-            ));
-        }
-
-        foreach($createThreads as $id)
-        {
-            $create_threads = ChannelPermission::firstOrCreate(array(
-                'permission_id' => 1,
-                'role_id' => $id,
-                'channel_id' => $channel->id
-            ));
-        }
 
         Flash::success('Updated channel!');
 

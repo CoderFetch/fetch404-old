@@ -4,6 +4,7 @@
 use App\Http\Controllers\Controller;
 
 // Models
+use App\Http\Requests\Account\AccountPrivacySettingsUpdateRequest;
 use App\Http\Requests\Account\AccountSettingsUpdateRequest;
 use App\User;
 use App\AccountConfirmation;
@@ -160,6 +161,26 @@ class AccountController extends Controller {
 		}
 
 		return redirect()->to('/account/settings');
+	}
+
+	/**
+	 * Update privacy settings
+	 *
+	 * @param AccountPrivacySettingsUpdateRequest $request
+	 * @return Response
+	 */
+	public function updatePrivacy(AccountPrivacySettingsUpdateRequest $request)
+	{
+		$user = $request->user();
+		$showOnlineStatus = $request->has('show_when_im_online');
+		$allowIndexing = $request->has('allow_bots_to_index_me');
+
+		$user->setSetting("show_when_im_online", $showOnlineStatus);
+		$user->setSetting("allow_bots_to_index_me", $allowIndexing);
+
+		Flash::success('Updated privacy settings!');
+
+		return redirect()->back();
 	}
 
 	/**

@@ -24,7 +24,7 @@
 					<br>
 					<label>Messages: </label> {{{ $user->posts()->count() }}}
 					<br>
-					<label>Likes Received: </label> 0
+					<label>Likes Received: </label> {{{ $user->likesReceived()->count() }}}
 				</div>
 			</div>
 			<div class="panel panel-primary">
@@ -68,19 +68,6 @@
 			<div class="panel panel-primary">
 				<div class="panel-heading">
 					<h2 class="panel-title">
-						@if (Auth::check() && Auth::user()->isConfirmed() && Auth::id() != $user->getId())
-						<div class="pull-right">
-							@if (!Auth::user()->isFollowing($user))
-							{!! Form::open(['route' => array('user.post.follow', $user)]) !!}
-							{!! Form::submit('Follow', ['class' => 'btn btn-info btn-xs']) !!}
-							{!! Form::close() !!}
-							@else
-							{!! Form::open(['route' => array('user.post.unfollow', $user)]) !!}
-							{!! Form::submit('Unfollow', ['class' => 'btn btn-info btn-xs']) !!}
-							{!! Form::close() !!}
-							@endif
-						</div>
-						@endif
 						{{{ $user->name }}}
 						@foreach($user->roles as $role)
 						<span class="label label-{{{ $role->is_superuser == 1 ? 'danger' : 'success' }}}">

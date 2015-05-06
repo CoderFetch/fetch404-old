@@ -26,7 +26,7 @@
                 </div>
             @endif
 
-            {!! Form::open(['method' => 'POST', 'class' => 'form-horizontal']) !!}
+            {!! Form::open(['route' => 'account.post.update.settings', 'class' => 'form-horizontal']) !!}
             <div class="form-group">
                 <label for="name">Username: <i class="fa fa-question-circle fa-fw" data-type='tooltip' data-original-title="<h5>Don't like your username? Now you can change it!</h5>" data-placement='right'></i></label>
                 <input class="form-control" type="text" name="name" value="{{{ Auth::user()->name }}}" />

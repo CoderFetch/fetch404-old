@@ -37,7 +37,7 @@ class LikesController extends Controller {
 			return redirect()->back();
 		}
 
-		$post->like($user);
+		$post->like($user, $post->user);
 
 		event(new UserLikedSomething($user, $post, $post->user));
 

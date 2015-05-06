@@ -37,17 +37,20 @@ trait LikeableTrait {
      * Attempt to "like" this object.
      *
      * @param User $user
+     * @param User $ownerOfContent
      * @return void
      */
-    public function like(User $user)
+    public function like(User $user, User $ownerOfContent)
     {
         if (is_null($user)) return;
+        if (is_null($ownerOfContent)) return;
         if ($this->isLikedBy($user)) return;
 
         return $this->likes()->create(array(
             'subject_id' => $this->id,
             'subject_type' => get_class($this),
-            'user_id' => $user->getId()
+            'user_id' => $user->getId(),
+            'liked_user_id' => $ownerOfContent->getId()
         ));
     }
 
@@ -107,7 +110,7 @@ trait LikeableTrait {
 
         // If there's more than one name, construct the list so that it has the word "and" in it.
         if (count($names) > 1) {
-            // If there're more than 3 names, chop off everything after the first 3 and replace them with a
+            // If there are more than 3 names, chop off everything after the first 3 and replace them with a
             // "x others" link.
             if (count($names) > 3) {
                 $otherNames = array_splice($names, 3);

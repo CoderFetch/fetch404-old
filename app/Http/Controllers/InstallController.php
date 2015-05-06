@@ -1,6 +1,8 @@
 <?php namespace App\Http\Controllers;
 
 use App\Category;
+use App\CategoryPermission;
+use App\ChannelPermission;
 use App\Setting;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\Facades\Artisan;
@@ -166,13 +168,84 @@ class InstallController extends Controller
                 'slug' => 'example-channel-3'
             ));
 
-            $exampleCategory1->categoryPermissions()->sync(array(
-               20 => array(
-                   'role_id' => [1, 3],
-                   'category_id' => $exampleCategory1->id
-               ),
-
+            $staffSection = $this->category->create(array(
+                'name' =>  'Staff Section',
+                'description' => 'Staff only section',
+                'weight' => 3,
+                'slug' => 'staff-section'
             ));
+
+            $staffChannel = $this->channel->create(array(
+                'name' => 'Staff Channel',
+                'description' => 'A channel for staff members',
+                'weight' => 1,
+                'category_id' => 3,
+                'slug' => 'staff-channel'
+            ));
+
+            $accessStaffSection = [1, 4];
+            $createThreads = [1, 4];
+
+            $accessStaffChannel = [1, 4];
+            $createThreadsInStaffChannel = [1, 4];
+
+            $postInStaffSection = [1, 4];
+            $postInStaffChannel = [1, 4];
+
+            foreach($accessStaffSection as $id)
+            {
+                $perm = CategoryPermission::firstOrCreate(array(
+                    'permission_id' => 20,
+                    'role_id' => $id,
+                    'category_id' => $staffSection->id
+                ));
+            }
+
+            foreach($createThreads as $id)
+            {
+                $perm = CategoryPermission::firstOrCreate(array(
+                    'permission_id' => 1,
+                    'role_id' => $id,
+                    'category_id' => $staffSection->id
+                ));
+            }
+
+            foreach($accessStaffChannel as $id)
+            {
+                $perm = ChannelPermission::firstOrCreate(array(
+                    'permission_id' => 21,
+                    'role_id' => $id,
+                    'channel_id' => $staffChannel->id
+                ));
+            }
+
+            foreach($createThreadsInStaffChannel as $id)
+            {
+                $perm = ChannelPermission::firstOrCreate(array(
+                    'permission_id' => 1,
+                    'role_id' => $id,
+                    'channel_id' => $staffChannel->id
+                ));
+            }
+
+            foreach($postInStaffSection as $id)
+            {
+                $perm = CategoryPermission::firstOrCreate(array(
+                    'permission_id' => 6,
+                    'role_id' => $id,
+                    'category_id' => $staffSection->id
+                ));
+            }
+
+            foreach($postInStaffChannel as $id)
+            {
+                $perm = ChannelPermission::firstOrCreate(array(
+                    'permission_id' => 6,
+                    'role_id' => $id,
+                    'channel_id' => $staffChannel->id
+                ));
+            }
+
             // Step 4: Create settings
             $data = array(
                 0 => array(
@@ -237,6 +310,24 @@ class InstallController extends Controller
                        'value' => $setting["value"]
                     ));
                 }
+
+                // Privacy settings
+//                $adminUser->settings()->create(array(
+//                    'name' => 'show_what_im_doing',
+//                    'value' => true,
+//                    'user_id' => $adminUser->getId()
+//                ));
+                $adminUser->setSetting("show_what_im_doing", true);
+                $adminUser->setSetting("show_if_im_online", true);
+                $adminUser->setSetting("show_if_im_online", true);
+                $adminUser->setSetting("notify_me_on_thread_reply", true);
+                $adminUser->setSetting("notify_me_on_thread_lock", true);
+                $adminUser->setSetting("notify_me_on_thread_pin", true);
+                $adminUser->setSetting("notify_me_on_thread_move", true);
+                $adminUser->setSetting("notify_me_on_new_follower", true);
+                $adminUser->setSetting("notify_me_on_post_like", true);
+                $adminUser->setSetting("notify_me_on_followed_user_new_post", true);
+                $adminUser->setSetting("notify_me_on_profile_post", true);
             }
             catch(Exception $ex) {
                 if ($ex instanceof \PDOException) // Is it PDOException? If yes, show the "pdoexception" view.

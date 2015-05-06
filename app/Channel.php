@@ -27,10 +27,43 @@ class Channel extends Model {
 	{
 		return $this->hasManyThrough('App\Post', 'App\Topic');
 	}
+
+	public function hasUnreadTopics()
+	{
+		foreach($this->topics as $topic)
+		{
+			if ($topic->userReadStatus == 'unread' || $topic->userReadStatus == 'updated')
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
 		
 	public function getRouteAttribute()
 	{
 		return URL::to('/forum/channel/' . $this->slug);
+	}
+
+	public function getTopicsPaginatedAttribute()
+	{
+		return $this->topics()->paginate(15);
+	}
+
+	public function getLastPageAttribute()
+	{
+		return $this->topicsPaginated->lastPage();
+	}
+
+	public function getPageLinksAttribute()
+	{
+		return $this->topicsPaginated->render();
+	}
+
+	public function getHasPagesAttribute()
+	{
+		return $this->topicsPaginated->hasPages();
 	}
 	
 	public function getCanCreateThreadAttribute()

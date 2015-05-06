@@ -8,7 +8,13 @@ $router->group(['middleware' => ['auth', 'csrf', 'bancheck', 'update_last_activi
         return view('core.user.settings.index');
     }]);
 
+    $router->get('/account/privacy', ['as' => 'account.get.show.settings.privacy', function()
+    {
+        return view('core.user.settings.privacy');
+    }]);
+
     $router->post('/account/settings', ['uses' => 'Auth\AccountController@updateSettings', 'as' => 'account.post.update.settings']);
+    $router->post('/account/privacy', ['uses' => 'Auth\AccountController@updatePrivacy', 'as' => 'account.post.update.settings.privacy']);
 
     $router->get('/settings/notifications/view', function() {
         return response()->json(array(

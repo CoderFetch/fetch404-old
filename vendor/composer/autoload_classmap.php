@@ -10,6 +10,7 @@ return array(
     'AddIdToTicketParticipantsTable' => $baseDir . '/database/migrations/2015_04_10_215048_add_id_to_ticket_participants_table.php',
     'AddIsOnlineToUsersTable' => $baseDir . '/database/migrations/2015_04_30_195055_add_is_online_to_users_table.php',
     'AddLastActiveToUsers' => $baseDir . '/database/migrations/2015_04_28_005713_add_last_active_to_users.php',
+    'AddLikedUserIdToLikesTable' => $baseDir . '/database/migrations/2015_05_05_175947_add_liked_user_id_to_likes_table.php',
     'AddNullableToLastReadInParticipantsTable' => $baseDir . '/database/migrations/2014_11_10_083449_add_nullable_to_last_read_in_participants_table.php',
     'AddSoftDeletesToParticipantsTable' => $baseDir . '/database/migrations/2014_11_03_154831_add_soft_deletes_to_participants_table.php',
     'AddSoftDeletesToThreadParticipantsTable' => $baseDir . '/database/migrations/2015_04_10_214927_add_soft_deletes_to_thread_participants_table.php',

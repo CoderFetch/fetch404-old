@@ -241,6 +241,8 @@ class ForumPageController extends Controller {
 
 		if ($thread)
 		{
+			if (!$thread->canView) abort(403);
+
 			$thread->posts = $thread->posts->filter(function($item)
 			{
 				return ($item->reports->isEmpty() ? true : EntrustFacade::can('viewReportedPosts'));
@@ -288,6 +290,9 @@ class ForumPageController extends Controller {
 		
 		if ($channel)
 		{
+			if (!$channel->canView(Auth::user())) abort(403);
+			if (!$channel->can(1, Auth::user())) abort(403);
+
 			return view('core.forum.create-thread', [
 				'channel' => $channel
 			]);
@@ -324,6 +329,9 @@ class ForumPageController extends Controller {
 		
 		if ($thread)
 		{
+			if (!$thread->canView) abort(403);
+			if (!$thread->canReply) abort(403);
+
 			return view('core.forum.thread-reply', [
 				'thread' => $thread
 			]);
@@ -359,7 +367,10 @@ class ForumPageController extends Controller {
 
 		$totalPosts = $topPosters->sum(function($item)
 		{
-			return $item->posts()->count();
+			return $item->posts->filter(function($item)
+			{
+				return $item->topic->canView;
+			})->count();
 		});
 
 		return view('core.forum.top-posters', [
