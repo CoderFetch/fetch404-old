@@ -77,10 +77,9 @@
 						&nbsp;
 						<small>
 							Last active
-							<span {!! $user->last_active_desc != null ? 'data-type=tooltip data-original-title=\'' . $user->last_active_desc . '\'' : '' !!}>
+							<span {!! $user->last_active_desc != null ? 'data-type=tooltip data-original-title=\'' . $user->getLastActiveDesc() . '\'' : '' !!}>
 								{{{ $user->getLastActivity() }}}
 							</span>
-							{{--- Last active <span{!! $user->last_active_desc != null ? ' data-type=tooltip data-original-title=' . $user->last_active_desc : '' !!}>{{{ $user->getLastActivity() }}}</span>--}}
 						</small>
 						@if ($user->currentStatus() != null)
 						<br />

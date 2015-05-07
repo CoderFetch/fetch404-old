@@ -99,10 +99,6 @@ class InstallController extends Controller
             Artisan::call('clear-compiled', ['--quiet']);
             Artisan::call('cache:clear', ['--quiet']);
 
-            try {
-                exec("cd " . base_path());
-                exec("composer update");
-            } catch (\Exception $ex) {}
             $username = $request->input('username');
             $password = $request->input('password');
 

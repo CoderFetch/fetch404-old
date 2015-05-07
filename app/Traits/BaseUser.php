@@ -279,41 +279,26 @@ trait BaseUser {
     /*
      * Get the generated URL to a user's avatar.
      * Returns a link to the default avatar if the user does not have an avatar
-     * This may also return a Cravatar image URL if the user has set their Minecraft name and it is valid.
      *
-     * @param integer $size
+     * @param boolean $large
      * @return string
      */
-    public function getAvatarURL($size = 25, $large = true)
+    public function getAvatarURL($large = true)
     {
-        if ($this->mcname)
+        $extensions = [
+            'png',
+            'jpg'
+        ];
+
+        foreach($extensions as $ext)
         {
-            if (MCHelpers::checkValidName($this->mcname))
+            if (Storage::exists('avatars/' . $this->id . '.' . $ext))
             {
-                return "//cravatar.eu/avatar/" . $this->mcname . "/" . $size;
-            }
-            else
-            {
-                return "//cravatar.eu/avatar/Steve/" . $size;
+                return 'avatars/' . $this->id . '.' . $ext;
             }
         }
-        else
-        {
-            $extensions = [
-                'png',
-                'jpg'
-            ];
 
-            foreach($extensions as $ext)
-            {
-                if (Storage::exists('avatars/' . $this->id . '.' . $ext))
-                {
-                    return 'avatars/' . $this->id . '.' . $ext;
-                }
-            }
-
-            return '/assets/img/defaultavatar' . ($large ? 'large' : '') . '.png';
-        }
+        return '/assets/img/defaultavatar' . ($large ? 'large' : '') . '.png';
     }
     /*
      * Other functions (role IDs, etc)
@@ -433,7 +418,26 @@ trait BaseUser {
             return ($this->created_at == null ? "never" : ($this->created_at > $now->toDateTimeString() ? $this->created_at->diffForHumans() : $this->created_at->format('M j, Y')));
         }
 
+        if (!Auth::check() && $this->getSetting("show_when_im_online", 1) == '0') return "[hidden]";
+
+        if ($this->getSetting("show_when_im_online", 1) == '0' && Auth::id() != $this->id)
+        {
+            return "[hidden]";
+        }
+
         return ($this->last_active > $now->toDateTimeString() ? $this->last_active->diffForHumans() : $this->last_active->format('M j, Y'));
+    }
+
+    public function getLastActiveDesc()
+    {
+        if (!Auth::check() && $this->getSetting("show_when_im_online", 1) == '0') return "[hidden]";
+
+        if ($this->getSetting("show_when_im_online", 1) == '0' && Auth::id() != $this->id)
+        {
+            return "[hidden]";
+        }
+
+        return $this->last_active_desc;
     }
 
     public function postCount()

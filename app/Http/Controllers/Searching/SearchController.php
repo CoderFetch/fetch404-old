@@ -187,11 +187,8 @@ class SearchController extends Controller
         $resultCount = $resultsCollection->count();
 
         $perPage = 10; // Item per page (change if needed)
-        $currentPage = Input::get('page') != null ? Input::get('page') : 1;
 
-        $pagedData = $resultsCollection->slice($currentPage * $perPage, $perPage)->all();
-
-        $results = new Paginator($pagedData, $perPage);
+        $results = $resultsCollection->paginate($perPage);
 
         if ($results->count() == 0)
         {

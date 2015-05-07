@@ -84,6 +84,12 @@
 								{{{ $role->name }}}
 							</span>
 							@endforeach
+							@if ($post->user->is_online == 1)
+							<br />
+							<span class="label label-success">
+								Online
+							</span>
+							@endif
 							<hr>
 							{{{ $post->user->posts()->count() }}} {{{ Pluralizer::plural('post', $post->user->posts()->count()) }}}
 							<br /><br />

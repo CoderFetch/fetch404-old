@@ -107,7 +107,14 @@ class Category extends Model {
 
 		if ($user == null)
 		{
-			return in_array(3, $queryObj->lists('role_id')) && ($permissionId == 17 || $permissionId == 20);
+			if ((in_array(3, $queryObj->lists('role_id'))) || (in_array(2, $queryObj->lists('role_id'))))
+			{
+				if ($permissionId == 17 || $permissionId == 21)
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 
 		if ($user && $user->roles->contains(1))
@@ -130,7 +137,7 @@ class Category extends Model {
 
 					if (!$user)
 					{
-						return $permission->role->id == 3;
+						return ($permission->role->id == 3 || $permission->role->id == 2);
 					}
 				}
 			}
