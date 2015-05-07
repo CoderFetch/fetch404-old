@@ -28,7 +28,7 @@ trait ResetsPasswords {
 	 */
 	public function getEmail()
 	{
-		return view('core.auth.password');
+		return view('auth.password');
 	}
 
 	/**
@@ -43,7 +43,7 @@ trait ResetsPasswords {
 
 		$response = $this->passwords->sendResetLink($request->only('email'), function($m)
 		{
-			$m->subject($this->getEmailSubject())->from('noreply@minerzone.net');
+			$m->subject($this->getEmailSubject());
 		});
 
 		switch ($response)
@@ -79,7 +79,7 @@ trait ResetsPasswords {
 			throw new NotFoundHttpException;
 		}
 
-		return view('core.auth.reset')->with('token', $token);
+		return view('auth.reset')->with('token', $token);
 	}
 
 	/**
@@ -133,7 +133,7 @@ trait ResetsPasswords {
 			return $this->redirectPath;
 		}
 
-		return property_exists($this, 'redirectTo') ? $this->redirectTo : '/';
+		return property_exists($this, 'redirectTo') ? $this->redirectTo : '/home';
 	}
 
 }

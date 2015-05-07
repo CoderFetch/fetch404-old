@@ -90,6 +90,9 @@ $router->group(['middleware' => ['installed', 'csrf']], function() use ($router)
                     'as' => 'admin.forum.post.permissions.category.edit',
                     'uses' => 'CategoryPermissionManagerController@update'
                 ]);
+
+                $router->post('/channel/{channel}/delete', ['as' => 'admin.forum.post.delete.channel', 'uses' => 'AdminForumsController@deleteChannel']);
+                $router->post('/category/{category}/delete', ['as' => 'admin.forum.post.delete.category', 'uses' => 'AdminForumsController@deleteCategory']);
             });
         });
 

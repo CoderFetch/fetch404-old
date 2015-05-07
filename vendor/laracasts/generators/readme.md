@@ -17,16 +17,22 @@ L5 includes a bunch of generators out of the box, so this package only needs to 
 ### Step 1: Install Through Composer
 
 ```
-composer require 'laracasts/generators' --dev
+composer require laracasts/generators --dev
 ```
 
 ### Step 2: Add the Service Provider
 
-Open `config/app.php` and, to your "providers" array at the bottom, add:
+You'll only want to use these generators for local development, so you don't want to update the production  `providers` array in `config/app.php`. Instead, add the provider in `app/Providers/AppServiceProvider.php`, like so:
 
+```php
+public function register()
+{
+	if ($this->app->environment() == 'local') {
+		$this->app->register('Laracasts\Generators\GeneratorsServiceProvider');
+	}
+}
 ```
-"Laracasts\Generators\GeneratorsServiceProvider"
-```
+
 
 ### Step 3: Run Artisan!
 
@@ -184,7 +190,7 @@ $table->foreign('user_id')->references('id')->on('users');
 
 As such, for that full command, our schema should look like so:
 
-``
+```
 Schema::create('posts', function(Blueprint $table) {
 	$table->increments('id');
 	$table->integer('user_id');

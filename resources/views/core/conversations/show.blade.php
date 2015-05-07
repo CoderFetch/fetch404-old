@@ -33,10 +33,10 @@
 		</ul>
 	</div>
 	@endif
-	@foreach($thread->messagesPaginated as $i => $message)
+	@foreach($thread->messages as $i => $message)
 	  <div class="panel panel-default">
 		<div class="panel-heading">
-		  <a href="/conversations/{{{ $thread->id }}}">@if ($message->getArrayIndex() > 0)RE: @endif{!! Purifier::clean($thread->subject) !!}</a>  
+		  <a href="/conversations/{{{ $thread->id }}}">{!! Purifier::clean($thread->subject) !!}</a>
 		  @if ($thread->canManage)
 		  <div class="pull-right">
 			  <div class="btn-group">
@@ -73,7 +73,6 @@
 		</div>
 	  </div>
 	@endforeach
-	{!! $thread->threadLinks !!}
 
 	<h2>Add a new message</h2>
 	{!! Form::open(['route' => ['conversations.update', $thread->id], 'method' => 'PUT']) !!}

@@ -16,8 +16,6 @@ return array(
     'AddSoftDeletesToThreadParticipantsTable' => $baseDir . '/database/migrations/2015_04_10_214927_add_soft_deletes_to_thread_participants_table.php',
     'AddSoftdeletesToThreadsTable' => $baseDir . '/database/migrations/2014_12_04_124531_add_softdeletes_to_threads_table.php',
     'AlterLastReadInParticipantsTable' => $baseDir . '/database/migrations/2014_11_20_131739_alter_last_read_in_participants_table.php',
-    'CategoriesTableSeeder' => $baseDir . '/database/seeds/CategoriesTableSeeder.php',
-    'ChannelsTableSeeder' => $baseDir . '/database/seeds/ChannelsTableSeeder.php',
     'CreateAccountConfirmationsTable' => $baseDir . '/database/migrations/2015_04_03_161145_create_account_confirmations_table.php',
     'CreateCategoriesTable' => $baseDir . '/database/migrations/2015_04_06_140311_create_categories_table.php',
     'CreateChannelPermissionsTable' => $baseDir . '/database/migrations/2015_04_24_202146_create_channel_permissions_table.php',
@@ -425,7 +423,6 @@ return array(
     'PHP_Token_XOR_EQUAL' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PHP_Token_YIELD' => $vendorDir . '/phpunit/php-token-stream/src/Token.php',
     'PermissionsTableSeeder' => $baseDir . '/database/seeds/PermissionsTableSeeder.php',
-    'PostsTableSeeder' => $baseDir . '/database/seeds/PostsTableSeeder.php',
     'RolesTableSeeder' => $baseDir . '/database/seeds/RolesTableSeeder.php',
     'SebastianBergmann\\Comparator\\ArrayComparator' => $vendorDir . '/sebastian/comparator/src/ArrayComparator.php',
     'SebastianBergmann\\Comparator\\Comparator' => $vendorDir . '/sebastian/comparator/src/Comparator.php',
@@ -465,6 +462,5 @@ return array(
     'SessionHandlerInterface' => $vendorDir . '/symfony/http-foundation/Symfony/Component/HttpFoundation/Resources/stubs/SessionHandlerInterface.php',
     'TestCase' => $baseDir . '/tests/TestCase.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/Text/Template.php',
-    'ThreadsTableSeeder' => $baseDir . '/database/seeds/ThreadsTableSeeder.php',
     'Zizaco\\Entrust\\MigrationCommand' => $vendorDir . '/zizaco/entrust/src/commands/MigrationCommand.php',
 );

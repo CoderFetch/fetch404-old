@@ -84,6 +84,11 @@ class MessagesManagingController extends Controller
 
         $participant->delete();
 
+        if ($thread->participants()->count() == 0)
+        {
+            $thread->delete();
+        }
+
         Flash::success('You have left the conversation.');
 
         return redirect('conversations');

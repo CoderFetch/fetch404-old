@@ -26,6 +26,9 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<a class="btn btn-success btn-xs pull-right" href="{{{ route('admin.forum.get.edit.category', ['category' => $category->id]) }}}">Edit</a>
+					{!! Form::open(['route' => array('admin.forum.post.delete.category', $category), 'style' => 'display: inline;']) !!}
+					{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}
+					{!! Form::close() !!}
 					<h3 class="panel-title">{{{ $category->name }}}</h3>
 				</div>
 				<div class="panel-body">

@@ -10,8 +10,10 @@ use App\Category;
 use App\Channel;
 use App\Http\Requests\Admin\Forum\CreateCategoryRequest;
 
+use App\Http\Requests\Admin\Forum\DeleteChannelRequest;
 use App\Http\Requests\Admin\Forum\EditCategoryRequest;
 use App\Http\Requests\Admin\Forum\EditChannelRequest;
+use App\Http\Requests\DeleteCategoryRequest;
 use App\Permission;
 use Laracasts\Flash\Flash;
 
@@ -148,5 +150,74 @@ class AdminForumsController extends AdminController
         Flash::success('Created category "' . $category->name . '"!');
 
         return redirect(route('admin.forum.get.index'));
+    }
+
+    /**
+     * Delete a category.
+     *
+     * @param DeleteCategoryRequest $request
+     * @return Response
+     */
+    public function deleteCategory(DeleteCategoryRequest $request)
+    {
+        $category = $request->route()->getParameter('category');
+
+        $postIds = [];
+
+//        foreach($channel->topics as $topic)
+//        {
+//            foreach($topic->posts as $post) $postIds[] = $post->id;
+//        }
+        foreach($category->channels as $channel)
+        {
+            foreach($channel->topics as $topic)
+            {
+                foreach($topic->posts as $post) $postIds[] = $post->id;
+
+                $topic->readers()->delete();
+                $topic->posts()->delete();
+                $topic->delete();
+            }
+
+            $channel->delete();
+        }
+
+        Like::whereIn('subject_id', $postIds)->where('subject_type', '=', 'App\Post')->delete();
+
+        $category->delete();
+
+        Flash::success('Deleted category');
+        return redirect()->route('admin.forum.get.index');
+    }
+
+    /**
+     * Delete a channel.
+     *
+     * @param DeleteChannelRequest $request
+     * @return Response
+     */
+    public function deleteChannel(DeleteChannelRequest $request)
+    {
+        $channel = $request->route()->getParameter('channel');
+
+        $postIds = [];
+        foreach($channel->topics as $topic)
+        {
+            foreach($topic->posts as $post) $postIds[] = $post->id;
+        }
+
+        Like::whereIn('subject_id', $postIds)->where('subject_type', '=', 'App\Post')->delete();
+
+        foreach($channel->topics as $topic)
+        {
+            $topic->readers()->delete();
+            $topic->posts()->delete();
+            $topic->delete();
+        }
+
+        $channel->delete();
+
+        Flash::success('Deleted channel');
+        return redirect()->route('admin.forum.get.index');
     }
 }

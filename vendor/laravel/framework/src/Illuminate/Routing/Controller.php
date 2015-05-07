@@ -5,16 +5,8 @@ use BadMethodCallException;
 use InvalidArgumentException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-require_once base_path() . '/core/functions/html/library/HTMLPurifier.auto.php'; 
-
 abstract class Controller {
 
-	/**
-	 * The global HTMLPurifier variable.
-	 *
-	 * @var HTMLPurifier
-	 */
-	protected $purifier = null;
 	/**
 	 * The middleware registered on the controller.
 	 *
