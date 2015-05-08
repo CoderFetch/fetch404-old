@@ -28,7 +28,7 @@
 					<div class="pull-right">
 						<a class="btn btn-success btn-xs" href="{{{ route('admin.forum.get.edit.category', ['category' => $category->id]) }}}">Edit</a>
 						{!! Form::open(['route' => array('admin.forum.post.delete.category', $category), 'style' => 'display: inline;']) !!}
-						{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-xs']) !!}
+						{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-xs', 'onclick' => 'return confirm(\'Are you sure?\nWARNING: Deleting this category will delete all child channels, topics, and posts.\')']) !!}
 						{!! Form::close() !!}
 						<a class="btn btn-primary btn-xs" href="{{{ route('admin.forum.get.category.create-channel', $category) }}}">
 							New channel

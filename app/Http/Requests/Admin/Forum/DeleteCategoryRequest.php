@@ -1,4 +1,4 @@
-<?php namespace App\Http\Requests;
+<?php namespace App\Http\Requests\Admin\Forum;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Zizaco\Entrust\EntrustFacade as Entrust;

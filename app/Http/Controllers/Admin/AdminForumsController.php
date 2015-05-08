@@ -11,10 +11,10 @@ use App\Channel;
 use App\Http\Requests\Admin\Forum\CreateCategoryRequest;
 
 use App\Http\Requests\Admin\Forum\CreateChannelRequest;
+use App\Http\Requests\Admin\Forum\DeleteCategoryRequest;
 use App\Http\Requests\Admin\Forum\DeleteChannelRequest;
 use App\Http\Requests\Admin\Forum\EditCategoryRequest;
 use App\Http\Requests\Admin\Forum\EditChannelRequest;
-use App\Http\Requests\DeleteCategoryRequest;
 use App\Permission;
 use Laracasts\Flash\Flash;
 
@@ -46,11 +46,11 @@ class AdminForumsController extends AdminController
         // Title
         $title = 'Forums';
         // Grab all the channels/categories
-        $categories = Category::get();
-        $channels = Channel::get();
+        $categories = Category::with('channels')->get();
+//        $channels = Channel::get();
         
         // Show the page
-        return view('core.admin.forums.index', compact('categories', 'channels', 'title'));
+        return view('core.admin.forums.index', compact('categories', 'title'));
     }
 
     public function showCreateCategory()
