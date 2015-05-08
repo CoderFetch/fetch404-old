@@ -12,7 +12,7 @@ use Zizaco\Entrust\EntrustFacade as Entrust;
 class CreateCategoryRequest extends FormRequest
 {
     protected $rules = [
-        'name' => 'required|min:5|max:20|unique:categories'
+        'name' => 'required|min:4|max:20|unique:categories'
     ];
 
     public function rules()
@@ -45,7 +45,7 @@ class CreateCategoryRequest extends FormRequest
     {
         return [
             'name.required' => 'A category title is required.',
-            'name.min' => 'Category titles must be at least 5 characters long.',
+            'name.min' => 'Category titles must be at least 4 characters long.',
             'name.max' => 'Category titles can be up to 20 characters long.',
             'name.unique' => 'That name is in use. Try another.',
             'weight.numeric' => 'Please enter a valid number.'
