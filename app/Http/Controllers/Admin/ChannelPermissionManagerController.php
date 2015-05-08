@@ -1,10 +1,10 @@
 <?php namespace App\Http\Controllers\Admin;
 
-use App\ChannelPermission;
 use App\Http\Controllers\Controller;
 
 use App\Http\Requests\Admin\Forum\UpdateChannelPermissionsRequest;
 use Fetch404\Core\Models\Channel;
+use Fetch404\Core\Models\ChannelPermission;
 use Fetch404\Core\Models\Role;
 use Laracasts\Flash\Flash;
 
