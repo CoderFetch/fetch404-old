@@ -15,6 +15,7 @@ use App\Http\Requests\Admin\Forum\EditChannelRequest;
 use Fetch404\Core\Models\Category;
 use Fetch404\Core\Models\CategoryPermission;
 use Fetch404\Core\Models\Channel;
+use Fetch404\Core\Models\Role;
 use Laracasts\Flash\Flash;
 
 use DB;
