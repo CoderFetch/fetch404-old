@@ -12,8 +12,7 @@ use Zizaco\Entrust\EntrustFacade as Entrust;
 class EditCategoryRequest extends FormRequest
 {
     protected $rules = [
-        'name' => 'required|min:5|max:20',
-        'allowed_groups' => 'required'
+        'name' => 'required|min:5|max:20'
     ];
 
     public function rules()
@@ -54,8 +53,7 @@ class EditCategoryRequest extends FormRequest
             'name.min' => 'Category titles must be at least 5 characters long.',
             'name.max' => 'Category titles can be up to 20 characters long.',
             'name.unique' => 'That name is in use. Try another.',
-            'weight.numeric' => 'Please enter a valid number.',
-            'allowed_groups.required' => 'You must allow at least 1 group to view this forum.'
+            'weight.numeric' => 'Please enter a valid number.'
         ];
     }
 

@@ -107,9 +107,9 @@ class Category extends Model {
 
 		if ($user == null)
 		{
-			if ((in_array(3, $queryObj->lists('role_id'))) || (in_array(2, $queryObj->lists('role_id'))))
+			if (in_array(2, $queryObj->lists('role_id')))
 			{
-				if ($permissionId == 17 || $permissionId == 21)
+				if ($permissionId == 17 || $permissionId == 20)
 				{
 					return true;
 				}

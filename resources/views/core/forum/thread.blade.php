@@ -175,14 +175,16 @@
 		{!! Form::close() !!}
 	@else
 		<span class="text-right">
-	@if (!Auth::check())
-				<p>Please log in to post on the forums.</p>
+			@if (!Auth::check())
+			<p>Please log in to post on the forums.</p>
 			@elseif (!Auth::user()->isConfirmed())
-				<p>Please confirm your account to post on the forums.</p>
+			<p>Please confirm your account to post on the forums.</p>
 			@elseif ($thread->isLocked())
-				<p>This thread is locked.</p>
+			<p>This thread is locked.</p>
+			@elseif (!$thread->channel->can(6, Auth::user()))
+			You do not have permission to post here.
 			@endif
-</span>
+		</span>
 	@endif
 @endsection
 

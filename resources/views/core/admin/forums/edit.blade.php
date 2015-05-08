@@ -4,7 +4,7 @@
 @section('content')
     <h1>
         <a class="btn btn-info btn-md pull-right" href="{{{ route('admin.forum.get.permissions.category.edit', $category) }}}">
-            Manage permissions
+            <i class="fa fa-user-plus"></i> Manage permissions
         </a>
         Editing category
     </h1>
@@ -43,11 +43,6 @@
                     </span>
                 </div>
 
-                <div class="form-group">
-                    {!! Form::label('allowed_groups', 'Allowed groups', ['class' => 'control-label']) !!}
-                    {!! Form::select('allowed_groups[]', $groups, null, ['id' => 'groups_list', 'class' => 'form-control', 'multiple']) !!}
-                </div>
-
                 <!-- Submit Form Input -->
                 <div class="form-group">
                     {!! Form::submit('Save changes', ['class' => 'btn btn-primary']) !!}
@@ -55,12 +50,4 @@
         </div>
     </div>
     {!! Form::close() !!}
-@stop
-
-@section('footer')
-    <script>
-        $('#groups_list').select2({
-            placeholder: 'Who should be able to access this forum?'
-        });
-    </script>
 @stop

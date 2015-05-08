@@ -59,6 +59,16 @@ $router->group(['middleware' => ['installed', 'csrf']], function() use ($router)
             $router->get('/channel/{channel}/edit', ['as' => 'admin.forum.get.edit.channel', 'uses' => 'AdminForumsController@showEditChannel']);
             $router->post('/channel/{channel}/edit', ['as' => 'admin.forum.post.edit.channel', 'uses' => 'AdminForumsController@editChannel']);
 
+            $router->get('/categories/{category}/new-channel', [
+                'as' => 'admin.forum.get.category.create-channel',
+                'uses' => 'AdminForumsController@showCreateChannel'
+            ]);
+
+            $router->post('/categories/{category}/new-channel', [
+                'as' => 'admin.forum.post.category.create-channel',
+                'uses' => 'AdminForumsController@createChannel'
+            ]);
+
             $router->group(['prefix' => 'permissions'], function() use ($router)
             {
                 $router->get('/categories', [

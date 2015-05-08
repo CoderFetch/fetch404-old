@@ -25,10 +25,15 @@
 			@foreach($categories as $category)
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<a class="btn btn-success btn-xs pull-right" href="{{{ route('admin.forum.get.edit.category', ['category' => $category->id]) }}}">Edit</a>
-					{!! Form::open(['route' => array('admin.forum.post.delete.category', $category), 'style' => 'display: inline;']) !!}
-					{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}
-					{!! Form::close() !!}
+					<div class="pull-right">
+						<a class="btn btn-success btn-xs" href="{{{ route('admin.forum.get.edit.category', ['category' => $category->id]) }}}">Edit</a>
+						{!! Form::open(['route' => array('admin.forum.post.delete.category', $category), 'style' => 'display: inline;']) !!}
+						{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-xs']) !!}
+						{!! Form::close() !!}
+						<a class="btn btn-primary btn-xs" href="{{{ route('admin.forum.get.category.create-channel', $category) }}}">
+							New channel
+						</a>
+					</div>
 					<h3 class="panel-title">{{{ $category->name }}}</h3>
 				</div>
 				<div class="panel-body">

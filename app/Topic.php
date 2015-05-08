@@ -101,7 +101,7 @@ class Topic extends Model {
 	{
 		if (Entrust::can('replyToAllThreads')) return true;
 
-		if (Auth::check() && Auth::user()->isConfirmed() && $this->locked == 0) return true;
+		if (Auth::check() && Auth::user()->isConfirmed() && $this->locked == 0 && $this->channel->can(6, Auth::user())) return true;
 
 		return false;
 	}
@@ -113,7 +113,6 @@ class Topic extends Model {
 
 	public function getOldAttribute()
 	{
-		//return (!$cutoff || $this->updated_at->timestamp < strtotime($cutoff));
 		$now = Carbon::now();
 		$now->subMonths(1);
 

@@ -10,6 +10,7 @@ use App\Category;
 use App\Channel;
 use App\Http\Requests\Admin\Forum\CreateCategoryRequest;
 
+use App\Http\Requests\Admin\Forum\CreateChannelRequest;
 use App\Http\Requests\Admin\Forum\DeleteChannelRequest;
 use App\Http\Requests\Admin\Forum\EditCategoryRequest;
 use App\Http\Requests\Admin\Forum\EditChannelRequest;
@@ -127,6 +128,42 @@ class AdminForumsController extends AdminController
         Flash::success('Updated channel!');
 
         return redirect(route('admin.forum.get.index'));
+    }
+
+    /**
+     * Show the page for creating a new channel.
+     *
+     * @param Category $category
+     * @return Response
+     */
+    public function showCreateChannel(Category $category)
+    {
+        return view('core.admin.forums.channel.create', array('category' => $category));
+    }
+
+    /**
+     * Create a new channel.
+     *
+     * @param CreateChannelRequest $request
+     * @return Response
+     */
+    public function createChannel(CreateChannelRequest $request)
+    {
+        $name = $request->input('name');
+        $weight = ($request->has('weight') ? $request->input('weight') : 1);
+        $description = $request->input('description');
+        $category = $request->route()->getParameter('category');
+
+        $channel = $this->channel->create(array(
+            'name' => $name,
+            'weight' => $weight,
+            'description' => $description,
+            'category_id' => $category->id,
+            'slug' => str_slug($name)
+        ));
+
+        Flash::success('Created channel!');
+        return redirect()->route('admin.forum.get.index');
     }
 
     /*
