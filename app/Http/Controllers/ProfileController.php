@@ -1,20 +1,7 @@
 <?php namespace App\Http\Controllers;
 
-// External libraries (well, sort of)
-use App\Http\Controllers\Controller;
-
-// Models
-use App\User;
-use App\AccountConfirmation;
-
-// Illuminate stuff
-use Illuminate\Http\Request;
-
-// The Laracasts libraries
-use Laracasts\Flash\Flash;
-
-// The facades need to be included for some reason O_o
 use Auth;
+use Fetch404\Core\Models\User;
 use Response;
 use Redirect;
 use Session;
@@ -32,12 +19,13 @@ class ProfileController extends Controller {
 	| This also handles showing the profile view.
 	|
 	*/
-	
+
 	/**
 	 * Attempt to show a user's profile
 	 *
-	 * @param integer $user_id
-	 * @return void
+	 * @param $slug
+	 * @param $id
+	 * @return Response
 	 */
 	public function showProfile($slug, $id)
 	{
@@ -86,13 +74,6 @@ class ProfileController extends Controller {
 			{
 				return view('core.errors.profilenotavailable', array('user' => $user));
 			}
-
-//			if (Auth::check())
-//			{
-//				Auth::user()->update(array(
-//					'last_active_desc' => 'Viewing ' . $user->name . '\'s profile'
-//				));
-//			}
 
 			return view('core.user.profile', [
 				'user' => $user

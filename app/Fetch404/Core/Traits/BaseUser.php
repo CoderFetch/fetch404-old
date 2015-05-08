@@ -6,8 +6,8 @@ use Cmgmyr\Messenger\Models\Thread;
 use Auth;
 
 use Fetch404\Core\Models\AccountConfirmation;
+use Fetch404\Core\Models\User;
 use Illuminate\Support\Facades\Storage;
-
 
 trait BaseUser {
 
