@@ -450,20 +450,11 @@ trait BaseUser {
     /**
      * Check to see if the current user is banned.
      * Will automatically update the ban data when this is called.
-     * TODO: Move the ban updating to the scheduler. ** DONE **
      *
      * @return bool
      */
     public function isBanned()
     {
-//        if ($this->banned_until != null && $this->banned_until < Carbon::now()->toDateTimeString() && $this->is_banned == 1)
-//        {
-//            $this->update(array(
-//                'is_banned' => 0,
-//                'banned_until' => null
-//            ));
-//        }
-
         if ($this->banned_until != null)
         {
             return ($this->is_banned == 1 && $this->banned_until > Carbon::now()->toDateTimeString());
@@ -474,7 +465,7 @@ trait BaseUser {
 
     /**
      * Check to see if the current user "is" a certain user
-     * You can provide either a name or a user ID.
+     * The only parameter type accepted is a User object.
      *
      * @param User $user
      * @return boolean
@@ -493,7 +484,10 @@ trait BaseUser {
      */
     public function currentStatus()
     {
-        $profilePost = $this->profilePosts()->where('from_user_id', '=', $this->getId())->where('to_user_id', '=', $this->getId())->first();
+        $profilePost = $this->profilePosts()
+            ->where('from_user_id', '=', $this->getId())
+            ->where('to_user_id', '=', $this->getId())
+            ->first();
 
         return $profilePost;
     }

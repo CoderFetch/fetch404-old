@@ -57,7 +57,7 @@ trait BasePost {
      */
     public function getRouteAttribute()
     {
-        $url = route('forum.get.show.thread', ['slug' => $this->topic->slug, 'id' => $this->topic->id]);
+        $url = route('forum.get.show.thread', [$this->topic->channel->id, $this->topic->id]);
 
         if ($this->topic->postsPaginated->hasPages())
         {

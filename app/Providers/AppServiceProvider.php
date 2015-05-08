@@ -84,7 +84,7 @@ class AppServiceProvider extends ServiceProvider {
 						return $item->updated_at;
 					});
 
-					$reports = $reports->filter(function($item) use ($user)
+					$reports = $reports->filter(function($item)
 					{
 						return !$item->isClosed();
 					});
@@ -166,7 +166,7 @@ class AppServiceProvider extends ServiceProvider {
 			$threads = Topic::all()->take(5);
 
 			$threads = $threads->filter(function($item) {
-				return $item->channel->category->canView(Auth::user()) && $item->channel->canView(Auth::user());
+				return ($item != null && $item->channel != null && $item->channel->category != null) && $item->channel->category->canView(Auth::user()) && $item->channel->canView(Auth::user());
 			});
 
 			$threads = $threads->sortByDesc(function($item) {
@@ -191,10 +191,10 @@ class AppServiceProvider extends ServiceProvider {
 		});
 
 		view()->composer('core.forum.partials.latest-statuses', function($view) {
-			$statuses = ProfilePost::
+			$statuses = ProfilePost::latest('created_at')->take(5);
 
-			$statuses = $statuses->filter(function($item) {
-				return $item->channel->category->canView(Auth::user()) && $item->channel->canView(Auth::user());
+			$statuses = $statuses->filter(function(ProfilePost $item) {
+				return !$item->toUser->isBanned();
 			});
 
 			$statuses = $statuses->sortByDesc(function($item) {

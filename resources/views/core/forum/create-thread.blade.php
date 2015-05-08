@@ -4,7 +4,7 @@
 @section('content')
 	<h1>Creating thread in "{{{ $channel->name }}}"</h1>
 	<hr>
-	{!! Form::open(['route' => array('forum.post.channel.create.thread', $channel->slug)]) !!}
+	{!! Form::open(['route' => array('forum.post.channel.create.thread', $channel->id)]) !!}
 	<div class="row">
 		<div class="col-md-7">
 			@if (count($errors) > 0)

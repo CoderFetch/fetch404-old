@@ -11,7 +11,7 @@
 |
 */
 
-$router->group(['middleware' => ['installed', 'write_config', 'bancheck', 'update_last_activity'], 'prefix' => config('app.url_prefix', '')], function() use ($router)
+$router->group(['middleware' => ['installed', 'bancheck', 'update_last_activity']], function() use ($router)
 {
 
 	# Start routes

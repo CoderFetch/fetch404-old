@@ -76,19 +76,11 @@ class Category extends Model {
 	
 	public function getRouteAttribute()
 	{
-		return route('forum.get.show.forum', ['slug' => $this->slug]);
+		return route('forum.get.show.forum', [$this->id]);
 	}
 
 	public function can($permissionId, $user)
 	{
-//		if ($user == null)
-//		{
-//			if ($permissionId == 17 || $permissionId == 20)
-//			{
-//				return true;
-//			}
-//		}
-
 		$queryObj = CategoryPermission::select(array(
 			'category_permission.permission_id',
 			'category_permission.role_id',
@@ -114,6 +106,7 @@ class Category extends Model {
 					return true;
 				}
 			}
+
 			return false;
 		}
 

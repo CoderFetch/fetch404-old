@@ -6,6 +6,7 @@ use App\Report;
 use App\Topic;
 use App\User;
 use App\Post;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -116,9 +117,9 @@ class SearchController extends Controller
             $resultsArray[] = $conv;
         }
 
-        $resultsCollection = Collection::make($resultsArray);
+        $results = Collection::make($resultsArray);
 
-        $resultsCollection = $resultsCollection->filter(function($item)
+        $results = $results->filter(function($item)
         {
             if ($item instanceof User)
             {
@@ -132,7 +133,7 @@ class SearchController extends Controller
 
             if ($item instanceof Post)
             {
-                return $item->topic->canView;
+                return $item->topic != null && $item->topic->canView;
             }
 
             if ($item instanceof Report)
@@ -142,15 +143,20 @@ class SearchController extends Controller
 
             if ($item instanceof Conversation)
             {
-                return (
-                    Auth::check()
-                    &&
-                    in_array(Auth::id(), $item->participantsUserIds())
-                );
+                if (!Auth::check()) return false;
+
+                try {
+                    $item->getParticipantFromUser(Auth::id());
+                    return true;
+                }
+                catch (ModelNotFoundException $ex)
+                {
+                    return false;
+                }
             }
         });
 
-        $resultsCollection = $resultsCollection->sortBy(function($item)
+        $results = $results->sortBy(function($item)
         {
             if ($item instanceof Conversation)
             {
@@ -184,19 +190,6 @@ class SearchController extends Controller
 
         });
 
-        $resultCount = $resultsCollection->count();
-
-        $perPage = 10; // Item per page (change if needed)
-
-        $results = $resultsCollection->paginate($perPage);
-
-        if ($results->count() == 0)
-        {
-            return redirect(route('search.send') . '?query=' . $searchQuery . '&page=1');
-        }
-
-        $results->setPath('search')->appends('query', $searchQuery);
-
-        return view('core.search.search', compact('results', 'resultCount', 'resultsCollection', 'searchQuery'));
+        return view('core.search.search', compact('results', 'searchQuery'));
     }
 }

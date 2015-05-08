@@ -4,6 +4,8 @@
 use App\Http\Controllers\Controller;
 
 // Models
+use App\Http\Requests\Forum\Threads\ThreadCreateRequest;
+use App\Http\Requests\Forum\Threads\ThreadReplyRequest;
 use App\User;
 use App\Topic;
 use App\Post;
@@ -12,262 +14,102 @@ use App\Category;
 
 // Illuminate stuff
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 
-// The Laracasts libraries
-use Laracasts\Flash\Flash;
-
-// The facades need to be included for some reason O_o
-use Auth;
-use Hash;
-use Mail;
-use Response;
-use Redirect;
-use Session;
-use Validator;
+use Illuminate\Support\Facades\Auth;
 
 class ForumController extends Controller {
 
-	/*
-	|--------------------------------------------------------------------------
-	| Forum controller
-	|--------------------------------------------------------------------------
-	|
-	| This handles the fun stuff (creating threads, etc)
-	| Do not modify this unless you know what you're doing!
-	| ...because lots of people will get upset if their threads don't show up.
-	|
-	*/
-	
+	private $topic;
+	private $post;
+
 	/**
 	 * Attempt to create a thread
 	 *
-	 * @param string $slug
-	 * @param Request $request
-	 * @return void
+	 * @param ThreadCreateRequest $request
+	 * @return Response
 	 */
-	public function postCreateThread($slug, Request $request)
+	public function postCreateThread(ThreadCreateRequest $request)
 	{
-		if (!$slug)
-		{
-			return redirect()->to('/forum');
-		}
-		
-		$channel = Channel::where(
-			'slug',
-			'=',
-			$slug
-		)->first();
-		
-		if ($channel)
-		{
-			$title = $request->input('title');
-			$body = $request->input('body');
-			
-			$validator = Validator::make(
-				[
-					'title' => $title,
-					'body' => $body
-				],
-				[
-					'title' => 'required|min:5|max:20|regex:/[A-Za-z0-9\-_!\.\s]/|unique:topics,title,NULL,id,channel_id,' . $channel->id,
-					'body' => 'required|min:20|max:4500'
-				],
-				[
-					'title.required' => 'A title is required.',
-					'title.min' => 'Thread titles must be at least 5 characters long.',
-					'title.max' => 'Thread titles can be up to 20 characters long.',
-					'title.unique' => 'A thread with this title already exists in this channel.',
-					'title.regex' => 'You are using characters that are not allowed. Allowed characters: A through Z (uppercase or lower), 0 through 9, - (dash), _ (underscore), !, . (period), and a space.',
-					'body.required' => 'A message is required.',
-					'body.min' => 'Messages must be at least 20 characters long.',
-					'body.max' => 'Messages can be up to 4500 characters long.'
-				]
-			);
-			
-			if ($validator->passes())
-			{
-				$thread = Topic::create([
-					'title' => $title,
-					'slug' => str_slug($title, '-'),
-					'user_id' => Auth::id(),
-					'channel_id' => $channel->id,
-					'locked' => 0,
-					'pinned' => 0
-				]);
-				
-				$post = Post::create([
-					'topic_id' => $thread->id,
-					'user_id' => Auth::id(),
-					'content' => $body
-				]);
-				
-				return redirect('/forum/topic/' . $thread->slug . '.' . $thread->id);
-			}
-			else
-			{
-				return redirect()->to('/forum/channel/' . $channel->slug . '/create-thread')->withErrors($validator->messages())->withInput();
-			}
-		}
-		else
-		{
-			return redirect()->to('/forum');
-		}
+		$channel = $request->route()->getParameter('channel');
+		$title = $request->input('title');
+		$body = $request->input('body');
+
+		$thread = $this->topic->create(array(
+			'title' => $title,
+			'slug' => str_slug($title, '-'),
+			'user_id' => Auth::id(),
+			'channel_id' => $channel->id,
+			'locked' => 0,
+			'pinned' => 0
+		));
+
+		$post = $this->post->create(array(
+			'topic_id' => $thread->id,
+			'user_id' => Auth::id(),
+			'content' => $body
+		));
+
+		return redirect($thread->Route);
 	}
 
 	/**
 	 * Attempt to quick-reply to a thread
 	 *
-	 * @param string $slug
-	 * @param $id
-	 * @param Request $request
+	 * @param ThreadReplyRequest $request
 	 * @return void
 	 */
-	public function postQuickReplyToThread($slug, $id, Request $request)
-	{	
-		if (!$slug || !$id)
-		{
-			return redirect()->to('/forum');
-		}
-		
-		$thread = Topic::where(
-			'slug',
-			'=',
-			$slug
-		)->orWhere(
-			'id',
-			'=',
-			$id
-		)->first();
-		
-		if ($thread)
-		{
-			$body = $request->input('body');
-			
-			$validator = Validator::make(
-				[
-					'body' => $body
-				],
-				[
-					'body' => 'required|min:20|max:4500'
-				],
-				[
-					'body.required' => 'A message is required.',
-					'body.min' => 'Messages must be at least 20 characters long.',
-					'body.max' => 'Messages can be up to 4500 characters long.'
-				]
-			);
-			
-			if ($validator->passes())
-			{
-				$post = Post::create([
-					'topic_id' => $thread->id,
-					'user_id' => Auth::id(),
-					'content' => $body
-				]);
+	public function postQuickReplyToThread(ThreadReplyRequest $request)
+	{
+		$topic = $request->route()->getParameter('topic');
+		$body = $request->input('body');
 
-				$post->topic->touch();
-				
-				return redirect('/forum/topic/' . $thread->slug . '.' . $thread->id . ($thread->postsPaginated->hasPages() ? '?page=' . $thread->postsPaginated->lastPage() : ''));
-			}
-			else
-			{
-				return redirect()->to('/forum/topic/' . $thread->slug . '.' . $thread->id)->withErrors($validator->messages())->withInput();
-			}			
-		}		
-		else
-		{
-			return redirect()->to('/forum');
-		}
+		$post = Post::create([
+			'topic_id' => $topic->id,
+			'user_id' => Auth::id(),
+			'content' => $body
+		]);
+
+		$post->topic->touch();
+
+		return redirect($post->Route);
+		//return redirect('/forum/topic/' . $thread->slug . '.' . $thread->id . ($thread->postsPaginated->hasPages() ? '?page=' . $thread->postsPaginated->lastPage() : ''));
 	}
 
 	/**
 	 * Attempt to reply to a thread
 	 *
-	 * @param string $slug
-	 * @param integer $id
-	 * @param Request $request
+	 * @param ThreadReplyRequest $request
 	 * @return void
 	 */	
-	public function postReplyToThread($slug, $id, Request $request)
-	{	
-		if (!$slug || !$id)
-		{
-			return redirect()->to('/forum');
-		}
-		
-		$thread = Topic::where(
-			'slug',
-			'=',
-			$slug
-		)->orWhere(
-			'id',
-			'=',
-			$id
-		)->first();
-		
-		if ($thread)
-		{
-			$body = $request->input('body');
-			
-			$validator = Validator::make(
-				[
-					'body' => $body
-				],
-				[
-					'body' => 'required|min:20|max:4500'
-				],
-				[
-					'body.required' => 'A message is required.',
-					'body.min' => 'Messages must be at least 20 characters long.',
-					'body.max' => 'Messages can be up to 4500 characters long.'
-				]
-			);
-			
-			if ($validator->passes())
-			{
-				$post = Post::create([
-					'topic_id' => $thread->id,
-					'user_id' => Auth::id(),
-					'content' => $body
-				]);
+	public function postReplyToThread(ThreadReplyRequest $request)
+	{
+		$topic = $request->route()->getParameter('topic');
+		$body = $request->input('body');
 
-				$post->topic->touch();
+		$post = Post::create([
+			'topic_id' => $topic->id,
+			'user_id' => Auth::id(),
+			'content' => $body
+		]);
 
-				if ($post->topic->user->id != Auth::id())
-				{
-					$post->topic->user->notifications()->create(array(
-						'subject_id' => $post->id,
-						'subject_type' => get_class($post),
-						'name' => 'thread_replied',
-						'user_id' => $post->topic->user->id,
-						'sender_id' => $post->user->id
-					));
-				}
-				
-				return redirect('/forum/topic/' . $thread->slug . '.' . $thread->id . ($thread->postsPaginated->hasPages() ? '?page=' . $thread->postsPaginated->lastPage() : ''));
-			}
-			else
-			{
-				return redirect()->to($thread->showReplyRoute)->withErrors($validator->messages())->withInput();
-			}			
-		}		
-		else
-		{
-			return redirect()->to('/forum');
-		}
+		$post->topic->touch();
+
+		return redirect($post->Route);
 	}
-		 
+
 	/**
 	 * Create a new forum page controller instance.
 	 *
-	 * @return mixed
+	 * @param Topic $topic
+	 * @param Post $post
 	 */
-	public function __construct()
+	public function __construct(Topic $topic, Post $post)
 	{
 		$this->middleware('auth');
 		$this->middleware('confirmed');
 		$this->middleware('csrf');
+		$this->topic = $topic;
+		$this->post = $post;
 	}
 
 }

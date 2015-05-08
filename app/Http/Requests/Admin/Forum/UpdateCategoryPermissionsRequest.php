@@ -25,7 +25,8 @@ class UpdateCategoryPermissionsRequest extends FormRequest {
 		return [
 			//
 			'allowed_groups' => 'required',
-			'create_threads' => 'required'
+			'create_threads' => 'required',
+			'reply_to_threads' => 'required'
 		];
 	}
 
@@ -38,7 +39,8 @@ class UpdateCategoryPermissionsRequest extends FormRequest {
 	{
 		return [
 			'allowed_groups.required' => 'You must allow at least 1 group to view this category.',
-			'create_threads.required' => 'You must allow at least 1 group to create threads in this category.'
+			'create_threads.required' => 'You must allow at least 1 group to create threads in this category.',
+			'reply_to_threads.required' => 'You must allow at least 1 group to post in this category.'
 		];
 	}
 

@@ -28,8 +28,8 @@ trait CreatesNotifications {
      * @param array $data
      * @return mixed
      */
-    public function createNotification(array $data)
+    public function notify(array $data)
     {
-        Notification::create($data);
+        return Notification::create($data);
     }
 }

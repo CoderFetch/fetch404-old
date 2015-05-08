@@ -67,22 +67,22 @@ class Topic extends Model {
 	
 	public function getRouteAttribute()
 	{
-		return route('forum.get.show.thread', ['slug' => $this->slug, 'id' => $this->id]);
+		return route('forum.get.show.thread', [$this->channel->id, $this->id]);
 	}
 	
 	public function getShowReplyRouteAttribute()
 	{
-		return route('forum.get.show.thread.reply', ['slug' => $this->slug, 'id' => $this->id]);
+		return route('forum.get.show.thread.reply', [$this->id]);
 	}
 
 	public function getReplyRouteAttribute()
 	{
-		return route('forum.post.thread.reply', ['slug' => $this->slug, 'id' => $this->id]);
+		return route('forum.post.thread.reply', [$this->channel->id, $this->id]);
 	}
 	
 	public function getQuickReplyRouteAttribute()
 	{
-		return route('forum.post.quick-reply.thread', ['slug' => $this->slug, 'id' => $this->id]);
+		return route('forum.post.quick-reply.thread', [$this->channel->id, $this->id]);
 	}
 
 	public function getCanViewAttribute()

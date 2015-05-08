@@ -3437,5 +3437,43 @@
             "faker",
             "fixtures"
         ]
+    },
+    {
+        "name": "marwelln/recaptcha",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Marwelln/recaptcha.git",
+            "reference": "2527576fd1f12c25a95a1bf856606cd20db82ba8"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Marwelln/recaptcha/zipball/2527576fd1f12c25a95a1bf856606cd20db82ba8",
+            "reference": "2527576fd1f12c25a95a1bf856606cd20db82ba8",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.4.0"
+        },
+        "time": "2015-02-09 14:53:41",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Marwelln\\Recaptcha\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Martin Mårtensson",
+                "email": "martin@redward.se"
+            }
+        ],
+        "description": "Recaptcha that supports Google's new \"no captcha recaptcha\" (with Laravel support)"
     }
 ]

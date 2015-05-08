@@ -69,29 +69,15 @@ class CategoryPermissionManagerController extends Controller {
 		//
 		$groups = Role::lists('name', 'id');
 
-		//$permissions = CategoryPermission::where('category_id', '=', $category->id)->get();
-
-		$queryObj = CategoryPermission::select(array(
-			'category_permission.permission_id',
-			'category_permission.role_id',
-			'category_permission.category_id'
-		))->leftJoin('categories as c', function($join)
-		{
-			$join->on('category_permission.category_id', '=', 'c.id');
-			//$join->on('category_forum_permission.role_id', '=', 1);
-		})->with(
-			'role',
-			'category',
-			'permission'
-		)->where('category_id', '=', $category->id);
-
-		$accessCategoryIds = $queryObj->where('permission_id', '=', 20)->lists('role_id', 'role_id');
-		$createThreadIds = $queryObj->where('permission_id', '=', 1)->lists('role_id', 'role_id');
+		$accessCategoryIds = CategoryPermission::where('category_id', '=', $category->id)->where('permission_id', '=', 20)->lists('role_id', 'role_id');
+		$createThreadIds = CategoryPermission::where('category_id', '=', $category->id)->where('permission_id', '=', 1)->lists('role_id', 'role_id');
+		$replyIds = CategoryPermission::where('category_id', '=', $category->id)->where('permission_id', '=', 6)->lists('role_id', 'role_id');
 
 		return view('core.admin.forums.permission-editor.category.edit', array(
 			'category' => $category,
 			'accessCategory' => $accessCategoryIds,
 			'createThread' => $createThreadIds,
+			'reply' => $replyIds,
 			'groups' => $groups
 		));
 	}
@@ -109,10 +95,12 @@ class CategoryPermissionManagerController extends Controller {
 
 		$accessCategory = $request->input('allowed_groups');
 		$createThreads = $request->input('create_threads');
+		$reply = $request->input('reply_to_threads');
 
 		CategoryPermission::where('category_id', '=', $category->id)
 			->where('permission_id', '=', 20)
 			->orWhere('permission_id', '=', 1)
+			->orWhere('permission_id', '=', 6)
 			->delete();
 
 		foreach($accessCategory as $id)
@@ -128,6 +116,15 @@ class CategoryPermissionManagerController extends Controller {
 		{
 			$create_threads = CategoryPermission::firstOrCreate(array(
 				'permission_id' => 1,
+				'role_id' => $id,
+				'category_id' => $category->id
+			));
+		}
+
+		foreach($reply as $id)
+		{
+			$perm = CategoryPermission::firstOrCreate(array(
+				'permission_id' => 6,
 				'role_id' => $id,
 				'category_id' => $category->id
 			));

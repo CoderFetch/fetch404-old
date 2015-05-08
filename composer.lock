@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7c75f186247a633ff84a3b25eaf50c5d",
+    "hash": "e99dd69b58688d664f08b860ae0cec70",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -716,6 +716,42 @@
                 "storage"
             ],
             "time": "2015-03-29 14:01:43"
+        },
+        {
+            "name": "marwelln/recaptcha",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Marwelln/recaptcha.git",
+                "reference": "2527576fd1f12c25a95a1bf856606cd20db82ba8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Marwelln/recaptcha/zipball/2527576fd1f12c25a95a1bf856606cd20db82ba8",
+                "reference": "2527576fd1f12c25a95a1bf856606cd20db82ba8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Marwelln\\Recaptcha\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Martin Mårtensson",
+                    "email": "martin@redward.se"
+                }
+            ],
+            "description": "Recaptcha that supports Google's new \"no captcha recaptcha\" (with Laravel support)",
+            "time": "2015-02-09 14:53:41"
         },
         {
             "name": "maximebf/debugbar",
@@ -3331,6 +3367,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "marwelln/recaptcha": 20,
         "zizaco/entrust": 20,
         "tobscure/permissible": 20
     },

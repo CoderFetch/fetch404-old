@@ -14,7 +14,7 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					@if ($channel->can(1, Auth::user()))
-						<a class="btn btn-success btn-xs pull-right" href="{{{ route('forum.get.channel.create.thread', ['slug' => $channel->slug]) }}}">Create thread</a>
+						<a class="btn btn-success btn-xs pull-right" href="{{{ route('forum.get.channel.create.thread', [$channel->id]) }}}">Create thread</a>
 					@endif
 					<h3 class="panel-title">
 						{{{ $channel->name }}}

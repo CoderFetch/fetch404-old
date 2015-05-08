@@ -43,7 +43,7 @@ class Channel extends Model {
 		
 	public function getRouteAttribute()
 	{
-		return URL::to('/forum/channel/' . $this->slug);
+		return route('forum.get.show.channel', [$this->id]);
 	}
 
 	public function getTopicsPaginatedAttribute()

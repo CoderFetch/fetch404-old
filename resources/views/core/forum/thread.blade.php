@@ -168,7 +168,7 @@
 	@endforeach
 	{!! $thread->pageLinks !!}
 	@if ($thread->canReply)
-		{!! Form::open(['route' => array('forum.post.quick-reply.thread', $thread->slug, $thread->id), 'id' => 'quickReply']) !!}
+		{!! Form::open(['route' => array('forum.post.quick-reply.thread', $thread->channel->id, $thread->id), 'id' => 'quickReply']) !!}
 		<textarea id="body" name="body" data-type="summernote" data-mentions="true"></textarea>
 		<br>
 		{!! Form::submit('Reply', ['class' => 'btn btn-primary']) !!}
@@ -186,12 +186,4 @@
 			@endif
 		</span>
 	@endif
-@endsection
-
-@section('scripts')
-	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-	<script>
-		var hash = window.location.hash.substring(1);
-		$("#" + hash).effect("highlight", {}, 2000);
-	</script>
 @endsection

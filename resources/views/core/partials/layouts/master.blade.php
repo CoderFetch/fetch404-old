@@ -108,16 +108,11 @@
 							</a>
 						</li>
 					</ul>
-					{{--{!! Form::open(['route' => 'search.send', 'class' => 'navbar-form navbar-right', 'role' => 'search']) !!}--}}
-						{{--<div class="form-group">--}}
-							{{--<input type="search" class="form-control" placeholder="Search" name="query" value="{{{ isset($searchQuery) ? $searchQuery : '' }}}"/>--}}
-						{{--</div>--}}
-					{{--{!! Form::close() !!}--}}
-					<form role="search" action="{{{ route('search.send') }}}" method="GET" class="navbar-form navbar-right">
+					{!! Form::open(['route' => 'search.send', 'class' => 'navbar-form navbar-right', 'role' => 'search']) !!}
 						<div class="form-group">
 							<input type="search" class="form-control" placeholder="Search" name="query" value="{{{ isset($searchQuery) ? $searchQuery : '' }}}"/>
 						</div>
-					</form>
+					{!! Form::close() !!}
 					<ul class="nav navbar-nav navbar-right">
 						@if (!Auth::check())
 						<li>

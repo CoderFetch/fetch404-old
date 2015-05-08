@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Forum;
 
 // External libraries (well, sort of)
+use App\CategoryPermission;
 use App\Http\Controllers\Controller;
 
 // Models
@@ -11,23 +12,14 @@ use App\Channel;
 use App\Category;
 
 // Illuminate stuff
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
-// The Laracasts libraries
-use Laracasts\Flash\Flash;
-
-// The facades need to be included for some reason O_o
 use Auth;
-use Hash;
-use Mail;
-use Response;
-use Redirect;
-use Session;
-use Validator;
-use Zizaco\Entrust\EntrustFacade;
 
 class ForumPageController extends Controller {
+
+	private $category;
+	private $channel;
 
 	/*
 	|--------------------------------------------------------------------------
@@ -46,7 +38,7 @@ class ForumPageController extends Controller {
 	 */
 	public function showIndex()
 	{
-		$categories = Category::with('channels')->get();
+		$categories = $this->category->with('channels')->get();
 
 		$categories = $categories->filter(function($item)
 		{
@@ -72,274 +64,124 @@ class ForumPageController extends Controller {
 			'categories' => $categories
 		]);
 	}
-	
+
 	/**
 	 * Attempt to show a certain forum
 	 *
-	 * @param string $slug
-	 * @return void
+	 * @param Category $category
+	 * @return Response
 	 */
-	public function showForum($slug)
+	public function showForum(Category $category)
 	{
-		if (!$slug)
+		if (!$category->canView(Auth::user()))
 		{
-			return redirect()->to('/forum');
+			abort(403);
 		}
-		
-		$category = Category::where(
-			'slug',
-			'=',
-			$slug
-		)->with('channels')->first();
-		
-		if ($category)
-		{
-			if (!$category->canView(Auth::user()))
-			{
-				abort(403);
-			}
 
-			if (Auth::check())
-			{
-				Auth::user()->update(array(
-					'last_active_desc' => 'Viewing category "' . $category->name . '"'
-				));
-			}
-
-			$category->channels = $category->channels->filter(function($item)
-			{
-				return $item->can(21, Auth::user());
-			});
-
-			return view('core.forum.category', [
-				'category' => $category
-			]);
-		}
-		else
+		if (Auth::check())
 		{
-			return redirect()->to('/forum');
+			Auth::user()->update(array(
+				'last_active_desc' => 'Viewing category "' . $category->name . '"'
+			));
 		}
-	}
-	
-	/**
-	 * Attempt to show a certain forum (by finding the entry with a certain ID)
-	 *
-	 * @param integer $id
-	 * @return void
-	 */
-	public function showForumById($id)
-	{
-		if (!$id)
-		{
-			return redirect()->to('/forum');
-		}
-		
-		$category = Category::where(
-			'id',
-			'=',
-			$id
-		)->with('channels')->first();
-		
-		if ($category)
-		{
-			if (!$category->canView(Auth::user()))
-			{
-				abort(403);
-			}
 
-			if (Auth::check())
-			{
-				Auth::user()->update(array(
-					'last_active_desc' => 'Viewing category "' . $category->name . '"'
-				));
-			}
-
-			$topPosters = new Collection($category->posts());
-			
-			$topPosters->sortByDesc(function($item)
-			{
-				return $item->author->posts()->count();
-			});
-		
-			return view('core.forum.category', [
-				'category' => $category,
-				'top_posters' => $topPosters
-			]);
-		}
-		else
+		$category->channels = $category->channels->filter(function($item)
 		{
-			return redirect()->to('/forum');
-		}
+			return $item->can(21, Auth::user());
+		});
+
+		return view('core.forum.category', [
+			'category' => $category
+		]);
 	}
 
 	/**
 	 * Attempt to show a certain channel
 	 *
-	 * @param $slug
-	 * @return void
+	 * @param Channel $channel
+	 * @return Response
 	 */
-	public function showChannel($slug)
+	public function showChannel(Channel $channel)
 	{
-		if (!$slug)
+		if (!$channel->canView(Auth::user()))
 		{
-			return redirect()->to('/forum');
+			abort(403);
 		}
-		
-		$channel = Channel::where(
-			'slug',
-			'=',
-			$slug
-		)->with('topics', 'category')->first();
-		
-		if ($channel)
-		{
-			if (!$channel->canView(Auth::user()))
-			{
-				abort(403);
-			}
 
-			if (Auth::check())
-			{
-				Auth::user()->update(array(
-					'last_active_desc' => 'Viewing channel "' . $channel->name . '"'
-				));
-			}
-
-			return view('core.forum.channel', [
-				'channel' => $channel
-			]);
-		}
-		else
+		if (Auth::check())
 		{
-			return redirect()->to('/forum');
+			Auth::user()->update(array(
+				'last_active_desc' => 'Viewing channel "' . $channel->name . '"'
+			));
 		}
+
+		return view('core.forum.channel', [
+			'channel' => $channel
+		]);
 	}
 
 	/**
 	 * Attempt to show a certain thread
 	 *
-	 * @param string $slug
-	 * @param $id
-	 * @return void
+	 * @param Channel $channel
+	 * @param Topic $topic
+	 * @return Response
 	 */
-	public function showThread($slug, $id)
+	public function showThread(Channel $channel, Topic $topic)
 	{
-		if (!$slug)
+		if (!$channel->category->canView(Auth::user())) abort(403);
+		if (!$channel->canView(Auth::user())) abort(403);
+		if (!$topic->canView) abort(403);
+
+		if (Auth::check())
 		{
-			return redirect()->to('/forum');
-		}
-		
-		$thread = Topic::where(
-			'slug',
-			'=',
-			$slug
-		)->where(
-			'id',
-			'=',
-			$id
-		)->with('channel', 'user', 'posts')->first();
-
-		if ($thread)
-		{
-			if (!$thread->canView) abort(403);
-
-			$thread->posts = $thread->posts->filter(function($item)
+			if (!$topic->old && !is_null(Auth::user()))
 			{
-				return ($item->reports->isEmpty() ? true : EntrustFacade::can('viewReportedPosts'));
-			});
-
-			if (Auth::check())
-			{
-				if (!$thread->old && !is_null(Auth::user()))
-				{
-					$thread->markAsRead(Auth::id());
-				}
-
-				Auth::user()->update(array(
-					'last_active_desc' => 'Viewing thread "' . $thread->title . '"'
-				));
+				$topic->markAsRead(Auth::id());
 			}
-			return view('core.forum.thread', [
-				'thread' => $thread
-			]);
+
+			Auth::user()->update(array(
+				'last_active_desc' => 'Viewing thread "' . $topic->title . '"'
+			));
 		}
-		else
-		{
-			return redirect()->to('/forum');
-		}
+
+		return view('core.forum.thread', [
+			'thread' => $topic
+		]);
 	}
 
 	/**
 	 * Show the "create thread" page
 	 *
-	 * @param string $slug
+	 * @param Channel $channel
 	 * @return void
 	 */
-	public function showCreateThread($slug)
+	public function showCreateThread(Channel $channel)
 	{
-		if (!$slug)
-		{
-			return redirect()->to('/forum');
-		}
-		
-		$channel = Channel::where(
-			'slug',
-			'=',
-			$slug
-		)->first();
-		
-		if ($channel)
-		{
-			if (!$channel->canView(Auth::user())) abort(403);
-			if (!$channel->can(1, Auth::user())) abort(403);
+		if (!$channel->canView(Auth::user())) abort(403);
+		if (!$channel->can(1, Auth::user())) abort(403);
 
-			return view('core.forum.create-thread', [
-				'channel' => $channel
-			]);
-		}
-		else
-		{
-			return redirect()->to('/forum');
-		}
+		return view('core.forum.create-thread', [
+			'channel' => $channel
+		]);
 	}
-	
+
 	/**
 	 * Show the "full reply" page
 	 *
-	 * @param string $slug
-	 * @param int $id
-	 * @return void
-	 */	 
-	public function showReplyToThread($slug, $id)
+	 * @param Channel $channel
+	 * @param Topic $topic
+	 * @return Response
+	 */
+	public function showReplyToThread(Channel $channel, Topic $topic)
 	{
-		if (!$slug || !$id)
-		{
-			return redirect()->to('/forum');
-		}
-		
-		$thread = Topic::where(
-			'slug',
-			'=',
-			$slug
-		)->where(
-			'id',
-			'=',
-			$id
-		)->first();
-		
-		if ($thread)
-		{
-			if (!$thread->canView) abort(403);
-			if (!$thread->canReply) abort(403);
+		if (!$topic->channel->can(6, Auth::user())) abort(403);
+		if (!$topic->canView) abort(403);
+		if (!$topic->canReply) abort(403);
 
-			return view('core.forum.thread-reply', [
-				'thread' => $thread
-			]);
-		}
-		else
-		{
-			return redirect()->to('/forum');
-		}
+		return view('core.forum.thread-reply', [
+			'thread' => $topic
+		]);
 	}
 
 	/*
@@ -369,7 +211,7 @@ class ForumPageController extends Controller {
 		{
 			return $item->posts->filter(function($item)
 			{
-				return $item->topic->canView;
+				return $item->topic != null && $item->topic->canView;
 			})->count();
 		});
 
@@ -382,11 +224,14 @@ class ForumPageController extends Controller {
 	/**
 	 * Create a new forum page controller instance.
 	 *
-	 * @return mixed
+	 * @param Channel $channel
+	 * @param Category $category
+	 * @type mixed
 	 */
-	public function __construct()
+	public function __construct(Channel $channel, Category $category)
 	{
-		
+		$this->channel = $channel;
+		$this->category = $category;
 	}
 
 }

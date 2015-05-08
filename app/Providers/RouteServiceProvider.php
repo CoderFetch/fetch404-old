@@ -35,6 +35,8 @@ class RouteServiceProvider extends ServiceProvider {
 		$router->model('profile_post', 'App\ProfilePost');
 		$router->model('post', 'App\Post');
 		$router->model('topic', 'App\Topic');
+		$router->model('channel', 'App\Channel');
+		$router->model('category', 'App\Category');
 
 		$router->model('conversation', 'Cmgmyr\Messenger\Models\Thread');
 
@@ -61,7 +63,6 @@ class RouteServiceProvider extends ServiceProvider {
 			require app_path('Http/Routes/conversations.php');
 			require app_path('Http/Routes/news.php');
 			require app_path('Http/Routes/search.php');
-			require app_path('Http/Routes/tickets.php');
 			require app_path('Http/Routes/users.php');
 			require app_path('Http/Routes/forum/reports.php');
 		});

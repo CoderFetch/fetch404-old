@@ -118,6 +118,7 @@ trait LikeableTrait {
             } else {
                 $lastName = array_pop($names);
             }
+
             $members = sprintf("%s like this.", sprintf("%s and %s", implode(", ", $names), $lastName));
         }
         // If there's only one name, we don't need to do anything grammatically fancy.

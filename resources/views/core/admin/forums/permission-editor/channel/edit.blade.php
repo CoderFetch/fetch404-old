@@ -44,6 +44,15 @@
             </div>
 
             <div class="form-group">
+                {!! Form::label('reply_to_threads', 'Who can post?', ['class' => 'control-label']) !!}
+                <select name="reply_to_threads[]" id="reply_to_threads" class="form-control" multiple>
+                    @foreach($groups as $i => $g)
+                    <option value="{{{ $i }}}"{{{ in_array($i, $reply) ? ' selected=selected' : '' }}}>{{{ $g }}}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="form-group">
                 {!! Form::submit('Save changes', ['class' => 'btn btn-success']) !!}
             </div>
 

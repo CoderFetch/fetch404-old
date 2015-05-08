@@ -11,7 +11,7 @@
             @if (empty($results))
                 <p>No results were found.</p>
             @else
-                <h1>Your search returned {{{ $resultCount }}} {{{ Pluralizer::plural('result', $resultCount) }}}</h1>
+                <h1>Your search returned {{{ $results->count() }}} {{{ Pluralizer::plural('result', $results->count()) }}}</h1>
                 <ul class="list-group">
                 @foreach($results as $item)
                   <li class="list-group-item">
@@ -62,7 +62,6 @@
                   </li>
                 @endforeach
                 </ul>
-                {!! $results->render() !!}
             @endif
         @endif
     </div>

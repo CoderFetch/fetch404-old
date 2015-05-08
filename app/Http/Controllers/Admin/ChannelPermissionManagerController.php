@@ -49,29 +49,15 @@ class ChannelPermissionManagerController extends Controller {
 		//
 		$groups = Role::lists('name', 'id');
 
-		//$permissions = CategoryPermission::where('category_id', '=', $category->id)->get();
-
-		$queryObj = ChannelPermission::select(array(
-			'channel_permission.permission_id',
-			'channel_permission.role_id',
-			'channel_permission.channel_id'
-		))->leftJoin('channels as ch', function($join)
-		{
-			$join->on('channel_permission.channel_id', '=', 'ch.id');
-			//$join->on('category_forum_permission.role_id', '=', 1);
-		})->with(
-			'role',
-			'channel',
-			'permission'
-		)->where('channel_id', '=', $channel->id);
-
-		$accessChannelIds = $queryObj->where('permission_id', '=', 21)->lists('role_id', 'role_id');
-		$createThreadIds = $queryObj->where('permission_id', '=', 1)->lists('role_id', 'role_id');
+		$createThreadIds = ChannelPermission::where('channel_id', '=', $channel->id)->where('permission_id', '=', 1)->lists('role_id', 'role_id');
+		$accessChannelIds = ChannelPermission::where('channel_id', '=', $channel->id)->where('permission_id', '=', 21)->lists('role_id', 'role_id');
+		$replyIds = ChannelPermission::where('channel_id', '=', $channel->id)->where('permission_id', '=', 6)->lists('role_id', 'role_id');
 
 		return view('core.admin.forums.permission-editor.channel.edit', array(
 			'channel' => $channel,
 			'accessChannel' => $accessChannelIds,
 			'createThread' => $createThreadIds,
+			'reply' => $replyIds,
 			'groups' => $groups
 		));
 	}
@@ -89,10 +75,12 @@ class ChannelPermissionManagerController extends Controller {
 
 		$accessChannel = $request->input('allowed_groups');
 		$createThreads = $request->input('create_threads');
+		$reply = $request->input('reply_to_threads');
 
 		ChannelPermission::where('channel_id', '=', $channel->id)
 			->where('permission_id', '=', 21)
 			->orWhere('permission_id', '=', 1)
+			->orWhere('permission_id', '=', 6)
 			->delete();
 
 		foreach($accessChannel as $id)
@@ -108,6 +96,15 @@ class ChannelPermissionManagerController extends Controller {
 		{
 			$create_threads = ChannelPermission::firstOrCreate(array(
 				'permission_id' => 1,
+				'role_id' => $id,
+				'channel_id' => $channel->id
+			));
+		}
+
+		foreach($reply as $id)
+		{
+			$replyToThread = ChannelPermission::firstOrCreate(array(
+				'permission_id' => 6,
 				'role_id' => $id,
 				'channel_id' => $channel->id
 			));
