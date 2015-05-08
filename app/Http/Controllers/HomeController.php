@@ -1,12 +1,9 @@
 <?php namespace App\Http\Controllers;
 
-use App\Events\UserWasRegistered;
-use App\News;
-use App\ProfilePost;
-use App\Tag;
-use Illuminate\Support\Facades\Event;
-
-use Auth;
+use Fetch404\Core\Models\News;
+use Fetch404\Core\Models\ProfilePost;
+use Fetch404\Core\Models\Tag;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller {
 

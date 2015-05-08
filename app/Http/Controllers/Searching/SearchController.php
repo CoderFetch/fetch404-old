@@ -2,12 +2,11 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Searching\SearchRequest;
-use App\Report;
-use App\Topic;
-use App\User;
-use App\Post;
+use Fetch404\Core\Models\Post;
+use Fetch404\Core\Models\Report;
+use Fetch404\Core\Models\Topic;
+use Fetch404\Core\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;

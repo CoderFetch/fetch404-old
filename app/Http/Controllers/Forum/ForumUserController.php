@@ -1,7 +1,7 @@
 <?php namespace App\Http\Controllers\Forum;
 
 use App\Http\Controllers\ForumController;
-use App\Post;
+use Fetch404\Core\Models\Post;
 use Illuminate\Contracts\Auth\Guard;
 
 class ForumUserController extends ForumController

@@ -1,22 +1,14 @@
 <?php namespace App\Http\Controllers\Auth;
 
-// External libraries (well, sort of)
 use App\Http\Controllers\Controller;
 
-// Models
 use App\Http\Requests\Account\AccountPrivacySettingsUpdateRequest;
 use App\Http\Requests\Account\AccountSettingsUpdateRequest;
-use App\User;
-use App\AccountConfirmation;
-use App\NameChange;
 
-// Illuminate stuff
-use Illuminate\Http\Request;
-
-// The Laracasts libraries
+use Fetch404\Core\Models\AccountConfirmation;
+use Illuminate\Mail\Mailer;
 use Laracasts\Flash\Flash;
 
-// The facades need to be included for some reason O_o
 use Auth;
 use Hash;
 use Mail;
@@ -26,6 +18,8 @@ use Session;
 use Validator;
 
 class AccountController extends Controller {
+
+	private $mail;
 
 	/*
 	|--------------------------------------------------------------------------
@@ -154,7 +148,7 @@ class AccountController extends Controller {
 			$outgoingEmail = Setting::where('name', '=', 'outgoing_email')->first();
 			$siteName = Setting::where('name', '=', 'sitename')->first();
 
-			Mail::send('core.emails.auth.reconfirm', ['user' => $user, 'confirmation' => $confirmation, 'siteName' => $siteName], function($message) use ($email, $outgoingEmail, $siteName)
+			$this->mail->send('core.emails.auth.reconfirm', ['user' => $user, 'confirmation' => $confirmation, 'siteName' => $siteName], function($message) use ($email, $outgoingEmail, $siteName)
 			{
 				$message->from($outgoingEmail->value)->to($email)->subject('Please re-confirm your email');
 			});
@@ -186,12 +180,13 @@ class AccountController extends Controller {
 	/**
 	 * Create a new account controller instance.
 	 *
-	 * @return mixed
+	 * @param Mailer $mail
 	 */
-	public function __construct()
+	public function __construct(Mailer $mail)
 	{
 		$this->middleware('auth', ['except' => 'activateAccount']);
 		$this->middleware('confirmed', ['except' => 'activateAccount']);
+		$this->mail = $mail;
 	}
 
 }

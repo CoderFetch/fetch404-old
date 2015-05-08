@@ -2,7 +2,7 @@
 
 use App\Events\Event;
 
-use App\User;
+use Fetch404\Core\Models\User;
 use Illuminate\Queue\SerializesModels;
 
 class UserLikedSomething extends Event {

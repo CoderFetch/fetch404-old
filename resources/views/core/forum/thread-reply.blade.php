@@ -4,7 +4,7 @@
 @section('content')
 	<h1>Replying to "{{{ $thread->title }}}"</h1>
 	<hr>
-	{!! Form::open(['route' => array('forum.post.thread.reply', $thread->slug, $thread->id)]) !!}
+	{!! Form::open(['route' => array('forum.post.thread.reply', $thread->channel->id, $thread->id)]) !!}
 	<div class="row">
 		<div class="col-md-7">
 			@if (count($errors) > 0)

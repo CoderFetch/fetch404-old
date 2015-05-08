@@ -1,11 +1,10 @@
 <?php namespace App\Http\Middleware;
 
 use Closure;
+use Fetch404\Core\Models\Setting;
 use Session;
 
 use Illuminate\Contracts\Auth\Guard;
-
-use App\Setting;
 
 class BanCheck {
 

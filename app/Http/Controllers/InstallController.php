@@ -1,24 +1,26 @@
 <?php namespace App\Http\Controllers;
 
-use App\Category;
-use App\CategoryPermission;
-use App\ChannelPermission;
-use App\Setting;
+use Fetch404\Core\Models\Category;
+use Fetch404\Core\Models\CategoryPermission;
+use Fetch404\Core\Models\Channel;
+use Fetch404\Core\Models\ChannelPermission;
+use Fetch404\Core\Models\Post;
+use Fetch404\Core\Models\Role;
+use Fetch404\Core\Models\Setting;
+use Fetch404\Core\Models\Topic;
+use Fetch404\Core\Models\User;
+use Fetch404\Core\Repositories\SettingsRepository;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
 
-use App\Channel;
 use App\Http\Requests\Installer\InstallRequest;
-use App\Post;
-use App\Topic;
-use App\User;
-use App\Role;
 
 use Cmgmyr\Messenger\Models\Thread as Conversation;
 use Cmgmyr\Messenger\Models\Message as ConversationMessage;
 
 use App\Services\Purifier;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 
 class InstallController extends Controller
@@ -41,6 +43,8 @@ class InstallController extends Controller
 
     private $auth;
 
+    private $settings;
+
     /**
      * Initializer.
      *
@@ -53,13 +57,14 @@ class InstallController extends Controller
      * @param ConversationMessage $conversationMessage
      * @param Role $role
      * @param Guard $auth
+     * @param SettingsRepository $settingsRepository
      */
     public function __construct(
         User $user, Channel $channel, Category $category,
         Topic $topic, Post $post,
         Conversation $conversation,
         ConversationMessage $conversationMessage,
-        Role $role, Guard $auth
+        Role $role, Guard $auth, SettingsRepository $settingsRepository
     )
     {
         $this->user = $user;
@@ -71,10 +76,16 @@ class InstallController extends Controller
         $this->role = $role;
         $this->category = $category;
         $this->auth = $auth;
+        $this->settings = $settingsRepository;
     }
 
     public function show()
     {
+        if (Schema::hasTable('migrations'))
+        {
+            return redirect(route('home.show'));
+        }
+
         return view('core.installer.index');
     }
 
@@ -118,10 +129,6 @@ class InstallController extends Controller
             // Step 2c: Add the admin role to the admin user
             $role = $this->role->where(
                 'name', '=', 'Administrator'
-            )->first();
-
-            $modRole = $this->role->where(
-                'name', '=', 'Moderator'
             )->first();
 
             if ($role)
@@ -257,46 +264,42 @@ class InstallController extends Controller
                     'value' => htmlspecialchars($request->has('forumDesc') ? $request->input('forumDesc') : 'This site uses Fetch404.')
                 ),
                 2 => array(
-                    'name' => 'youtube_url',
-                    'value' => null
-                ),
-                3 => array(
                     'name' => 'twitter_url',
                     'value' => null
                 ),
-                4 => array(
+                3 => array(
                     'name' => 'gplus_url',
                     'value' => null
                 ),
-                5 => array(
+                4 => array(
                     'name' => 'fb_url',
                     'value' => null
                 ),
-                6 => array(
+                5 => array(
                     'name' => 'recaptcha',
                     'value' => 'false'
                 ),
-                7 => array(
+                6 => array(
                     'name' => 'recaptcha_key',
                     'value' => null
                 ),
-                8 => array(
+                7 => array(
                     'name' => 'twitter_feed_id',
                     'value' => null
                 ),
-                9 => array(
+                8 => array(
                     'name' => 'bootswatch_theme',
                     'value' => $request->has('bootswatch_theme') ? $request->get('bootswatch_theme') : 6
                 ),
-                10 => array(
+                9 => array(
                     'name' => 'navbar_style',
                     'value' => ($request->has('inverse_navbar') ? 1 : 0)
                 ),
-                11 => array(
+                10 => array(
                     'name' => 'infractions',
                     'value' => ($request->has('enable_infractions') ? 'true' : 'false')
                 ),
-                12 => array(
+                11 => array(
                     'name' => 'outgoing_email',
                     'value' => $request->input('outgoing_email')
                 )
@@ -305,18 +308,9 @@ class InstallController extends Controller
             {
                 foreach($data as $setting)
                 {
-                    Setting::create(array(
-                       'name' => $setting["name"],
-                       'value' => $setting["value"]
-                    ));
+                    $this->settings->setSetting($data["name"], $data["value"]);
                 }
 
-                // Privacy settings
-//                $adminUser->settings()->create(array(
-//                    'name' => 'show_what_im_doing',
-//                    'value' => true,
-//                    'user_id' => $adminUser->getId()
-//                ));
                 $adminUser->setSetting("show_what_im_doing", true);
                 $adminUser->setSetting("show_if_im_online", true);
                 $adminUser->setSetting("show_if_im_online", true);
@@ -329,7 +323,8 @@ class InstallController extends Controller
                 $adminUser->setSetting("notify_me_on_followed_user_new_post", true);
                 $adminUser->setSetting("notify_me_on_profile_post", true);
             }
-            catch(Exception $ex) {
+            catch(Exception $ex)
+            {
                 if ($ex instanceof \PDOException) // Is it PDOException? If yes, show the "pdoexception" view.
                 {
                     return view('core.installer.errors.pdoexception', array(
@@ -355,7 +350,7 @@ class InstallController extends Controller
             $messageBody .= '<h1>Managing your Forum</h1><hr>';
             $messageBody .= '<p>Managing a large forum can be hard. Luckily, Fetch404\'s admin panel allows you to easily customize almost every part of your forum, including categories, channels, and much more. Just go to the "Forum" section of your admin panel and start setting up your forum!</p><hr>';
             $messageBody .= '<h1>Customizing your Site</h1><hr>';
-            $messageBody .= '<p>Bored of the same old bland look? Want some color? You can do that! Just go to the "Design" section of your admin panel and you can instantly change the site theme, and if you want to, invert the colors of the navigation bar. You can also edit the custom styles (custom.css).</p><hr>';
+            $messageBody .= '<p>Bored of the same old bland look? Want some color? You can do that! Go to the "General" section of your admin panel, and from there you can change the theme, and switch the navigation bar color.</p><hr>';
             $messageBody .= '<h1>Configuring your Site</h1><hr>';
             $messageBody .= '<p>Want to prevent spambots? Want to change your site\'s name? Need to disable the login or register feature? You can do all of that from the "General" section of your admin panel.</p><br><small>* Note: You will need to have a <a href="https://www.google.com/recaptcha/intro/index.html">reCAPTCHA</a> key in order to enable the captcha.</small><hr>';
             $messageBody .= '<h1>I need help!</h1><hr>';

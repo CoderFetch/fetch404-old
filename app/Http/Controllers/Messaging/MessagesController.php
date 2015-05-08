@@ -1,11 +1,11 @@
 <?php namespace App\Http\Controllers\Messaging;
 
 use App\Http\Requests\Messaging\ConversationCreateRequest;
-use App\User;
 use Carbon\Carbon;
 use Cmgmyr\Messenger\Models\Thread;
 use Cmgmyr\Messenger\Models\Message;
 use Cmgmyr\Messenger\Models\Participant;
+use Fetch404\Core\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;

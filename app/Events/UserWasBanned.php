@@ -2,10 +2,8 @@
 
 use App\Events\Event;
 
+use Fetch404\Core\Models\User;
 use Illuminate\Queue\SerializesModels;
-
-use App\User;
-use Illuminate\Support\Facades\Auth;
 
 class UserWasBanned extends Event {
 

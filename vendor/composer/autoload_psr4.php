@@ -16,6 +16,7 @@ return array(
     'Laracasts\\Generators\\' => array($vendorDir . '/laracasts/generators/src'),
     'Illuminate\\Html\\' => array($vendorDir . '/illuminate/html'),
     'Illuminate\\' => array($vendorDir . '/laravel/framework/src/Illuminate'),
+    'Fetch404\\' => array($baseDir . '/app/Fetch404'),
     'ClassPreloader\\' => array($vendorDir . '/classpreloader/classpreloader/src'),
     'Barryvdh\\Debugbar\\' => array($vendorDir . '/barryvdh/laravel-debugbar/src'),
     'App\\' => array($baseDir . '/app'),

@@ -4,12 +4,15 @@
 use App\Http\Controllers\AdminController;
 
 // The Laracasts libraries
+use Fetch404\Core\Models\Setting;
+use Fetch404\Core\Repositories\SettingsRepository;
 use Laracasts\Flash\Flash;
 
 use App\Http\Requests\Admin\SaveGeneralSettingsRequest;
-use App\Setting;
 
 class AdminSettingsController extends AdminController {
+
+    private $settings;
 
     /**
      * Attempt to save the general site settings
@@ -19,48 +22,17 @@ class AdminSettingsController extends AdminController {
      */
     public function saveGeneral(SaveGeneralSettingsRequest $request)
     {
-        $bsTheme = Setting::where('name', '=', 'bootswatch_theme')->first();
+        $theme = $request->input('bootstrap_style');
+        $navbarStyle = $request->input('navbar_theme');
+        $enableRecaptcha = $request->has('enable_recaptcha') ? 'true' : 'false';
+        $siteName = $request->input('sitename');
+        $recaptchaKey = $request->has('recaptcha') ? $request->input('recaptcha') : null;
 
-        if ($bsTheme)
-        {
-            $bsTheme->value = $request->input('bootstrap_style');
-            $bsTheme->save();
-        }
-
-        $navbarStyle = Setting::where('name', '=', 'navbar_style')->first();
-
-        if ($navbarStyle)
-        {
-            $navbarStyle->value = $request->input('navbar_theme') == 1 ? '1' : '0';
-            $navbarStyle->save();
-        }
-
-        $enableRecaptcha = Setting::where('name', '=', 'recaptcha')->first();
-
-        if ($enableRecaptcha)
-        {
-            $enableRecaptcha->value = ($request->has('enable_recaptcha') ? 'true' : 'false');
-            $enableRecaptcha->save();
-        }
-
-        $recaptchaKey = Setting::where('name', '=', 'recaptcha_key')->first();
-
-        if ($recaptchaKey)
-        {
-            $recaptchaKey->value = $request->has('recaptcha') ? $request->input('recaptcha') : null;
-            $recaptchaKey->save();
-        }
-
-        $siteName = Setting::where('name', '=', 'sitename')->first();
-
-        if ($siteName)
-        {
-            if ($siteName->value != $request->input('sitename'))
-            {
-                $siteName->value = $request->input('sitename');
-                $siteName->save();
-            }
-        }
+        $this->settings->setSetting("bootswatch_theme", $theme);
+        $this->settings->setSetting("navbar_style", $navbarStyle);
+        $this->settings->setSetting("recaptcha", $enableRecaptcha);
+        $this->settings->setSetting("recaptcha_key", $recaptchaKey);
+        $this->settings->setSetting("sitename", $siteName);
 
         Flash::success('Updated site settings!');
 
@@ -70,12 +42,13 @@ class AdminSettingsController extends AdminController {
     /**
      * Create a new admin settings controller instance.
      *
-     * @return mixed
+     * @param SettingsRepository $settingsRepository
      */
-    public function __construct()
+    public function __construct(SettingsRepository $settingsRepository)
     {
         $this->middleware('auth');
         $this->middleware('confirmed');
+        $this->settings = $settingsRepository;
     }
 
 }

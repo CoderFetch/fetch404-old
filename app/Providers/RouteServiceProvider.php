@@ -28,15 +28,15 @@ class RouteServiceProvider extends ServiceProvider {
 
 		//
 		# Route Models
-		$router->model('role', 'App\Role');
-		$router->model('user', 'App\User');
-		$router->model('news', 'App\News');
-		$router->model('tag', 'App\Tag');
-		$router->model('profile_post', 'App\ProfilePost');
-		$router->model('post', 'App\Post');
-		$router->model('topic', 'App\Topic');
-		$router->model('channel', 'App\Channel');
-		$router->model('category', 'App\Category');
+		$router->model('role', 'Fetch404\Core\Models\Role');
+		$router->model('user', 'Fetch404\Core\Models\User');
+		$router->model('news', 'Fetch404\Core\Models\News');
+		$router->model('tag', 'Fetch404\Core\Models\Tag');
+		$router->model('profile_post', 'Fetch404\Core\Models\ProfilePost');
+		$router->model('post', 'Fetch404\Core\Models\Post');
+		$router->model('topic', 'Fetch404\Core\Models\Topic');
+		$router->model('channel', 'Fetch404\Core\Models\Channel');
+		$router->model('category', 'Fetch404\Core\Models\Category');
 
 		$router->model('conversation', 'Cmgmyr\Messenger\Models\Thread');
 

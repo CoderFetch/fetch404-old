@@ -1,6 +1,8 @@
-<?php namespace App\Http\Requests;
+<?php namespace App\Http\Requests\Forum\Threads;
 
 use Illuminate\Foundation\Http\FormRequest;
+
+use Zizaco\Entrust\EntrustFacade as Entrust;
 
 class ThreadPinRequest extends FormRequest {
 
@@ -11,7 +13,9 @@ class ThreadPinRequest extends FormRequest {
 	 */
 	public function authorize()
 	{
-		return false;
+		$topic = $this->route()->getParameter('topic');
+
+		return Entrust::can('moderateThreads') && Entrust::can('pinThreads') && $topic->canView;
 	}
 
 	/**

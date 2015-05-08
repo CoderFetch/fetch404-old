@@ -25,27 +25,13 @@ use Cmgmyr\Messenger\Models\Participant;
 use Illuminate\Http\Request;
 
 class AdminUsersController extends AdminController {
-    /**
-     * User Model
-     * @var User
-     */
+
     protected $user;
-    /**
-     * Role Model
-     * @var Role
-     */
+
     protected $role;
-    /**
-     * Permission Model
-     * @var Permission
-     */
+
     protected $permission;
-    /**
-     * Inject the models.
-     * @param User $user
-     * @param Role $role
-     * @param Permission $permission
-     */
+
     public function __construct(User $user, Role $role, Permission $permission)
     {
         parent::__construct();
@@ -445,6 +431,12 @@ class AdminUsersController extends AdminController {
 	public function banUser(BanUserRequest $request)
 	{
 		$user = $request->route()->getParameter('user');
+
+		if ($user->getId() == 1)
+		{
+			Flash::error('This user can not be banned.');
+			return redirect(route('admin.users.get.index'));
+		}
 
 		if ($user->isBanned())
 		{

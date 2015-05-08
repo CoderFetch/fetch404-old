@@ -1,18 +1,11 @@
 <?php namespace App\Http\Controllers\Messaging;
 
-use App\User;
-use Carbon\Carbon;
 use Cmgmyr\Messenger\Models\Thread;
-use Cmgmyr\Messenger\Models\Message;
-use Cmgmyr\Messenger\Models\Participant;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Session;
 use Laracasts\Flash\Flash;
 use Validator;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class MessagesManagingController extends Controller

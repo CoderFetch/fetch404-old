@@ -1,9 +1,7 @@
 <?php namespace App\Events;
 
-use App\Events\Event;
-
-use App\Topic;
-use App\User;
+use Fetch404\Core\Models\Topic;
+use Fetch404\Core\Models\User;
 use Illuminate\Queue\SerializesModels;
 
 class TopicWasLocked extends Event {

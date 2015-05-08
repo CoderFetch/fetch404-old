@@ -12,7 +12,9 @@ class PostLikeRequest extends FormRequest {
      */
     public function authorize()
     {
-        return Auth::check() && Auth::user()->isConfirmed();
+        $post = $this->route()->getParameter('post');
+
+        return Auth::check() && Auth::user()->isConfirmed() && $post->topic->canView;
     }
 
     /**

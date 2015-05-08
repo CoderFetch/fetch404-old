@@ -1,19 +1,12 @@
 <?php namespace App\Http\Controllers\Forum;
 
-// External libraries (well, sort of)
 use App\Http\Controllers\Controller;
 
-// Models
 use App\Http\Requests\Forum\Threads\ThreadCreateRequest;
 use App\Http\Requests\Forum\Threads\ThreadReplyRequest;
-use App\User;
-use App\Topic;
-use App\Post;
-use App\Channel;
-use App\Category;
 
-// Illuminate stuff
-use Illuminate\Http\Request;
+use Fetch404\Core\Models\Post;
+use Fetch404\Core\Models\Topic;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -63,16 +56,15 @@ class ForumController extends Controller {
 		$topic = $request->route()->getParameter('topic');
 		$body = $request->input('body');
 
-		$post = Post::create([
+		$post = $this->post->create(array(
 			'topic_id' => $topic->id,
 			'user_id' => Auth::id(),
 			'content' => $body
-		]);
+		));
 
 		$post->topic->touch();
 
 		return redirect($post->Route);
-		//return redirect('/forum/topic/' . $thread->slug . '.' . $thread->id . ($thread->postsPaginated->hasPages() ? '?page=' . $thread->postsPaginated->lastPage() : ''));
 	}
 
 	/**
@@ -86,11 +78,11 @@ class ForumController extends Controller {
 		$topic = $request->route()->getParameter('topic');
 		$body = $request->input('body');
 
-		$post = Post::create([
+		$post = $this->post->create(array(
 			'topic_id' => $topic->id,
 			'user_id' => Auth::id(),
 			'content' => $body
-		]);
+		));
 
 		$post->topic->touch();
 

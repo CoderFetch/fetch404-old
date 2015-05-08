@@ -2,9 +2,8 @@
 
 use App\Events\Event;
 
+use Fetch404\Core\Models\User;
 use Illuminate\Queue\SerializesModels;
-
-use App\User;
 
 class UserFollowedSomeone extends Event {
 

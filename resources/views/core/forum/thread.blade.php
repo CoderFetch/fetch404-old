@@ -174,7 +174,7 @@
 		{!! Form::submit('Reply', ['class' => 'btn btn-primary']) !!}
 		{!! Form::close() !!}
 	@else
-		<span class="text-right">
+		<span class="text-right" style="float: right;">
 			@if (!Auth::check())
 			<p>Please log in to post on the forums.</p>
 			@elseif (!Auth::user()->isConfirmed())

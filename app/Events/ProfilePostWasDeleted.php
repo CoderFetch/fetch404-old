@@ -1,10 +1,7 @@
 <?php namespace App\Events;
 
-use App\Events\Event;
-
-use App\ProfilePost;
-use App\User;
-
+use Fetch404\Core\Models\ProfilePost;
+use Fetch404\Core\Models\User;
 use Illuminate\Queue\SerializesModels;
 
 class ProfilePostWasDeleted extends Event {

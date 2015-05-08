@@ -1,20 +1,11 @@
 <?php namespace App\Http\Controllers\Forum;
 
-// External libraries (well, sort of)
-use App\CategoryPermission;
 use App\Http\Controllers\Controller;
 
-// Models
-use App\User;
-use App\Topic;
-use App\Post;
-use App\Channel;
-use App\Category;
-
-// Illuminate stuff
-use Illuminate\Support\Collection;
-
 use Auth;
+use Fetch404\Core\Models\Category;
+use Fetch404\Core\Models\Channel;
+use Fetch404\Core\Models\Topic;
 
 class ForumPageController extends Controller {
 

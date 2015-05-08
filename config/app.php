@@ -26,7 +26,7 @@ return [
 	|
 	*/
 
-	'url' => 'http://steveville.org',
+	'url' => '/',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -209,22 +209,21 @@ return [
 		/*
 		 * Custom facades
 		 */
-		'Comment' => 'App\Comment',
-		'News' => 'App\News',
+		'Comment' => 'Fetch404\Core\Models\Comment',
+		'News' => 'Fetch404\Core\Models\News',
 		'Thread' => 'Cmgmyr\Messenger\Models\Thread',
-		'Post' => 'App\Post',
-		'Channel' => 'App\Channel',
-		'Category' => 'App\Category',
-		'Role' => 'App\Role',
-		'Permission' => 'App\Permission',
-		'NameChange' => 'App\NameChange',
+		'Post' => 'Fetch404\Core\Models\Post',
+		'Channel' => 'Fetch404\Core\Models\Channel',
+		'Category' => 'Fetch404\Core\Models\Category',
+		'Role' => 'Fetch404\Core\Models\Role',
+		'Permission' => 'Fetch404\Core\Models\Permission',
+		'NameChange' => 'Fetch404\Core\Models\NameChange',
 		'Purifier' => 'App\Services\Purifier',
 		'Smilies' => 'App\Services\Smilies',
 		'Mentions' => 'App\Services\Mentions',
 		'Pluralizer' => 'Illuminate\Support\Pluralizer',
-		'Settings' => 'App\Setting',
-		'Topic' => 'App\Topic',
-		'User' => 'App\User'
-	],
-	'url_prefix' => ''
+		'Settings' => 'Fetch404\Core\Models\Setting',
+		'Topic' => 'Fetch404\Core\Models\Topic',
+		'User' => 'Fetch404\Core\Models\User'
+	]
 ];

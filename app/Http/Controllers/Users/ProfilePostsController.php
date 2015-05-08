@@ -2,12 +2,10 @@
 
 use App\Events\ProfilePostWasDeleted;
 use App\Events\UserWroteProfilePost;
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Http\Requests\Profiles\CreateProfilePostRequest;
 use App\Http\Requests\Profiles\DeleteProfilePostRequest;
-use Illuminate\Http\Request;
 use Laracasts\Flash\Flash;
 
 class ProfilePostsController extends Controller {

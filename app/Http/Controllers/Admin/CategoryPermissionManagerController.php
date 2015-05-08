@@ -1,13 +1,11 @@
 <?php namespace App\Http\Controllers\Admin;
 
-use App\Category;
-use App\CategoryPermission;
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Http\Requests\Admin\Forum\UpdateCategoryPermissionsRequest;
-use App\Role;
-use Illuminate\Http\Request;
+use Fetch404\Core\Models\Category;
+use Fetch404\Core\Models\CategoryPermission;
+use Fetch404\Core\Models\Role;
 use Laracasts\Flash\Flash;
 
 class CategoryPermissionManagerController extends Controller {

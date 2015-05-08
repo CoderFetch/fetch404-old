@@ -1,13 +1,10 @@
 <?php namespace App\Http\Controllers\Admin;
 
 // Custom controller
-use App\CategoryPermission;
 use App\ChannelPermission;
 use App\Http\Controllers\AdminController;
 
 // Facades
-use App\Category;
-use App\Channel;
 use App\Http\Requests\Admin\Forum\CreateCategoryRequest;
 
 use App\Http\Requests\Admin\Forum\CreateChannelRequest;
@@ -15,10 +12,10 @@ use App\Http\Requests\Admin\Forum\DeleteCategoryRequest;
 use App\Http\Requests\Admin\Forum\DeleteChannelRequest;
 use App\Http\Requests\Admin\Forum\EditCategoryRequest;
 use App\Http\Requests\Admin\Forum\EditChannelRequest;
-use App\Permission;
+use Fetch404\Core\Models\Category;
+use Fetch404\Core\Models\CategoryPermission;
+use Fetch404\Core\Models\Channel;
 use Laracasts\Flash\Flash;
-
-use App\Role;
 
 use DB;
 
@@ -79,14 +76,23 @@ class AdminForumsController extends AdminController
         )->where('category_id', '=', $category->id);
 
         return view('core.admin.forums.edit', array(
-            'category' => $category,
-            'groups' => $groups,
-            'permissions' => $queryObj->lists('role_id', 'role_id')
+            'category' => $category
         ));
     }
 
     public function editCategory(EditCategoryRequest $request)
     {
+        $name = $request->input('name');
+        $weight = $request->input('weight', 1);
+        $desc = $request->input('description');
+        $category = $request->route()->getParameter('category');
+
+        $category->update(array(
+            'name' => $name,
+            'weight' => $weight,
+            'description' => $desc
+        ));
+
         Flash::success('Updated category!');
 
         return redirect(route('admin.forum.get.index'));
@@ -96,34 +102,24 @@ class AdminForumsController extends AdminController
     {
         $groups = Role::lists('name', 'id');
 
-        //$permissions = CategoryPermission::where('category_id', '=', $category->id)->get();
-
-        $queryObj = ChannelPermission::select(array(
-            'channel_permission.permission_id',
-            'channel_permission.role_id',
-            'channel_permission.channel_id'
-        ))->leftJoin('channels as ch', function($join)
-        {
-            $join->on('channel_permission.channel_id', '=', 'ch.id');
-            //$join->on('category_forum_permission.role_id', '=', 1);
-        })->with(
-            'role',
-            'channel',
-            'permission'
-        )->where('channel_id', '=', $channel->id);
-
         return view('core.admin.forums.channel.edit', array(
-            'channel' => $channel,
-            'groups' => $groups,
-            'permissions' => $queryObj->lists('role_id', 'role_id'),
-            'groupIds' => ($queryObj->where('permission_id', '=', 21)->lists('role_id', 'role_id')),
-            'createThreadIds' => ($queryObj->where('permission_id', '=', 1)->lists('role_id', 'role_id'))
+            'channel' => $channel
         ));
     }
 
     public function editChannel(EditChannelRequest $request)
     {
         $channel = $request->route()->getParameter('channel');
+
+        $name = $request->input('name');
+        $weight = $request->input('weight', 1);
+        $desc = $request->input('description');
+
+        $channel->update(array(
+            'name' => $name,
+            'weight' => $weight,
+            'description' => $desc
+        ));
 
         Flash::success('Updated channel!');
 
@@ -201,10 +197,6 @@ class AdminForumsController extends AdminController
 
         $postIds = [];
 
-//        foreach($channel->topics as $topic)
-//        {
-//            foreach($topic->posts as $post) $postIds[] = $post->id;
-//        }
         foreach($category->channels as $channel)
         {
             foreach($channel->topics as $topic)

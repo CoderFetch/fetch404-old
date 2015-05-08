@@ -1,20 +1,15 @@
 <?php namespace App\Providers;
 
-use App\ProfilePost;
-use App\Report;
-use App\Role;
-use App\Ticket;
-use App\User;
 use Cmgmyr\Messenger\Models\Thread;
+use Fetch404\Core\Models\ProfilePost;
+use Fetch404\Core\Models\Report;
+use Fetch404\Core\Models\Setting;
+use Fetch404\Core\Models\Topic;
+use Fetch404\Core\Models\User;
 use Illuminate\Support\ServiceProvider;
 use Carbon\Carbon;
 
-use App\Setting;
-
 use Illuminate\Support\Facades\Auth;
-
-use App\Category;
-use App\Topic;
 
 class AppServiceProvider extends ServiceProvider {
 
@@ -146,10 +141,6 @@ class AppServiceProvider extends ServiceProvider {
 			$users = User::where('created_at', '>', $date->toDateTimeString())->get();
 
 			$view->with('latest_users', $users);
-
-			$tickets = Ticket::where('created_at', '>', $date->toDateTimeString())->get();
-
-			$view->with('latest_tickets', $tickets);
 
 			$view->with('roles', Role::all());
 		});
