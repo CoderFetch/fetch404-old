@@ -1,7 +1,6 @@
 <?php namespace App\Http\Requests\Auth;
 
-use App\Setting;
-
+use Fetch404\Core\Models\Setting;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterRequest extends FormRequest {
