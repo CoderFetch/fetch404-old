@@ -79,7 +79,7 @@
 	@foreach($thread->postsPaginated as $i => $post)
 		<div class="panel panel-primary" id="post-{{{ $post->id }}}">
 			<div class="panel-heading">
-				<a href="{{{ $thread->Route }}}">@if ($post->getArrayIndex() > 0)RE: @endif{{{ $thread->title }}}</a>
+				<a href="{{{ $thread->Route }}}" class="white-text">@if ($post->getArrayIndex() > 0)RE: @endif{{{ $thread->title }}}</a>
 			</div>
 			<div class="panel-body">
 				<div class="row">

@@ -203,7 +203,7 @@
     margin-bottom: 0;
     overflow: hidden;
 }
-    /*background: #FDFCFC; }*/
+/*background: #FDFCFC; }*/
 .status-post .status-post-submit .btn {
     float: right;
     /*background: #2eb1e4;*/
@@ -321,4 +321,8 @@
     .btn-breadcrumb > * div {
         max-width: 170px;
     }
+}
+
+.white-text {
+    color: white;
 }

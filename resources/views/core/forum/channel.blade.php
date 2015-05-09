@@ -31,7 +31,7 @@
 							@endif
 						</span>
 						&nbsp;
-						<a href="{{{ $thread->Route }}}" data-type="tooltip" data-original-title="{{{ Purifier::brOnly(str_limit($thread->posts()->first()->content, 65)) }}}">{{{ $thread->title }}}</a>
+						<a href="{{{ $thread->Route }}}" data-type="tooltip" data-original-title="{{{ str_limit(strip_tags($thread->posts()->first()->content), 65) }}}">{{{ $thread->title }}}</a>
 						<span class="text-muted"> - by {{{ $thread->user->name }}}</span>
 						<span class="pull-right">
 							@if ($thread->isLocked())

@@ -3,6 +3,7 @@
 use Cmgmyr\Messenger\Models\Thread;
 use Fetch404\Core\Models\ProfilePost;
 use Fetch404\Core\Models\Report;
+use Fetch404\Core\Models\Role;
 use Fetch404\Core\Models\Setting;
 use Fetch404\Core\Models\Topic;
 use Fetch404\Core\Models\User;
