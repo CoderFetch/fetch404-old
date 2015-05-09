@@ -1,6 +1,5 @@
 <?php namespace App\Handlers\Events;
 
-
 use App\Events\TopicWasUnlocked;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldBeQueued;

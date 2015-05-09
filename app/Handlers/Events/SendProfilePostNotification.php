@@ -2,7 +2,6 @@
 
 use App\Events\UserWroteProfilePost;
 
-use App\Notification;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldBeQueued;
 
@@ -13,13 +12,11 @@ class SendProfilePostNotification {
 	/**
 	 * Create the event handler.
 	 *
-	 * @param Notification $notification
 	 * @type mixed
 	 */
-	public function __construct(Notification $notification)
+	public function __construct()
 	{
 		//
-		$this->notification = $notification;
 	}
 
 	/**

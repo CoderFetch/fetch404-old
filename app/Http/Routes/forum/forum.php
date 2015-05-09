@@ -50,6 +50,12 @@ $router->group(['middleware' => ['installed', 'csrf', 'bancheck', 'update_last_a
                 'uses' => 'ModerationController@unlock',
                 'middleware' => ['auth', 'confirmed', 'csrf']
             ]);
+
+            $router->get('/{topic}/pin', [
+                'as' => 'forum.post.topics.pin',
+                'uses' => 'ModerationController@pin',
+                'middleware' => ['auth', 'confirmed', 'csrf']
+            ]);
         });
 
         $router->group(['prefix' => 'posts', 'namespace' => 'Forum'], function() use ($router)

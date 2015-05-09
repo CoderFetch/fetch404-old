@@ -1,10 +1,11 @@
 <?php namespace App\Handlers\Events;
 
-use App\AccountConfirmation;
-use App\Role;
-use App\Setting;
-
 use App\Events\UserWasRegistered;
+
+use Fetch404\Core\Models\AccountConfirmation;
+use Fetch404\Core\Models\Role;
+use Fetch404\Core\Models\Setting;
+use Fetch404\Core\Repositories\SettingsRepository;
 
 use Illuminate\Mail\Mailer;
 
@@ -12,7 +13,7 @@ class SendConfirmationEmail {
 
 	private $confirmation;
 	private $role;
-	private $setting;
+	private $settings;
 
 	private $mail;
 
@@ -22,15 +23,15 @@ class SendConfirmationEmail {
 	 * @param Mailer $mail
 	 * @param AccountConfirmation $confirmation
 	 * @param Role $role
-	 * @param Setting $setting
+	 * @param SettingsRepository $settingsRepository
 	 */
-	public function __construct(Mailer $mail, AccountConfirmation $confirmation, Role $role, Setting $setting)
+	public function __construct(Mailer $mail, AccountConfirmation $confirmation, Role $role, SettingsRepository $settingsRepository)
 	{
 		//
 		$this->mail = $mail;
 		$this->confirmation = $confirmation;
 		$this->role = $role;
-		$this->setting = $setting;
+		$this->settings = $settingsRepository;
 	}
 
 	/**
@@ -46,14 +47,21 @@ class SendConfirmationEmail {
 
 		if ($user->getAccountConfirmation() == null)
 		{
+			$code = str_random(30);
+
+			while ($this->confirmation->where('code', '=', $code) != null)
+			{
+				$code = str_random(30);
+			}
+
 			$confirmation = $this->confirmation->create(array(
 				'user_id' => $user->getId(),
 				'expires_at' => (time() + 3600),
-				'code' => str_random(30)
+				'code' => $code
 			));
 
-			$outgoingEmail = $this->setting->where('name', '=', 'outgoing_email')->first();
-			$siteName = $this->setting->where('name', '=', 'sitename')->first();
+			$outgoingEmail = $this->settings->getByName('outgoing_email', 'admin@mysite.com');
+			$siteName = $this->settings->getByName('sitename', 'A Fetch404 Site');
 
 			$this->mail->send('core.emails.auth.confirm', ['user' => $user, 'confirmation' => $confirmation, 'siteName' => $siteName->value], function($message) use ($user, $outgoingEmail, $siteName)
 			{

@@ -21,4 +21,18 @@ class Purifier
         return $purifier->purify($html);
     }
 
+
+	public static function brOnly($html)
+	{
+		$config = HTMLPurifier_Config::createDefault();
+		$config->set('HTML.Doctype', 'XHTML 1.0 Transitional');
+		$config->set('URI.DisableExternalResources', false);
+		$config->set('URI.DisableResources', false);
+		$config->set('HTML.Allowed', 'br');
+		$config->set('CSS.AllowedProperties', array());
+		$config->set('HTML.AllowedAttributes', '');
+		$purifier = new HTMLPurifier($config);
+
+		return $purifier->purify($html);
+	}
 }

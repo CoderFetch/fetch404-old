@@ -1,11 +1,13 @@
 <?php namespace App\Http\Controllers\Forum;
 
 use App\Events\TopicWasLocked;
+use App\Events\TopicWasPinned;
 use App\Events\TopicWasUnlocked;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Http\Requests\Forum\Threads\ThreadLockRequest;
+use App\Http\Requests\Forum\Threads\ThreadPinRequest;
 use App\Http\Requests\Forum\Threads\ThreadUnlockRequest;
 use Laracasts\Flash\Flash;
 
@@ -57,6 +59,30 @@ class ModerationController extends Controller {
 		event(new TopicWasUnlocked($topic, $user));
 
 		Flash::success('Unlocked topic');
+
+		return redirect()->back();
+	}
+
+	/**
+	 * Pin a topic.
+	 *
+	 * @param ThreadPinRequest $request
+	 * @return Response
+	 */
+	public function pin(ThreadPinRequest $request)
+	{
+		$topic = $request->route()->getParameter('topic');
+		$user = $request->user();
+
+		if ($topic->pinned == 1)
+		{
+			Flash::error('This topic is already pinned.');
+			return redirect()->back();
+		}
+
+		event(new TopicWasPinned($topic, $user));
+
+		Flash::success('Pinned topic');
 
 		return redirect()->back();
 	}

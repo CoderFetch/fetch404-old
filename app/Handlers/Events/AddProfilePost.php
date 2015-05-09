@@ -2,10 +2,9 @@
 
 use App\Events\UserWroteProfilePost;
 
+use Fetch404\Core\Models\ProfilePost;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldBeQueued;
-
-use App\ProfilePost;
 
 class AddProfilePost {
 

@@ -21,7 +21,18 @@
 					<span>
 						<i class="fa fa-comment fa-fw fa-2x pull-left"></i>
 						<h3 style="margin-top: 5px;"><a href="{{{ $channel->Route }}}"@if ($channel->description != null)data-type="tooltip" data-original-title="{{{ $channel->description }}}" @endif>{{{ $channel->name }}}</a></h3>
-						<small><label>Discussions:</label> {{{ $channel->topics()->count() }}} <label>Messages:</label> {{{ $channel->posts()->count() }}}</small>
+						<small>
+							<label>Discussions:</label> {{{ $channel->topics()->count() }}}
+							<label>Messages:</label> {{{ $channel->posts()->count() }}}
+							<span style="float: right;">
+								@if ($channel->posts()->count() > 0)
+								<span class="text-muted">
+									Latest post by {!! link_to_route('profile.get.show', $channel->getLatestPost()->user->name, [$channel->getLatestPost()->user->slug, $channel->getLatestPost()->user->id]) !!} in
+									{!! link_to_route('forum.get.show.thread', $channel->getLatestPost()->topic->title, [$channel->getLatestPost()->topic->channel->id, $channel->getLatestPost()->topic->id]) !!}
+								</span>
+								@endif
+							</span>
+						</small>
 					</span>
 					@if ($i != sizeof($category->channels) - 1)
 					<hr>

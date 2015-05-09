@@ -2,7 +2,7 @@
 
 use App\Events\UserWasRegistered;
 
-use App\Role;
+use Fetch404\Core\Models\Role;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldBeQueued;
 

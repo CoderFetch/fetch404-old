@@ -28,6 +28,11 @@ class Channel extends Model {
 		return $this->hasManyThrough('Fetch404\Core\Models\Post', 'Fetch404\Core\Models\Topic');
 	}
 
+	public function getLatestPost()
+	{
+		return $this->posts()->latest('created_at')->first();
+	}
+
 	public function hasUnreadTopics()
 	{
 		foreach($this->topics as $topic)

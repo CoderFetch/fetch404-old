@@ -57,6 +57,16 @@
 								</li>
 							@endunless
 						@endif
+
+						@if (!$thread->isPinned())
+							@unless(!Entrust::can('pinThreads'))
+								<li>
+									<a href="{{{ route('forum.post.topics.pin', $thread) }}}">
+										<i class="fa fa-thumb-tack"></i> Pin Thread
+									</a>
+								</li>
+							@endunless
+						@endif
 					</ul>
 				</div>
 			@endunless
