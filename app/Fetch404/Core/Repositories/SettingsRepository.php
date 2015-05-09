@@ -16,15 +16,16 @@ class SettingsRepository extends BaseRepository {
      *
      * @param $name
      * @param null $default
+     * @param bool $returnValue
      * @return mixed
      */
-    public function getByName($name, $default = null)
+    public function getByName($name, $default = null, $returnValue = false)
     {
         $model = $this->model->where('name', '=', $name)->first();
 
         if ($model)
         {
-            return $model->value;
+            return ($returnValue == true ? $model->value : $model);
         }
         else
         {
@@ -42,7 +43,7 @@ class SettingsRepository extends BaseRepository {
      */
     public function setSetting($name, $value)
     {
-        $setting = $this->getByName($name, null);
+        $setting = $this->getByName($name, null, false);
 
         if ($setting)
         {
