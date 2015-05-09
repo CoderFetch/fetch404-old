@@ -1,6 +1,7 @@
 <?php namespace Fetch404\Core\Repositories;
 
 abstract class BaseRepository {
+
     protected $model;
     protected $itemsPerPage = 0;
 

@@ -1,6 +1,6 @@
 <?php namespace Fetch404\Core\Repositories;
 
-use App\Setting;
+use Fetch404\Core\Models\Setting;
 
 class SettingsRepository extends BaseRepository {
 
