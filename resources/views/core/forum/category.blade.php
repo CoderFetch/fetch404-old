@@ -1,6 +1,6 @@
 @extends('core.partials.layouts.master')
 
-@section('title', $category->title)
+@section('title', $category->name)
 @section('content')
 	<ol class="breadcrumb">
 		<li><a href="/">Home</a></li>
