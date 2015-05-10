@@ -7,7 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'AddBannedToUsers' => $baseDir . '/database/migrations/2015_04_26_175824_add_banned_to_users.php',
-    'AddIdToTicketParticipantsTable' => $baseDir . '/database/migrations/2015_04_10_215048_add_id_to_ticket_participants_table.php',
     'AddIsOnlineToUsersTable' => $baseDir . '/database/migrations/2015_04_30_195055_add_is_online_to_users_table.php',
     'AddLastActiveToUsers' => $baseDir . '/database/migrations/2015_04_28_005713_add_last_active_to_users.php',
     'AddLikedUserIdToLikesTable' => $baseDir . '/database/migrations/2015_05_05_175947_add_liked_user_id_to_likes_table.php',
@@ -30,14 +29,13 @@ return array(
     'CreateNotificationsTable' => $baseDir . '/database/migrations/2015_04_22_193601_create_notifications_table.php',
     'CreateParticipantsTable' => $baseDir . '/database/migrations/2014_10_28_180224_create_participants_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
+    'CreatePostEditsTable' => $baseDir . '/database/migrations/2015_05_10_163450_create_post_edits_table.php',
     'CreatePostsTable' => $baseDir . '/database/migrations/2015_04_06_155402_create_posts_table.php',
     'CreateProfilePostsTable' => $baseDir . '/database/migrations/2015_04_28_195208_create_profile_posts_table.php',
     'CreateReportsTable' => $baseDir . '/database/migrations/2015_05_01_200354_create_reports_table.php',
     'CreateSettingsTable' => $baseDir . '/database/migrations/2015_04_18_171951_create_settings_table.php',
     'CreateTagsTable' => $baseDir . '/database/migrations/2015_04_15_201035_create_tags_table.php',
     'CreateThreadsTable' => $baseDir . '/database/migrations/2014_10_28_175635_create_threads_table.php',
-    'CreateTicketMessagesTable' => $baseDir . '/database/migrations/2015_04_10_022134_create_ticket_messages_table.php',
-    'CreateTicketsTable' => $baseDir . '/database/migrations/2015_04_10_022120_create_tickets_table.php',
     'CreateTopicsTable' => $baseDir . '/database/migrations/2015_04_06_155359_create_topics_table.php',
     'CreateUserSettingsTable' => $baseDir . '/database/migrations/2015_04_29_211926_create_user_settings_table.php',
     'CreateUsersTable' => $baseDir . '/database/migrations/2014_10_12_000000_create_users_table.php',

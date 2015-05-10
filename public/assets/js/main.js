@@ -9,7 +9,9 @@ var summernoteSettings = {
         ['fontsize', ['fontsize']],
         ['color', ['color']],
         ['para', ['ul', 'ol', 'paragraph']],
-        ['height', ['height']]
+        ['height', ['height']],
+        ['style', ['picture', 'link', 'table', 'hr']],
+        ['misc', ['codeview']],
     ]
 };
 $(document).ready(function()

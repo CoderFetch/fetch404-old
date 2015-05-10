@@ -369,7 +369,7 @@ trait BaseUser {
         $now = Carbon::now();
         $now->subDays(7);
 
-        return ($this->created_at > $now->toDateTimeString() ? $this->created_at->diffForHumans() : $this->created_at->format('M j, Y'));
+        return ($this->created_at > $now->toDateTimeString() ? $this->created_at->diffForHumans() : $this->created_at->format('M jS, Y'));
     }
 
     public function getLastActivity()
@@ -379,7 +379,7 @@ trait BaseUser {
 
         if ($this->last_active == null)
         {
-            return ($this->created_at == null ? "never" : ($this->created_at > $now->toDateTimeString() ? $this->created_at->diffForHumans() : $this->created_at->format('M j, Y')));
+            return ($this->created_at == null ? "never" : ($this->created_at > $now->toDateTimeString() ? $this->created_at->diffForHumans() : $this->created_at->format('M jS, Y')));
         }
 
         if (!Auth::check() && $this->getSetting("show_when_im_online", 1) == '0') return "[hidden]";
@@ -389,7 +389,7 @@ trait BaseUser {
             return "[hidden]";
         }
 
-        return ($this->last_active > $now->toDateTimeString() ? $this->last_active->diffForHumans() : $this->last_active->format('M j, Y'));
+        return ($this->last_active > $now->toDateTimeString() ? $this->last_active->diffForHumans() : $this->last_active->format('M jS, Y'));
     }
 
     public function getLastActiveDesc()
@@ -406,9 +406,7 @@ trait BaseUser {
 
     public function postCount()
     {
-        $posts = $this->posts;
-
-        return $posts->count();
+        return $this->posts()->count();
     }
 
     /**

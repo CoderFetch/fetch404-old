@@ -79,7 +79,7 @@
 	
 	<body style="position: relative; padding-top: 60px; font-family: 'Source Sans Pro'; font-weight: 300;"@yield('extra_attributes')>
 		<!-- Navigation -->
-		<nav class="navbar navbar-{{{ $navbar_style == 1 ? 'inverse' : 'default' }}} navbar-fixed-top" role="navigation">
+		<nav class="navbar navbar-top-links navbar-{{{ $navbar_style == 1 ? 'inverse' : 'default' }}} navbar-fixed-top" role="navigation">
 			<div class="container">
 				<!-- Brand and toggle get grouped for better mobile display -->
 				<div class="navbar-header">
@@ -103,6 +103,12 @@
 							<a href="{{{ route('forum.get.index') }}}">
 								<i class="fa fa-comments fa-fw"></i>
 								Forum
+							</a>
+						</li>
+						<li{{{ Request::is('members') ? ' class=active' : '' }}}>
+							<a href="{{{ route('members.get.index') }}}">
+								<i class="fa fa-users fa-fw"></i>
+								Members
 							</a>
 						</li>
 					</ul>
@@ -132,69 +138,48 @@
 								<li><a href="{{{ route('auth.get.logout') }}}"><i class="fa fa-sign-out fa-fw"></i> Log out</a></li>
 							</ul>
 						</li>
-						<li>
-							<a href="#" id="messages">
+						<li class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#">
 								<i class="fa fa-envelope fa-fw"></i>
-								<span class="badge" id="messagesCount">
-									{{{ $messages->count() }}}
-								</span>
+								@unless($messages->count() == 0)
+								<span class="badge badge-default">{{{ $messages->count() }}}</span>
+								@endunless
+								<i class="fa fa-caret-down"></i>
 							</a>
-							<div id="messagesPopup" class="popup right" style="display: none; position: absolute; top: 49px; right: 0px;">
-								<h3>Messages</h3>
-								<div class="">
-									<ul class="list messagesList">
-										@if ($messages->isEmpty())
-										<li>
-											<p>
-												You have no new messages.
-											</p>
-										</li>
-										@else
-										@foreach($messages as $pm)
-										<li class="message">
-											<a href="{{{ route('conversations.show', $pm) }}}">
-												<span class="avatar">{{{ strtoupper(substr(strip_tags($pm->latestMessage->user->name), 0, 1)) }}}</span>
-												{{{ $pm->latestMessage->user->name }}}
-												<small class="time pull-right">{{{ $pm->latestMessage->created_at->diffForHumans() }}}</small>
-												<br />
-												Subject: {{{ str_limit($pm->subject, 12) }}}
-											</a>
-										</li>
-										@endforeach
-										@endif
-										<li id="viewAllMessages"><a href="#">View all messages »</a></li>
-									</ul>
-								</div>
-							</div>
-						</li>
-						<li>
-							<a href="#" id="notifications">
-								<i class="fa fa-bell fa-fw"></i>
-								<span class="badge" id="notificationsCount">
-									{{{ $notifications->where('is_read', '=', 0)->count() }}}
-								</span>
-							</a>
-							<div id="notificationsPopup" class="popup right" style="display: none; position: absolute; top: 49px; right: 0px;">
-								<h3>Notifications</h3>
-								<div class="">
-									<ul class="list notificationsList">
-										@if ($notifications->isEmpty())
-										<li>
-											<p>
-												You have no new notifications.
-											</p>
-										</li>
-										@else
-										@foreach($notifications as $notification)
-										@if (view()->exists('core.notifications.types.' . $notification->name))
-										@include('core.notifications.types.' . $notification->name)
-										@endif
-										@endforeach
-										@endif
-										<li id="viewAllNotifications"><a href="#">View all notifications »</a></li>
-									</ul>
-								</div>
-							</div>
+							<ul class="dropdown-menu dropdown-messages">
+								@if (!$messages->isEmpty())
+								@foreach($messages as $i => $pm)
+								<li>
+									<a href="{{{ route('conversations.show', $pm->id) }}}">
+										<div>
+											<strong>{{{ $pm->latestMessage->user->name }}}</strong>
+											<span class="pull-right text-muted">
+												<em>{{{ $pm->latestMessage->created_at->diffForHumans() }}}</em>
+											</span>
+											<br>
+											<strong>Subject: {{{ str_limit($pm->subject, 20) }}}</strong>
+										</div>
+										<div>
+											{{{ str_limit(strip_tags($pm->latestMessage->body), 150) }}}
+										</div>
+									</a>
+								</li>
+								@if ($i != $messages->count() - 1)
+								<li class="divider"></li>
+								@endif
+								@endforeach
+								@else
+								<p>You do not have any new messages.</p>
+								@endif
+								<li class="divider"></li>
+								<li>
+									<a class="text-center" href="{{{ route('conversations') }}}">
+										<strong>Read All Messages</strong>
+										<i class="fa fa-angle-right"></i>
+									</a>
+								</li>
+							</ul>
+							<!-- /.dropdown-messages -->
 						</li>
 						@if ($user->can('accessAdminPanel'))
 						<li>

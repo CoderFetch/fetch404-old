@@ -54,7 +54,7 @@
 							@endif
 						@endforeach
 					@else
-						<p>Nobody has created a topic.</p>
+						<p>Nobody has created a thread.</p>
 					@endif
 
 				</div>

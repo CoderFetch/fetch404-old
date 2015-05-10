@@ -21,7 +21,7 @@
         </div>
         <div class="panel-body">
             {!! Form::open(['route' => array('forum.post.posts.edit', $post)]) !!}
-            <textarea name="body" class="form-control" rows="3" data-type="summernote"></textarea>
+            {!! Form::textarea('body', $post->content, ['class' => 'form-control', 'rows' => 3, 'data-type' => 'summernote']) !!}
             <br />
             {!! Form::submit('Submit', ['class' => 'btn btn-primary']) !!}
             {!! Form::close() !!}

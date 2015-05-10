@@ -3,12 +3,13 @@
 use Illuminate\Database\Eloquent\Model;
 
 use Fetch404\Core\Traits\CanBeReported;
+use Fetch404\Core\Traits\CreatesNotifications;
 use Fetch404\Core\Traits\LikeableTrait;
 use Fetch404\Core\Traits\BasePost;
 
 class Post extends Model {
 	//
-	use BasePost, LikeableTrait, CanBeReported;
+	use BasePost, LikeableTrait, CanBeReported, CreatesNotifications;
 
 	protected $table = 'posts';
 	protected $fillable = ['topic_id', 'user_id', 'content'];

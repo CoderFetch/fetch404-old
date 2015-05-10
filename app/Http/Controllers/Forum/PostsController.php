@@ -35,8 +35,17 @@ class PostsController extends Controller {
 		//
 		$post = $request->route()->getParameter('post');
 		$body = $request->input('body');
+		$user = $request->user();
+		$oldContent = $post->content;
 
 		$post->update(array('content' => $body));
+
+		$post->postEdits()->create(array(
+			'user_id' => $user->id,
+			'post_id' => $post->id,
+			'old_content' => $oldContent,
+			'new_content' => $body
+		));
 
 		Flash::success('Edited post');
 
@@ -58,6 +67,8 @@ class PostsController extends Controller {
 
 		$post->reports()->delete();
 		$post->likes()->delete();
+		$post->postEdits()->delete();
+		$post->notifications()->delete();
 		$post->delete();
 
 		if ($thread->posts()->count() == 0)

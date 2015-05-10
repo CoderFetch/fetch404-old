@@ -28,7 +28,7 @@
             {!! Form::open(['route' => 'account.post.update.settings.profile', 'class' => 'form-horizontal']) !!}
             <div class="form-group">
                 {!! Form::label('signature', 'Post signature') !!}
-                {!! Form::textarea('signature', Auth::user()->getSetting('post_signature', null), ['class' => 'form-control', 'rows' => 3, 'id' => 'signature']) !!}
+                {!! Form::textarea('signature', Auth::user()->getSetting('post_signature', null), ['class' => 'form-control', 'rows' => 3, 'data-type' => 'summernote']) !!}
             </div>
             <div class="form-group">
                 {!! Form::submit('Save changes', ['class' => 'btn btn-primary']) !!}
@@ -36,24 +36,4 @@
             {!! Form::close() !!}
         </div>
     </div>
-@endsection
-
-@section('scripts')
-<script>
-    $('#signature').summernote({
-        height: 100,
-        minHeight: null,
-        maxHeight: null,
-        toolbar: [
-            ['style', ['bold', 'italic', 'underline', 'clear']],
-            ['font', ['strikethrough']],
-            ['fontsize', ['fontsize']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['height', ['height']],
-            ['style', ['picture', 'link', 'table', 'hr']],
-            ['misc', ['codeview']],
-        ]
-    });
-</script>
 @endsection

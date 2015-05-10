@@ -1,7 +1,5 @@
 <?php namespace Fetch404\Core\Traits;
 
-use App\Notification;
-
 trait CreatesNotifications {
 
     /*
@@ -11,15 +9,8 @@ trait CreatesNotifications {
      */
     public function notifications()
     {
-        return Notification::where(
-            'subject_id',
-            '=',
-            $this->id
-        )->where(
-            'subject_type',
-            '=',
-            get_class($this)
-        );
+        return $this->hasMany('Fetch404\Core\Models\Notification', 'subject_id')
+            ->where('subject_type', '=', get_class($this));
     }
 
     /*
@@ -28,8 +19,8 @@ trait CreatesNotifications {
      * @param array $data
      * @return mixed
      */
-    public function notify(array $data)
+    public function notify(array $data = array())
     {
-        return Notification::create($data);
+        return $this->notifications()->create($data);
     }
 }

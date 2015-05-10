@@ -1,6 +1,6 @@
 <?php namespace Fetch404\Core\Traits;
 
-use App\User;
+use Fetch404\Core\Models\User;
 
 trait FollowableTrait {
 

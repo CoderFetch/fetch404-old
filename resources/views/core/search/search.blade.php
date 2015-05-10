@@ -15,7 +15,7 @@
                 <ul class="list-group">
                 @foreach($results as $item)
                   <li class="list-group-item">
-                      @if ($item instanceof App\User)
+                      @if ($item instanceof Fetch404\Core\Models\User)
                         <i class="fa fa-user fa-fw"></i>
                         {!! link_to($item->profileURL, str_limit(strip_tags($item->name), 15)) !!}
                         <span class="pull-right">
@@ -23,7 +23,7 @@
                                 Joined {{{ $item->created_at->diffForHumans() }}}
                             </span>
                         </span>
-                      @elseif ($item instanceof App\Post)
+                      @elseif ($item instanceof Fetch404\Core\Models\Post)
                         <i class="fa fa-comment fa-fw"></i>
                         {!! link_to($item->Route, str_limit(strip_tags($item->content), 50)) !!}
                         <span class="pull-right">
@@ -31,7 +31,7 @@
                                 {{{ $item->created_at->diffForHumans() }}}
                             </span>
                         </span>
-                      @elseif ($item instanceof App\Topic)
+                      @elseif ($item instanceof Fetch404\Core\Models\Topic)
                         <i class="fa fa-comments-o fa-fw"></i>
                         {!! link_to($item->Route, str_limit(strip_tags($item->title), 50)) !!}
                         <span class="pull-right">
@@ -39,7 +39,7 @@
                                 {{{ $item->created_at->diffForHumans() }}}
                             </span>
                         </span>
-                      @elseif ($item instanceof App\Report)
+                      @elseif ($item instanceof Fetch404\Core\Models\Report)
                         <i class="fa fa-exclamation-circle fa-fw"></i>
                         {!! link_to_route('reports.view', "Report by " . $item->owner->name, [$item]) !!}
                         <span class="pull-right">

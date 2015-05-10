@@ -30,9 +30,9 @@
                 By <a href="{{{ $post->user->profileURL }}}">{{{ $post->user->name }}}</a>
                 &raquo;
                 <span data-type="tooltip" data-trigger="hover" data-original-title="{{{ $post->created_at->format('l \a\t g:h A') }}}">{{{ $post->created_at->diffForHumans() }}}</span>
-                @if ($post->updated_at > $post->created_at)
+                @if ($post->updated_at > $post->created_at && $post->latestEdit != null)
                 <span class="text-muted">
-					- Last edited {{{ $post->updated_at->diffForHumans() }}}
+					- Last edited {{{ $post->latestEdit->created_at->diffForHumans() }}} by {{{ $post->latestEdit->user->name }}}
 				</span>
                 @endif
                 <span class="pull-right">

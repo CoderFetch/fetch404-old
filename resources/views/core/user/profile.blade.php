@@ -73,6 +73,19 @@
 			<div class="panel panel-primary">
 				<div class="panel-heading">
 					<h2 class="panel-title">
+						<div class="pull-right">
+							@if (Auth::check() && Auth::id() != $user->id)
+							@if (!Auth::user()->isFollowing($user))
+							{!! Form::open(['route' => array('user.post.follow', $user)]) !!}
+							{!! Form::submit('Follow', ['class' => 'btn btn-info btn-xs']) !!}
+							{!! Form::close() !!}
+							@else
+							{!! Form::open(['route' => array('user.post.unfollow', $user)]) !!}
+							{!! Form::submit('Unfollow', ['class' => 'btn btn-danger btn-xs']) !!}
+							{!! Form::close() !!}
+							@endif
+							@endunless
+						</div>
 						{{{ $user->name }}}
 						@foreach($user->roles as $role)
 						<span class="label label-{{{ $role->is_superuser == 1 ? 'danger' : 'success' }}}">
@@ -133,29 +146,7 @@
 								<p>Nobody has written anything on this user's profile.</p>
 								@else
 								@foreach($user->profilePosts as $profilePost)
-								<article class="media status-media">
-									<div class="pull-left">
-										<a href="{{{ $profilePost->user->profileURL }}}">
-											<img class="media-object" src="https://cravatar.eu/avatar/{{{ $profilePost->user->slug }}}/30" alt="{{ $profilePost->user->name }}">
-										</a>
-									</div>
-
-									<div class="pull-right">
-										<div class="btn-group">
-											@if (Auth::check() && $profilePost->user->id == Auth::id())
-											{!! Form::open(['route' => array('user.profile-posts.post.delete', $user, $profilePost)]) !!}
-											{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-xs']) !!}
-											{!! Form::close() !!}
-											@endif
-										</div>
-									</div>
-
-									<div class="media-body status-media-body">
-										<h4 class="media-heading status-media-heading">{{ $profilePost->user->name }}</h4>
-										<p><small class="status-media-time">{{{ $profilePost->formattedCreatedAt() }}}</small></p>
-										{!! Purifier::clean($profilePost->body) !!}
-									</div>
-								</article>
+								@include('core.user.partials.profile.profile-post', array('profilePost' => $profilePost))
 								@endforeach
 								@endif
 							</div>

@@ -26,6 +26,16 @@ trait BasePost {
         return $this->belongsTo('Fetch404\Core\Models\Topic');
     }
 
+    /**
+     * Get all edits associated with this post.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function postEdits()
+    {
+        return $this->hasMany('Fetch404\Core\Models\PostEdit');
+    }
+
     public function formattedCreatedAt()
     {
         $now = Carbon::now();
@@ -118,5 +128,15 @@ trait BasePost {
         }
 
         return 0; //first element
+    }
+
+    /**
+     * Get the most recent post edit.
+     *
+     * @return \Fetch404\Core\Models\PostEdit
+     */
+    public function getLatestEditAttribute()
+    {
+        return $this->postEdits()->latest('created_at')->first();
     }
 }

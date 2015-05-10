@@ -26,12 +26,14 @@ class Smilies
             ':D' => '/assets/img/smilies/grin.png',
             ':P' => '/assets/img/smilies/tongue.png',
             ';)' => '/assets/img/smilies/wink.png',
+            ':/' => '/assets/img/smilies/pouty.png',
             ':|' => '/assets/img/smilies/pouty.png'
         );
 
         foreach($smilies as $key => $img)
         {
-            $value = preg_replace("/[\s]*" . preg_quote($key, "/") . "[\s]*/", "<img src='" . $img . "' />", $value);
+            $value = preg_replace("/(^|>|\s)(" . preg_quote($key, "/") . ")($|<|\s)/", "$1<img src='" . $img . "' />$3", $value);
+
         }
 
         return $value;

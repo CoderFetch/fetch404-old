@@ -23,14 +23,14 @@
 		      			<span class="pull-right">
 		        			<a style="color: white;" href="{{{ route('profile.get.show', ['slug' => $newsPost->user->slug, 'id' => $newsPost->user->id]) }}}">{{{ $newsPost->user->name }}}</a>
 							&nbsp;
-							<img class="img-rounded" src="https://cravatar.eu/avatar/{{{ str_slug($newsPost->user->name, '') }}}/25.png" />
+							<img src="{{{ $newsPost->user->getAvatarURL(25) }}}" height="25" width="25" />
 						</span>
 					</div>
 					<div class="panel-body">
 						{!! Mentions::parse(Purifier::clean($newsPost->content)) !!}
 						<br />
 						<span class="label label-info">
-							{{{ date('l \a\t g:h A', strtotime($newsPost->created_at)) }}}
+							{{{ $newsPost->created_at->format('l \a\t g:h A') }}}
 						</span>
 						<span class="pull-right">
 							@if ($newsPost->tags->count() > 0)
