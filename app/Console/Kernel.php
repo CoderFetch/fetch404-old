@@ -26,47 +26,50 @@ class Kernel extends ConsoleKernel {
 	 */
 	protected function schedule(Schedule $schedule)
 	{
-		$banned = User::banned()->get();
-		$all = User::all();
-
-		$schedule->call(function() use ($banned)
+		if (Schema::hasTable('migrations') && Schema::hasTable('users'))
 		{
-			foreach($banned as $u)
+			$banned = User::banned()->get();
+			$all = User::all();
+
+			$schedule->call(function() use ($banned)
 			{
-				if ($u->banned_until != null)
+				foreach($banned as $u)
 				{
-					if ($u->banned_until < Carbon::now()->toDateTimeString())
+					if ($u->banned_until != null)
+					{
+						if ($u->banned_until < Carbon::now()->toDateTimeString())
+						{
+							$u->update(array(
+								'is_banned' => 0,
+								'banned_until' => null
+							));
+						}
+					}
+				}
+			})->when(function() use ($banned)
+			{
+				return $banned->count() > 0;
+			})->cron('* * * * *');
+
+			$schedule->call(function() use ($all)
+			{
+				$now = Carbon::now();
+				$now->subMinutes(15); // A user is offline if they do nothing for 15 minutes
+
+				foreach($all as $u)
+				{
+					if ($u->last_active != null && $u->last_active < $now->toDateTimeString())
 					{
 						$u->update(array(
-							'is_banned' => 0,
-							'banned_until' => null
+							'is_online' => 0
 						));
 					}
 				}
-			}
-		})->when(function()
-		{
-			return Schema::hasTable('users') && Schema::hasTable('migrations') && User::banned()->count() > 0;
-		})->cron('* * * * *');
-
-		$schedule->call(function() use ($all)
-		{
-			$now = Carbon::now();
-			$now->subMinutes(15); // A user is offline if they do nothing for 15 minutes
-
-			foreach($all as $u)
+			})->when(function() use ($all)
 			{
-				if ($u->last_active != null && $u->last_active < $now->toDateTimeString())
-				{
-					$u->update(array(
-						'is_online' => 0
-					));
-				}
-			}
-		})->when(function()
-		{
-			return Schema::hasTable('users') && Schema::hasTable('migrations') && User::all()->count() > 0;
-		})->cron('* * * * *');
+				return $all->count() > 0;
+			})->cron('* * * * *');
+		}
 	}
 
 }
