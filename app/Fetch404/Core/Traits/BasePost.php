@@ -1,10 +1,12 @@
 <?php namespace Fetch404\Core\Traits;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Zizaco\Entrust\EntrustFacade as Entrust;
 
 trait BasePost {
 
-    /*
+    /**
      * Get the user associated with this post.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -14,7 +16,7 @@ trait BasePost {
         return $this->belongsTo('Fetch404\Core\Models\User', 'user_id');
     }
 
-    /*
+    /**
      * Get the topic associated with this post.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -41,7 +43,7 @@ trait BasePost {
         return $this->created_at->format('M j, Y');
     }
 
-    /*
+    /**
      * Get the page number for this post.
      *
      * @return integer
@@ -51,7 +53,7 @@ trait BasePost {
         return ceil(($this->getArrayIndex() +1)/10);
     }
 
-    /*
+    /**
      * Get the generated route for this post.
      *
      * @return string
@@ -70,7 +72,35 @@ trait BasePost {
         return $url;
     }
 
-    /*
+    /**
+     * Can this post be edited by the current user?
+     *
+     * @return boolean
+     */
+    public function getCanEditAttribute()
+    {
+        if (!Auth::check()) return false;
+
+        if (Auth::id() == $this->user->id)
+        {
+            return ($this->topic->canView && $this->topic->channel->can(7, Auth::user()));
+        }
+
+        return $this->topic->canView && ($this->topic->channel->can(7, Auth::user()) && Entrust::can('editAllPosts'));
+    }
+
+    /**
+     * Can this post be deleted by the current user?
+     *
+     * @return boolean
+     */
+    public function getCanDeleteAttribute()
+    {
+        if (!Auth::check()) return false;
+        return ($this->user->isUser(Auth::user()) || Entrust::can('deleteAllPosts'));
+    }
+
+    /**
      * Get the array index for this post (in the related thread's posts array)
      *
      * @return integer

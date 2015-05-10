@@ -1,10 +1,8 @@
 <?php namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Fetch404\Core\Models\Report;
-use Illuminate\Http\Request;
 
 class AdminReportsController extends Controller {
 

@@ -13,10 +13,6 @@
 
 $router->group(['middleware' => ['installed', 'csrf']], function() use ($router)
 {
-    $router->model('category', 'App\Category');
-    $router->model('channel', 'App\Channel');
-    $router->model('user', 'App\User');
-    $router->model('report', 'App\Report');
 
     # Administration routes
     $router->group(['prefix' => 'admin', 'namespace' => 'Admin'], function () use ($router)
@@ -27,7 +23,7 @@ $router->group(['middleware' => ['installed', 'csrf']], function() use ($router)
         # User Management
         $router->group(['prefix' => 'users'], function () use ($router)
         {
-            $router->get('/', ['uses' => 'AdminUsersController@getIndex', 'as' => 'admin.users.get.index']);
+            $router->get('/', ['uses' => 'AdminUsersController@index', 'as' => 'admin.users.get.index']);
             $router->post('/{user}/ban', ['uses' => 'AdminUsersController@banUser', 'as' => 'admin.users.post.ban']);
             $router->post('/{user}/unban', ['uses' => 'AdminUsersController@unbanUser', 'as' => 'admin.users.post.unban']);
         });
@@ -101,9 +97,10 @@ $router->group(['middleware' => ['installed', 'csrf']], function() use ($router)
                     'uses' => 'CategoryPermissionManagerController@update'
                 ]);
 
-                $router->post('/channel/{channel}/delete', ['as' => 'admin.forum.post.delete.channel', 'uses' => 'AdminForumsController@deleteChannel']);
-                $router->post('/category/{category}/delete', ['as' => 'admin.forum.post.delete.category', 'uses' => 'AdminForumsController@deleteCategory']);
             });
+
+            $router->post('/channel/{channel}/delete', ['as' => 'admin.forum.post.delete.channel', 'uses' => 'AdminForumsController@deleteChannel']);
+            $router->post('/category/{category}/delete', ['as' => 'admin.forum.post.delete.category', 'uses' => 'AdminForumsController@deleteCategory']);
         });
 
         # Reports

@@ -38,7 +38,9 @@
                 {!! Form::label('create_threads', 'Who can create threads?', ['class' => 'control-label']) !!}
                 <select name="create_threads[]" id="create_threads" class="form-control" multiple>
                     @foreach($groups as $i => $g)
+                        @if ($i != 2)
                         <option value="{{{ $i }}}"{{{ in_array($i, $createThread) ? ' selected=selected' : '' }}}>{{{ $g }}}</option>
+                        @endif
                     @endforeach
                 </select>
             </div>
@@ -47,7 +49,9 @@
                 {!! Form::label('reply_to_threads', 'Who can post?', ['class' => 'control-label']) !!}
                 <select name="reply_to_threads[]" id="reply_to_threads" class="form-control" multiple>
                     @foreach($groups as $i => $g)
-                    <option value="{{{ $i }}}"{{{ in_array($i, $reply) ? ' selected=selected' : '' }}}>{{{ $g }}}</option>
+                        @if ($i != 2)
+                        <option value="{{{ $i }}}"{{{ in_array($i, $reply) ? ' selected=selected' : '' }}}>{{{ $g }}}</option>
+                        @endif
                     @endforeach
                 </select>
             </div>

@@ -11,12 +11,12 @@ use Illuminate\Support\Facades\Storage;
 
 trait BaseUser {
 
-    /*
+    /**
      * Relationship functions
      * DO NOT MODIFY
      */
 
-    /*
+    /**
      * Get all the topics created by a user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -26,7 +26,7 @@ trait BaseUser {
         return $this->hasMany('Fetch404\Core\Models\Topic');
     }
 
-    /*
+    /**
     * Get all the posts created by a user.
     *
     * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -36,7 +36,7 @@ trait BaseUser {
         return $this->hasMany('Fetch404\Core\Models\Post');
     }
 
-    /*
+    /**
      * Get all of the user's news posts.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -46,7 +46,7 @@ trait BaseUser {
         return $this->hasMany('Fetch404\Core\Models\News');
     }
 
-    /*
+    /**
      * Get any name changes the user has had.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -139,7 +139,7 @@ trait BaseUser {
         return false;
     }
 
-    /*
+    /**
      * Get all of the user's recent notifications.
      *
      * @return mixed
@@ -152,7 +152,7 @@ trait BaseUser {
             ->latest();
     }
 
-    /*
+    /**
      * Get all of the user's unread notifications.
      *
      * @return mixed
@@ -162,10 +162,10 @@ trait BaseUser {
         return $this->notifications()->unread($this->id);
     }
 
-    /*
+    /**
      * Get the user's account confirmation object.
      *
-     * @return App\AccountConfirmation
+     * @return AccountConfirmation
      */
     public function getAccountConfirmation()
     {
@@ -188,21 +188,21 @@ trait BaseUser {
         return $confirmation;
     }
 
-    /*
+    /**
      * Get a user's conversations.
      *
-     * @return Cmgmyr\Messenger\Models\Thread
+     * @return Thread
      */
     public function getConversations()
     {
         return Thread::forUser($this->id);
     }
 
-    /*
+    /**
      * Attribute functions
-     * Not recommended to modify.
+     *
      */
-    /*
+    /**
      * Is the user confirmed?
      *
      * @return boolean
@@ -212,7 +212,7 @@ trait BaseUser {
         return $this->confirmed == 1;
     }
 
-    /*
+    /**
      * Get the user's profile URL.
      *
      * @return string
@@ -222,7 +222,7 @@ trait BaseUser {
         return route('profile.get.show', ['slug' => $this->slug, 'id' => $this->id]);
     }
 
-    /*
+    /**
      * Get the user's name color.
      *
      * @return string
@@ -243,7 +243,7 @@ trait BaseUser {
         }
     }
 
-    /*
+    /**
      * Get a user's prefix.
      *
      * @return string
@@ -261,7 +261,7 @@ trait BaseUser {
         }
     }
 
-    /*
+    /**
      * Get the generated URL to a user's avatar.
      * Returns a link to the default avatar if the user does not have an avatar
      *
@@ -285,7 +285,7 @@ trait BaseUser {
 
         return '/assets/img/defaultavatar' . ($large ? 'large' : '') . '.png';
     }
-    /*
+    /**
      * Other functions (role IDs, etc)
      *
      * Don't modify these!
@@ -309,7 +309,7 @@ trait BaseUser {
         return $roleIds;
     }
 
-    /*
+    /**
      * Save a user's roles, input is taken from the Select2 inputs.
      *
      * @param array $inputRoles
@@ -413,7 +413,6 @@ trait BaseUser {
 
     /**
      * Check to see if the current user is banned.
-     * Will automatically update the ban data when this is called.
      *
      * @return bool
      */

@@ -71,6 +71,9 @@ class CategoryPermissionManagerController extends Controller {
 		$createThreadIds = CategoryPermission::where('category_id', '=', $category->id)->where('permission_id', '=', 1)->lists('role_id', 'role_id');
 		$replyIds = CategoryPermission::where('category_id', '=', $category->id)->where('permission_id', '=', 6)->lists('role_id', 'role_id');
 
+		$createThreadIds = array_except($createThreadIds, [2]);
+		$replyIds = array_except($replyIds, [2]);
+
 		return view('core.admin.forums.permission-editor.category.edit', array(
 			'category' => $category,
 			'accessCategory' => $accessCategoryIds,
@@ -100,6 +103,16 @@ class CategoryPermissionManagerController extends Controller {
 			->orWhere('permission_id', '=', 1)
 			->orWhere('permission_id', '=', 6)
 			->delete();
+
+		$createThreads = collect($createThreads);
+		$createThreads = $createThreads->filter(function($item) {
+			return $item != 2;
+		});
+
+		$reply = collect($reply);
+		$reply = $reply->filter(function($item) {
+			return $item != 2;
+		});
 
 		foreach($accessCategory as $id)
 		{

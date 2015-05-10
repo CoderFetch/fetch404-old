@@ -4,6 +4,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 use Auth;
+use Illuminate\Support\Facades\DB;
 use URL;
 
 use Zizaco\Entrust\EntrustFacade as Entrust;
@@ -147,7 +148,7 @@ class Topic extends Model {
 				return self::STATUS_UNREAD;
 			}
 
-			return ($this->updatedSince($this->reader)) ? self::STATUS_UPDATED : false;
+			return ($this->updatedSince($this->reader)) ? self::STATUS_UNREAD : false;
 		}
 
 		return false;
@@ -168,5 +169,12 @@ class Topic extends Model {
 		{
 			$this->reader->touch();
 		}
+	}
+
+	public function deleteReaders()
+	{
+		return DB::table('forum_threads_read')
+			->where('topic_id', '=', $this->id)
+			->delete();
 	}
 }

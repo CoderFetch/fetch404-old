@@ -7,6 +7,7 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="csrf-token" content="{{ csrf_token() }}" />
+		@yield('extra_tags')
 		
 		<link href="/assets/css/themes/{{{ $theme_id }}}.css" rel="stylesheet" type="text/css" media="all" />
 		<link href="/assets/css/summernote.css" rel="stylesheet" type="text/css" media="all" />
@@ -19,6 +20,7 @@
 		@endif
 		<link href="/assets/css/select2.min.css" rel="stylesheet" />
 		<link href="/assets/css/main.css" rel="stylesheet" type="text/css" />
+		@yield('styles')
 		
 		<script src="/assets/js/jquery-1.11.2.min.js"></script>
 		<script src="/assets/js/bootstrap.min.js"></script>
@@ -30,8 +32,6 @@
 		@endif
 		<script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0-rc.2/js/select2.min.js"></script>
 		<script src="/assets/js/main.js"></script>
-		<script src="/assets/js/login.js"></script>
-		<script src="/assets/js/register.js"></script>
 
 		@if ($recaptcha_enabled)
 		<script src='https://www.google.com/recaptcha/api.js'></script>
@@ -70,8 +70,6 @@
 				$("[data-bswitch]").bootstrapSwitch();
 			});
 		</script>
-
-
 
 		@if (Auth::check())
 		<script src="/assets/js/notifications.js"></script>
@@ -243,7 +241,6 @@
 			@endif
 			<br />
 			@yield('content')
-			<hr>
 		</div>
 
 		@yield('scripts')

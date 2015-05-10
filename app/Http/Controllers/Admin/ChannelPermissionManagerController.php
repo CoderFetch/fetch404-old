@@ -51,11 +51,21 @@ class ChannelPermissionManagerController extends Controller {
 		$accessChannelIds = ChannelPermission::where('channel_id', '=', $channel->id)->where('permission_id', '=', 21)->lists('role_id', 'role_id');
 		$replyIds = ChannelPermission::where('channel_id', '=', $channel->id)->where('permission_id', '=', 6)->lists('role_id', 'role_id');
 
+		$createThreadIds = collect($createThreadIds);
+		$createThreadIds = $createThreadIds->filter(function($item) {
+			return $item != 2;
+		});
+
+		$replyIds = collect($replyIds);
+		$replyIds = $replyIds->filter(function($item) {
+			return $item != 2;
+		});
+
 		return view('core.admin.forums.permission-editor.channel.edit', array(
 			'channel' => $channel,
 			'accessChannel' => $accessChannelIds,
-			'createThread' => $createThreadIds,
-			'reply' => $replyIds,
+			'createThread' => $createThreadIds->toArray(),
+			'reply' => $replyIds->toArray(),
 			'groups' => $groups
 		));
 	}
@@ -74,6 +84,16 @@ class ChannelPermissionManagerController extends Controller {
 		$accessChannel = $request->input('allowed_groups');
 		$createThreads = $request->input('create_threads');
 		$reply = $request->input('reply_to_threads');
+
+		$createThreads = collect($createThreads);
+		$createThreads = $createThreads->filter(function($item) {
+			return $item != 2;
+		});
+
+		$reply = collect($reply);
+		$reply = $reply->filter(function($item) {
+			return $item != 2;
+		});
 
 		ChannelPermission::where('channel_id', '=', $channel->id)
 			->where('permission_id', '=', 21)

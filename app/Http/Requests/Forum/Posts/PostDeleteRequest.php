@@ -1,4 +1,4 @@
-<?php namespace App\Http\Requests;
+<?php namespace App\Http\Requests\Forum\Posts;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -11,7 +11,9 @@ class PostDeleteRequest extends FormRequest {
 	 */
 	public function authorize()
 	{
-		return false;
+		$post = $this->route()->getParameter('post');
+
+		return $post->canDelete;
 	}
 
 	/**

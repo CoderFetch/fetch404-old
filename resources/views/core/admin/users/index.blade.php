@@ -26,7 +26,7 @@
 				</p>
 				@else
 				<ul class="list-group">
-					@foreach($users->get() as $user)
+					@foreach($users as $user)
 					<li class="list-group-item">
 						<a href="{{{ $user->profileURL }}}">
 							{{{ $user->name }}}

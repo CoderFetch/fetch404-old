@@ -37,7 +37,7 @@ class RouteServiceProvider extends ServiceProvider {
 		$router->model('topic', 'Fetch404\Core\Models\Topic');
 		$router->model('channel', 'Fetch404\Core\Models\Channel');
 		$router->model('category', 'Fetch404\Core\Models\Category');
-
+		$router->model('report', 'Fetch404\Core\Models\Report');
 		$router->model('conversation', 'Cmgmyr\Messenger\Models\Thread');
 
 		$router->bind('conversation', function($value)

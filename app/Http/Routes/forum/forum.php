@@ -89,6 +89,24 @@ $router->group(['middleware' => ['installed', 'csrf', 'bancheck', 'update_last_a
                 'uses' => 'PostsController@edit',
                 'middleware' => ['auth', 'confirmed', 'csrf']
             ]);
+
+            $router->post('/{post}/delete', [
+                'as' => 'forum.post.posts.delete',
+                'uses' => 'PostsController@destroy',
+                'middleware' => ['auth', 'confirmed', 'csrf']
+            ]);
+
+            $router->get('/{post}/edit', [
+                'as' => 'forum.get.posts.edit',
+                'uses' => 'PostsController@edit',
+                'middleware' => ['auth', 'confirmed', 'csrf']
+            ]);
+
+            $router->post('/{post}/edit', [
+                'as' => 'forum.post.posts.edit',
+                'uses' => 'PostsController@update',
+                'middleware' => ['auth', 'confirmed', 'csrf']
+            ]);
         });
     });
 

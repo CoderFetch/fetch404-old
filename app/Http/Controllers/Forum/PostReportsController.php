@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 
 use App\Http\Requests\Forum\Posts\ReportPostRequest;
 
-use App\Post;
+use Fetch404\Core\Models\Post;
 use Laracasts\Flash\Flash;
 
 class PostReportsController extends Controller {
@@ -18,6 +18,8 @@ class PostReportsController extends Controller {
 	 */
 	public function show(Post $post)
 	{
+		if (!$post->topic->canView) abort(403);
+
 		return view('core.forum.report-post', array(
 			'post' => $post
 		));

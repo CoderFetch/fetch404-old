@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Account\AccountPrivacySettingsUpdateRequest;
 use App\Http\Requests\Account\AccountSettingsUpdateRequest;
 
+use App\Http\Requests\Account\ProfileSettingsUpdateRequest;
 use Fetch404\Core\Models\AccountConfirmation;
 use Illuminate\Mail\Mailer;
 use Laracasts\Flash\Flash;
@@ -173,6 +174,24 @@ class AccountController extends Controller {
 		$user->setSetting("allow_bots_to_index_me", $allowIndexing);
 
 		Flash::success('Updated privacy settings!');
+
+		return redirect()->back();
+	}
+
+	/**
+	 * Update a user's profile settings
+	 *
+	 * @param ProfileSettingsUpdateRequest $request
+	 * @return Response
+	 */
+	public function updateProfile(ProfileSettingsUpdateRequest $request)
+	{
+		$user = $request->user();
+		$signature = $request->input('signature', null);
+
+		$user->setSetting("post_signature", $signature);
+
+		Flash::success('Updated profile settings!');
 
 		return redirect()->back();
 	}

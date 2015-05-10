@@ -1,7 +1,7 @@
 <?php
 
 # Account management routes
-$router->group(['middleware' => ['auth', 'csrf', 'bancheck', 'update_last_activity']], function() use ($router)
+$router->group(['middleware' => ['auth', 'confirmed', 'csrf', 'bancheck', 'update_last_activity']], function() use ($router)
 {
     $router->get('/account/settings', ['as' => 'account.get.show.settings', function()
     {
@@ -13,8 +13,14 @@ $router->group(['middleware' => ['auth', 'csrf', 'bancheck', 'update_last_activi
         return view('core.user.settings.privacy');
     }]);
 
+    $router->get('/account/profile', ['as' => 'account.get.show.settings.profile', function()
+    {
+        return view('core.user.settings.profile');
+    }]);
+
     $router->post('/account/settings', ['uses' => 'Auth\AccountController@updateSettings', 'as' => 'account.post.update.settings']);
     $router->post('/account/privacy', ['uses' => 'Auth\AccountController@updatePrivacy', 'as' => 'account.post.update.settings.privacy']);
+    $router->post('/account/profile', ['uses' => 'Auth\AccountController@updateProfile', 'as' => 'account.post.update.settings.profile']);
 
     $router->get('/settings/notifications/view', function() {
         return response()->json(array(

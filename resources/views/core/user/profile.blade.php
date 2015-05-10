@@ -2,6 +2,11 @@
 
 @section('title', $user->name . '\'s profile')
 
+@section('extra_tags')
+@if ($user->getSetting("allow_bots_to_index_me", true) == false)
+<meta name="robots" content="noindex">
+@endif
+@stop
 @section('content')
 	<ol class="breadcrumb">
 		<li><a href="/">Home</a></li>

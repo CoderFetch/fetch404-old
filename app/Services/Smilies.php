@@ -4,10 +4,10 @@
  * Smilies library
  * 
  * @package        Smilies
- * @author        BrianLabs
+ * @author        ItsLeo
  * @version        1.0.0
  * @license        http://unlicense.org/
- * @copyright    Copyright (c) 2011 BrianLabs
+ * @copyright    Copyright (c) 2015 ItsLeo
  */
 class Smilies 
 {
@@ -20,18 +20,18 @@ class Smilies
      */
     public static function parse($value) 
     {
-        $config = config('smilies');
-        
-        $smileys = $config['images'];
+        $smilies = array(
+            ':)' => '/assets/img/smilies/smile.png',
+            ':D' => '/assets/img/smilies/grin.png',
+            ':P' => '/assets/img/smilies/tongue.png',
+            ';)' => '/assets/img/smilies/wink.png'
+        );
 
-//         foreach($smileys as $key => $val) {
-//             $value = str_replace($key, '<img src="' . $config['path'] . $smileys[$key][0] . '" width="' . $smileys[$key][1] . '" height="' . $smileys[$key][2] . '" alt="' . $smileys[$key][3] . '" style="border:0;" />', $value);
-//         }
-		foreach($smileys as $key => $val)
-		{
-			$value = preg_replace("/\$key\s/", '<img src="' . $config['path'] . $smileys[$key][0] . '" width="' . $smileys[$key][1] . '" height="' . $smileys[$key][2] . '" alt="' . $smileys[$key][3] . '" style="border:0;" />', $value);
-		}
-		
+        foreach($smilies as $key => $img)
+        {
+            $value = preg_replace("/[\s]" . preg_quote($key, "/") . "[\s]*/", "<img src='" . $img . "' />", $value);
+        }
+
         return $value;
     }
 }

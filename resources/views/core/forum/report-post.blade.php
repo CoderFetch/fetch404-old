@@ -39,6 +39,10 @@
                             By {!! link_to_route('profile.get.show', $post->user->name, [$post->user->slug, $post->user->id]) !!} &raquo; {{{ $post->created_at->diffForHumans() }}}
                             <hr>
                             {!! Purifier::clean($post->content) !!}
+                            <hr>
+                            @if ($post->user->getSetting("show_signature", true) == true && $post->user->getSetting("post_signature") != null)
+                                {!! Purifier::clean($post->user->getSetting("post_signature")) !!}
+                            @endif
                         </div>
                     </div>
                 </div>

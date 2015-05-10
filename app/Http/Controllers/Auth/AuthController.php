@@ -1,17 +1,18 @@
 <?php namespace App\Http\Controllers\Auth;
 
-// External libraries (well, sort of)
 use App\Events\UserWasRegistered;
 use App\Http\Controllers\Controller;
 
-// Models
 use App\Http\Requests\Auth\LoginJSONRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 
 use App\Http\Requests\Auth\LoginRequest;
-use Fetch404\Core\Models\User;
+
+use Fetch404\Core\Repositories\UsersRepository;
+
 use Illuminate\Contracts\Auth\Guard;
 
+use Illuminate\Session\Store;
 use Laracasts\Flash\Flash;
 
 class AuthController extends Controller {
@@ -26,9 +27,11 @@ class AuthController extends Controller {
 	|
 	*/
 
-	protected $auth;
+	private $auth;
 
-	protected $user;
+	private $usersRepository;
+
+	private $session;
 
 	/**
 	 * Show the login page
@@ -74,7 +77,7 @@ class AuthController extends Controller {
 		$email = $request->input('email');
 		$password = $request->input('password');
 
-		$user = $this->user->create(array(
+		$user = $this->usersRepository->create(array(
 			'name' => $name,
 			'email' => $email,
 			'password' => Hash::make($password),
@@ -105,7 +108,7 @@ class AuthController extends Controller {
 			));
 
 			$this->auth->logout();
-			Session::flush();
+			$this->session->flush();
 			
 			return redirect()
 				->to('/');
@@ -122,12 +125,16 @@ class AuthController extends Controller {
 	 * Create a new authentication controller instance.
 	 *
 	 * @param Guard $auth
-	 * @param User $user
+	 * @param Store $session
+	 * @param UsersRepository $usersRepository
+	 * @internal param User $user
 	 */
-	public function __construct(Guard $auth, User $user)
+	public function __construct(Guard $auth, Store $session, UsersRepository $usersRepository)
 	{
 		$this->auth = $auth;
-		$this->user = $user;
+		$this->session = $session;
+		$this->usersRepository = $usersRepository;
+
 		$this->middleware('guest', ['except' => 'getLogout']);
 	}
 

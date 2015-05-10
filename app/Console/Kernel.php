@@ -1,7 +1,7 @@
 <?php namespace App\Console;
 
-use App\User;
 use Carbon\Carbon;
+use Fetch404\Core\Models\User;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Fetch404 Installer | Error</title>
+    <title>Fetch404 | Error</title>
     <meta charset='utf-8'>
     {!! HTML::script('assets/js/jquery-1.11.2.min.js') !!}
     <link type="text/css" rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,600">

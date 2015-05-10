@@ -146,6 +146,27 @@ class AppServiceProvider extends ServiceProvider {
 			$view->with('roles', Role::all());
 		});
 
+		view()->composer('core.admin.partials.sidebar', function($view) {
+			$user = Auth::user();
+
+			if ($user->can('viewReports'))
+			{
+				$reports = Report::all();
+
+				$reports = $reports->sortByDesc(function($item)
+				{
+					return $item->updated_at;
+				});
+
+				$reports = $reports->filter(function($item) use ($user)
+				{
+					return !$item->isClosed();
+				});
+
+				$view->with('reports', $reports);
+			}
+		});
+
 		view()->composer('core.auth.register', function($view) {
 			$recaptcha_enabled = Setting::where('name', '=', 'recaptcha')->first();
 			$recaptcha_key = Setting::where('name', '=', 'recaptcha_key')->first();

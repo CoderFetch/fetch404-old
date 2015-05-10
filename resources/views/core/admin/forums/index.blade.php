@@ -43,7 +43,9 @@
 					<span>
 						<div class="pull-right">
 							<a class="btn btn-info btn-sm" href="{{{ route('admin.forum.get.edit.channel', $channel) }}}">Edit</a>
-							<button class="btn btn-danger btn-sm">Delete</button>
+							{!! Form::open(['route' => array('admin.forum.post.delete.channel', $channel), 'style' => 'display: inline;']) !!}
+							{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm', 'onclick' => 'return confirm(\'Are you sure?\nWARNING: Deleting this channel will delete all child topics and posts.\')']) !!}
+							{!! Form::close() !!}
 						</div>
 						<h4 style="margin-top: 5px;">{{{ $channel->name }}}</h4>
 					</span>

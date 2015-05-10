@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 
 use App\Http\Requests\Forum\Posts\PostDislikeRequest;
 use App\Http\Requests\Forum\Posts\PostLikeRequest;
-use Illuminate\Http\Request;
 use Laracasts\Flash\Flash;
 
 class LikesController extends Controller {

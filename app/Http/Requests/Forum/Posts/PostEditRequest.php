@@ -1,4 +1,4 @@
-<?php namespace App\Http\Requests;
+<?php namespace App\Http\Requests\Forum\Posts;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -11,7 +11,9 @@ class PostEditRequest extends FormRequest {
 	 */
 	public function authorize()
 	{
-		return false;
+		$post = $this->route()->getParameter('post');
+
+		return $post->canEdit;
 	}
 
 	/**
@@ -23,6 +25,22 @@ class PostEditRequest extends FormRequest {
 	{
 		return [
 			//
+			'body' => 'required|min:20|max:4500'
+		];
+	}
+
+	/**
+	 * Get the validation messages that apply to the request.
+	 *
+	 * @return array
+	 */
+	public function messages()
+	{
+		return [
+			//
+			'body.required' => 'A message is required.',
+			'body.min' => 'Messages must be at least 20 characters long.',
+			'body.max' => 'Messages can be up to 4500 characters long.'
 		];
 	}
 

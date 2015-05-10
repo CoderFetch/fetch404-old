@@ -11,6 +11,11 @@ abstract class BaseRepository {
         return $model;
     }
 
+    public function getAll()
+    {
+        return $this->model->all();
+    }
+
     public function getByID($id, $with = array())
     {
         return $this->getFirstBy('id', $id, $with);

@@ -26,12 +26,18 @@
 							<span{{{ $thread->pinned == 1  }}}>
 						<span class="fa-stack pull-left">
 						  	<i class="fa fa-comment fa-stack-2x"></i>
-							@if($thread->userReadStatus == 'unread' || $thread->userReadStatus == 'updated')
+							@if($thread->userReadStatus == 'unread')
 								<i class="fa fa-exclamation fa-stack-1x" style="color: black;"></i>
 							@endif
 						</span>
 						&nbsp;
-						<a href="{{{ $thread->Route }}}" data-type="tooltip" data-original-title="{{{ str_limit(strip_tags($thread->posts()->first()->content), 65) }}}">{{{ $thread->title }}}</a>
+						<a href="{{{ $thread->Route }}}" data-type="tooltip" data-original-title="{{{ str_limit(strip_tags($thread->posts()->first()->content), 65) }}}">
+							@if ($thread->userReadStatus == 'unread')
+							<span style="font-weight: bold;">{{{ $thread->title }}}</span>
+							@else
+							{{{ $thread->title }}}
+							@endif
+						</a>
 						<span class="text-muted"> - by {{{ $thread->user->name }}}</span>
 						<span class="pull-right">
 							@if ($thread->isLocked())
@@ -40,7 +46,7 @@
 							@if ($thread->isPinned())
 								<i class="fa fa-thumb-tack" data-type="tooltip" data-original-title="Pinned"></i>
 							@endif
-							{{{ $thread->replyCount }}} replies
+							{{{ $thread->replyCount }}} {{{ Pluralizer::plural('reply', $thread->replyCount) }}}
 						</span>
 					</span>
 							@if ($i != sizeof($channel->topicsPaginated) - 1)

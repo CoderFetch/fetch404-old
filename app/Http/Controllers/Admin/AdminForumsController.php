@@ -15,6 +15,7 @@ use App\Http\Requests\Admin\Forum\EditChannelRequest;
 use Fetch404\Core\Models\Category;
 use Fetch404\Core\Models\CategoryPermission;
 use Fetch404\Core\Models\Channel;
+use Fetch404\Core\Models\Like;
 use Fetch404\Core\Models\Role;
 use Laracasts\Flash\Flash;
 
@@ -204,7 +205,7 @@ class AdminForumsController extends AdminController
             {
                 foreach($topic->posts as $post) $postIds[] = $post->id;
 
-                $topic->readers()->delete();
+                $topic->deleteReaders();
                 $topic->posts()->delete();
                 $topic->delete();
             }
@@ -230,17 +231,18 @@ class AdminForumsController extends AdminController
     {
         $channel = $request->route()->getParameter('channel');
 
-        $postIds = [];
         foreach($channel->topics as $topic)
         {
-            foreach($topic->posts as $post) $postIds[] = $post->id;
+            foreach($topic->posts as $post)
+            {
+                $post->likes()->delete();
+                $post->reports()->delete();
+            }
         }
 
-        Like::whereIn('subject_id', $postIds)->where('subject_type', '=', 'App\Post')->delete();
-
         foreach($channel->topics as $topic)
         {
-            $topic->readers()->delete();
+            $topic->deleteReaders();
             $topic->posts()->delete();
             $topic->delete();
         }
