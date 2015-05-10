@@ -3,9 +3,8 @@
 use App\Http\Controllers\Controller;
 use App\Http\Requests\News\NewsCreateRequest;
 
-use App\News;
-use App\Tag;
-
+use Fetch404\Core\Models\News;
+use Fetch404\Core\Models\Tag;
 use Illuminate\Support\Facades\Auth;
 
 class NewsController extends Controller

@@ -93,7 +93,7 @@
 						</span>
 						@endforeach
 						&nbsp;
-						<small>
+						<small class="last-activity">
 							Last active
 							<span {!! $user->last_active_desc != null ? 'data-type=tooltip data-original-title=\'' . $user->getLastActiveDesc() . '\'' : '' !!}>
 								{{{ $user->getLastActivity() }}}
@@ -101,7 +101,7 @@
 						</small>
 						@if ($user->currentStatus() != null)
 						<br />
-						<small>
+						<small class="latest-status">
 							<em>
 								{{{ $user->currentStatus()->body }}}
 							</em>

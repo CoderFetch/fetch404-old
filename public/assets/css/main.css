@@ -375,3 +375,11 @@
     right: 0;
     left: auto;
 }
+
+.last-activity {
+    color: white;
+}
+
+.latest-status {
+    color: white;
+}

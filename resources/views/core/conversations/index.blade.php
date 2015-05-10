@@ -9,7 +9,7 @@
     @if($threads->count() > 0)
 	@foreach($threads as $i => $thread)
 		<span{{{ $thread->isUnread(Auth::id()) ? ' style="background-color: #3498db"' : ''}}}>
-			<img src="//cravatar.eu/avatar/{{{ str_slug($thread->participants()->first()->user->name, '') }}}/50" data-type="tooltip" data-original-title="Started by {{{ $thread->participants()->first()->user->name }}}"/>
+			<img src="{{{ $thread->user()->getAvatarURL(45) }}}" data-type="tooltip" data-original-title="Started by {{{ $thread->user()->name }}}" height="45" width="45" />
 			&nbsp;
 			{!! link_to('conversations/' . $thread->id, $thread->subject) !!}
 			<span class="text-muted"> -  Participants: <b>{{{ $thread->participantsString(null, ['name']) }}}</b></span>

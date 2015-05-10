@@ -1,5 +1,6 @@
 <?php namespace Fetch404\Core\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class News extends Model {
@@ -28,5 +29,13 @@ class News extends Model {
         }
 
         return implode(", ", $names);
+    }
+
+    public function formattedCreatedAt()
+    {
+        $now = Carbon::now();
+        $now->subDays(7);
+
+        return ($this->created_at > $now->toDateTimeString() ? $this->created_at->diffForHumans() : $this->created_at->format('M jS, Y'));
     }
 }
